@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="ps2dev" />
+		<Option makefile_is_custom="1" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="all">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+			<Target title="clean">
+				<Option type="4" />
+				<Option compiler="gcc" />
+				<MakeCommands>
+					<Build command="$make -f $makefile $target" />
+					<CompileFile command="$make -f $makefile $file" />
+					<Clean command="$make -f $makefile clean" />
+					<DistClean command="$make -f $makefile distclean$target" />
+					<AskRebuildNeeded command="$make -q -f $makefile $target" />
+					<SilentBuild command="$make -s -f $makefile $target" />
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="2xsai.cpp" />
+		<Unit filename="65c816.h" />
+		<Unit filename="apu.cpp" />
+		<Unit filename="apu.h" />
+		<Unit filename="apudebug.cpp" />
+		<Unit filename="apumem.h" />
+		<Unit filename="c4.cpp" />
+		<Unit filename="c4.h" />
+		<Unit filename="c4emu.cpp" />
+		<Unit filename="cheats.cpp" />
+		<Unit filename="cheats.h" />
+		<Unit filename="cheats2.cpp" />
+		<Unit filename="clip.cpp" />
+		<Unit filename="copyright.h" />
+		<Unit filename="cpu.cpp" />
+		<Unit filename="cpuaddr.h" />
+		<Unit filename="cpuexec.cpp" />
+		<Unit filename="cpuexec.h" />
+		<Unit filename="cpumacro.h" />
+		<Unit filename="cpuops.cpp" />
+		<Unit filename="cpuops.h" />
+		<Unit filename="data.cpp" />
+		<Unit filename="debug.cpp" />
+		<Unit filename="debug.h" />
+		<Unit filename="display.h" />
+		<Unit filename="dma.cpp" />
+		<Unit filename="dma.h" />
+		<Unit filename="dsp1.cpp" />
+		<Unit filename="dsp1.h" />
+		<Unit filename="dsp1emu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="dsp2emu.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="dsp3emu.cpp" />
+		<Unit filename="dsp4.h" />
+		<Unit filename="dsp4emu.cpp" />
+		<Unit filename="font.h" />
+		<Unit filename="fxdbg.cpp" />
+		<Unit filename="fxemu.cpp" />
+		<Unit filename="fxemu.h" />
+		<Unit filename="fxinst.cpp" />
+		<Unit filename="fxinst.h" />
+		<Unit filename="getset.h" />
+		<Unit filename="gfx.cpp" />
+		<Unit filename="gfx.h" />
+		<Unit filename="globals.cpp" />
+		<Unit filename="loadzip.cpp" />
+		<Unit filename="memmap.cpp" />
+		<Unit filename="memmap.h" />
+		<Unit filename="messages.h" />
+		<Unit filename="missing.h" />
+		<Unit filename="netplay.cpp" />
+		<Unit filename="netplay.h" />
+		<Unit filename="obc1.cpp" />
+		<Unit filename="obc1.h" />
+		<Unit filename="offsets.cpp" />
+		<Unit filename="pixform.h" />
+		<Unit filename="port.h" />
+		<Unit filename="ppu.cpp" />
+		<Unit filename="ppu.h" />
+		<Unit filename="sa1.cpp" />
+		<Unit filename="sa1.h" />
+		<Unit filename="sa1cpu.cpp" />
+		<Unit filename="sar.h" />
+		<Unit filename="sdd1.cpp" />
+		<Unit filename="sdd1.h" />
+		<Unit filename="sdd1emu.cpp" />
+		<Unit filename="sdd1emu.h" />
+		<Unit filename="server.cpp" />
+		<Unit filename="snaporig.cpp" />
+		<Unit filename="snaporig.h" />
+		<Unit filename="snapshot.cpp" />
+		<Unit filename="snapshot.h" />
+		<Unit filename="snes9x.cpp" />
+		<Unit filename="snes9x.h" />
+		<Unit filename="sound.cpp" />
+		<Unit filename="soundux.cpp" />
+		<Unit filename="soundux.h" />
+		<Unit filename="spc.cpp" />
+		<Unit filename="spc700.cpp" />
+		<Unit filename="spc700.h" />
+		<Unit filename="spc7110.cpp" />
+		<Unit filename="spc7110.h" />
+		<Unit filename="spccycles.cpp" />
+		<Unit filename="spctool.cpp" />
+		<Unit filename="srtc.cpp" />
+		<Unit filename="srtc.h" />
+		<Unit filename="tile.cpp" />
+		<Unit filename="tile.h" />
+		<Unit filename="unix/caanoo.h" />
+		<Unit filename="unix/dingoo.h" />
+		<Unit filename="unix/keydef.h" />
+		<Unit filename="unix/menu.cpp" />
+		<Unit filename="unix/menu.h" />
+		<Unit filename="unix/pandora_scaling/blitscale.h" />
+		<Unit filename="unix/pandora_scaling/hqx/hq2x_16.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/hqx/hqx.h" />
+		<Unit filename="unix/pandora_scaling/hqx/hqx_common.h" />
+		<Unit filename="unix/pandora_scaling/hqx/hqx_init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/scale2x/getopt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/scale2x/pixel.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/scale2x/pixel.h" />
+		<Unit filename="unix/pandora_scaling/scale2x/portable.h" />
+		<Unit filename="unix/pandora_scaling/scale2x/scale2x.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/scale2x/scale2x.h" />
+		<Unit filename="unix/pandora_scaling/scale2x/scale3x.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/scale2x/scale3x.h" />
+		<Unit filename="unix/pandora_scaling/scale2x/scalebit.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unix/pandora_scaling/scale2x/scalebit.h" />
+		<Unit filename="unix/pandora_scaling/simple_noAA_scaler.cpp" />
+		<Unit filename="unix/pandora_scaling/simple_noAA_scaler.h" />
+		<Unit filename="unix/svga.cpp" />
+		<Unit filename="unix/unix.cpp" />
+		<Unit filename="unzip/explode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unzip/unreduce.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unzip/unshrink.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unzip/unz.h" />
+		<Unit filename="unzip/unzip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="unzip/unzip.h" />
+		<Unit filename="unzip/unzipp.h" />
+		<Unit filename="unzipP.h" />
+		<Unit filename="win32.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars set="ps2dev" />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
