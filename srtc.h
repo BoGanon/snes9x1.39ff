@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -83,14 +83,14 @@ Index Description     Range (nibble)
 
 typedef struct
 {
-    bool8 needs_init;
-    bool8 count_enable;	// Does RTC mark time or is it frozen
-    uint8 data [MAX_RTC_INDEX+1];
-    int8  index;
-    uint8 mode;
+	bool8 needs_init;
+	bool8 count_enable;	// Does RTC mark time or is it frozen
+	uint8 data [MAX_RTC_INDEX+1];
+	int8  index;
+	uint8 mode;
 
-    time_t system_timestamp;	// Of latest RTC load time
-    uint32 pad;
+	time_t system_timestamp;	// Of latest RTC load time
+	uint32 pad;
 } SRTC_DATA;
 
 extern SRTC_DATA           rtc;

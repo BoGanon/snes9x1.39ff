@@ -4,8 +4,8 @@
 
   This header file is used by all of the unzip source files.  Its contents
   are divided into seven more-or-less separate sections:  predefined macros,
-  OS-dependent includes, (mostly) OS-independent defines, typedefs, function 
-  prototypes (or "prototypes," in the case of non-ANSI compilers), macros, 
+  OS-dependent includes, (mostly) OS-independent defines, typedefs, function
+  prototypes (or "prototypes," in the case of non-ANSI compilers), macros,
   and global-variable declarations.
 
   ---------------------------------------------------------------------------*/
@@ -137,12 +137,12 @@
 #    endif
 #  endif
 #  include <string.h>      /* defines strcpy, strcmp, memcpy, etc. */
-   typedef size_t extent;
+typedef size_t extent;
 #else /* !MODERN */
-   char *malloc();
-   char *strchr(), *strrchr();
-   long lseek();
-   typedef unsigned int extent;
+char *malloc();
+char *strchr(), *strrchr();
+long lseek();
+typedef unsigned int extent;
 #  define void int
 #endif /* ?MODERN */
 
@@ -182,7 +182,7 @@
 #      define NO_MKDIR           /* for mapname() */
 #    endif /* !AMIGA && !MINIX */
 #    include <time.h>
-     struct tm *gmtime(), *localtime();
+struct tm *gmtime(), *localtime();
 #  else   /* BSD */
 #    include <sys/time.h>
 #    include <sys/timeb.h>
@@ -375,34 +375,37 @@
 
 #  include "macstat.h"
 
-typedef struct _ZipExtraHdr {
-    unsigned short header;    /*    2 bytes */
-    unsigned short data;      /*    2 bytes */
+typedef struct _ZipExtraHdr
+{
+	unsigned short header;    /*    2 bytes */
+	unsigned short data;      /*    2 bytes */
 } ZIP_EXTRA_HEADER;
 
-typedef struct _MacInfoMin {
-    unsigned short header;    /*    2 bytes */
-    unsigned short data;      /*    2 bytes */
-    unsigned long signature;  /*    4 bytes */
-    FInfo finfo;              /*   16 bytes */
-    unsigned long lCrDat;     /*    4 bytes */
-    unsigned long lMdDat;     /*    4 bytes */
-    unsigned long flags ;     /*    4 bytes */
-    unsigned long lDirID;     /*    4 bytes */
-                              /*------------*/
+typedef struct _MacInfoMin
+{
+	unsigned short header;    /*    2 bytes */
+	unsigned short data;      /*    2 bytes */
+	unsigned long signature;  /*    4 bytes */
+	FInfo finfo;              /*   16 bytes */
+	unsigned long lCrDat;     /*    4 bytes */
+	unsigned long lMdDat;     /*    4 bytes */
+	unsigned long flags ;     /*    4 bytes */
+	unsigned long lDirID;     /*    4 bytes */
+	/*------------*/
 } MACINFOMIN;                 /* = 40 bytes for size of data */
 
-typedef struct _MacInfo {
-    unsigned short header;    /*    2 bytes */
-    unsigned short data;      /*    2 bytes */
-    unsigned long signature;  /*    4 bytes */
-    FInfo finfo;              /*   16 bytes */
-    unsigned long lCrDat;     /*    4 bytes */
-    unsigned long lMdDat;     /*    4 bytes */
-    unsigned long flags ;     /*    4 bytes */
-    unsigned long lDirID;     /*    4 bytes */
-    char rguchVolName[28];    /*   28 bytes */
-                              /*------------*/
+typedef struct _MacInfo
+{
+	unsigned short header;    /*    2 bytes */
+	unsigned short data;      /*    2 bytes */
+	unsigned long signature;  /*    4 bytes */
+	FInfo finfo;              /*   16 bytes */
+	unsigned long lCrDat;     /*    4 bytes */
+	unsigned long lMdDat;     /*    4 bytes */
+	unsigned long flags ;     /*    4 bytes */
+	unsigned long lDirID;     /*    4 bytes */
+	char rguchVolName[28];    /*   28 bytes */
+	/*------------*/
 } MACINFO;                    /* = 68 bytes for size of data */
 #endif /* MACOS */
 
@@ -438,7 +441,7 @@ typedef struct _MacInfo {
 #endif /* !WSIZE */          /*  at least 32K for zip's deflate method */
 
 #define DIR_BLKSIZ    64     /* number of directory entries per block
-                              *  (should fit in 4096 bytes, usually) */
+*  (should fit in 4096 bytes, usually) */
 #ifndef INBUFSIZ
 #  define INBUFSIZ    2048   /* works for MS-DOS small model */
 #endif /* !INBUFSIZ */
@@ -629,7 +632,7 @@ typedef struct _MacInfo {
 /**************/
 
 #ifndef _BULL_SOURCE                /* Bull has it defined somewhere already */
-   typedef unsigned char  byte;     /* code assumes UNSIGNED bytes */
+typedef unsigned char  byte;     /* code assumes UNSIGNED bytes */
 #endif /* !_BULL_SOURCE */
 
 typedef char              boolean;
@@ -640,22 +643,24 @@ typedef unsigned char     uch;
 typedef unsigned short    ush;
 typedef unsigned long     ulg;
 
-typedef struct min_info {
-    unsigned unix_attr;
-    unsigned dos_attr;
-    int hostnum;
-    longint offset;
-    ULONG compr_size;        /* compressed size (needed if extended header) */
-    ULONG crc;               /* crc (needed if extended header) */
-    unsigned encrypted : 1;  /* file encrypted: decrypt before uncompressing */
-    unsigned ExtLocHdr : 1;  /* use time instead of CRC for decrypt check */
-    unsigned text : 1;       /* file is text or binary */
-    unsigned lcflag : 1;     /* convert filename to lowercase */
+typedef struct min_info
+{
+	unsigned unix_attr;
+	unsigned dos_attr;
+	int hostnum;
+	longint offset;
+	ULONG compr_size;        /* compressed size (needed if extended header) */
+	ULONG crc;               /* crc (needed if extended header) */
+	unsigned encrypted : 1;  /* file encrypted: decrypt before uncompressing */
+	unsigned ExtLocHdr : 1;  /* use time instead of CRC for decrypt check */
+	unsigned text : 1;       /* file is text or binary */
+	unsigned lcflag : 1;     /* convert filename to lowercase */
 } min_info;
 
-typedef struct VMStimbuf {
-    char *revdate;           /* (both correspond to Unix modtime/st_mtime) */
-    char *credate;
+typedef struct VMStimbuf
+{
+	char *revdate;           /* (both correspond to Unix modtime/st_mtime) */
+	char *credate;
 } VMStimbuf;
 
 /*---------------------------------------------------------------------------
@@ -663,7 +668,7 @@ typedef struct VMStimbuf {
     xxREC_SIZE defines (above) change with them!
   ---------------------------------------------------------------------------*/
 
-   typedef byte   local_byte_hdr[ LREC_SIZE ];
+typedef byte   local_byte_hdr[ LREC_SIZE ];
 #      define L_VERSION_NEEDED_TO_EXTRACT_0     0
 #      define L_VERSION_NEEDED_TO_EXTRACT_1     1
 #      define L_GENERAL_PURPOSE_BIT_FLAG        2
@@ -676,7 +681,7 @@ typedef struct VMStimbuf {
 #      define L_FILENAME_LENGTH                 22
 #      define L_EXTRA_FIELD_LENGTH              24
 
-   typedef byte   cdir_byte_hdr[ CREC_SIZE ];
+typedef byte   cdir_byte_hdr[ CREC_SIZE ];
 #      define C_VERSION_MADE_BY_0               0
 #      define C_VERSION_MADE_BY_1               1
 #      define C_VERSION_NEEDED_TO_EXTRACT_0     2
@@ -696,7 +701,7 @@ typedef struct VMStimbuf {
 #      define C_EXTERNAL_FILE_ATTRIBUTES        34
 #      define C_RELATIVE_OFFSET_LOCAL_HEADER    38
 
-   typedef byte   ec_byte_rec[ ECREC_SIZE+4 ];
+typedef byte   ec_byte_rec[ ECREC_SIZE+4 ];
 /*     define SIGNATURE                         0   space-holder only */
 #      define NUMBER_THIS_DISK                  4
 #      define NUM_DISK_WITH_START_CENTRAL_DIR   6
@@ -707,47 +712,50 @@ typedef struct VMStimbuf {
 #      define ZIPFILE_COMMENT_LENGTH            20
 
 
-   typedef struct local_file_header {                 /* LOCAL */
-       byte version_needed_to_extract[2];
-       UWORD general_purpose_bit_flag;
-       UWORD compression_method;
-       UWORD last_mod_file_time;
-       UWORD last_mod_file_date;
-       ULONG crc32;
-       ULONG compressed_size;
-       ULONG uncompressed_size;
-       UWORD filename_length;
-       UWORD extra_field_length;
-   } local_file_hdr;
+typedef struct local_file_header                   /* LOCAL */
+{
+	byte version_needed_to_extract[2];
+	UWORD general_purpose_bit_flag;
+	UWORD compression_method;
+	UWORD last_mod_file_time;
+	UWORD last_mod_file_date;
+	ULONG crc32;
+	ULONG compressed_size;
+	ULONG uncompressed_size;
+	UWORD filename_length;
+	UWORD extra_field_length;
+} local_file_hdr;
 
-   typedef struct central_directory_file_header {     /* CENTRAL */
-       byte version_made_by[2];
-       byte version_needed_to_extract[2];
-       UWORD general_purpose_bit_flag;
-       UWORD compression_method;
-       UWORD last_mod_file_time;
-       UWORD last_mod_file_date;
-       ULONG crc32;
-       ULONG compressed_size;
-       ULONG uncompressed_size;
-       UWORD filename_length;
-       UWORD extra_field_length;
-       UWORD file_comment_length;
-       UWORD disk_number_start;
-       UWORD internal_file_attributes;
-       ULONG external_file_attributes;
-       ULONG relative_offset_local_header;
-   } cdir_file_hdr;
+typedef struct central_directory_file_header       /* CENTRAL */
+{
+	byte version_made_by[2];
+	byte version_needed_to_extract[2];
+	UWORD general_purpose_bit_flag;
+	UWORD compression_method;
+	UWORD last_mod_file_time;
+	UWORD last_mod_file_date;
+	ULONG crc32;
+	ULONG compressed_size;
+	ULONG uncompressed_size;
+	UWORD filename_length;
+	UWORD extra_field_length;
+	UWORD file_comment_length;
+	UWORD disk_number_start;
+	UWORD internal_file_attributes;
+	ULONG external_file_attributes;
+	ULONG relative_offset_local_header;
+} cdir_file_hdr;
 
-   typedef struct end_central_dir_record {            /* END CENTRAL */
-       UWORD number_this_disk;
-       UWORD num_disk_with_start_central_dir;
-       UWORD num_entries_centrl_dir_ths_disk;
-       UWORD total_entries_central_dir;
-       ULONG size_central_directory;
-       ULONG offset_start_central_directory;
-       UWORD zipfile_comment_length;
-   } ecdir_rec;
+typedef struct end_central_dir_record              /* END CENTRAL */
+{
+	UWORD number_this_disk;
+	UWORD num_disk_with_start_central_dir;
+	UWORD num_entries_centrl_dir_ths_disk;
+	UWORD total_entries_central_dir;
+	ULONG size_central_directory;
+	ULONG offset_start_central_directory;
+	UWORD zipfile_comment_length;
+} ecdir_rec;
 
 
 
@@ -961,34 +969,38 @@ int    ReadByte                  __((UWORD *x));                /* file_io.c */
 /*************/
 
 #ifdef MACOS
-   union work {
-     struct {
-       short *Prefix_of;        /* (8193 * sizeof(short)) */
-       byte *Suffix_of;
-       byte *Stack;
-     } shrink;
-     byte *Slide;
-   };
+union work
+{
+	struct
+	{
+		short *Prefix_of;        /* (8193 * sizeof(short)) */
+		byte *Suffix_of;
+		byte *Stack;
+	} shrink;
+	byte *Slide;
+};
 #else
-   union work {
-     struct {
-       short Prefix_of[HSIZE + 2];      /* (8194 * sizeof(short)) */
-       byte Suffix_of[HSIZE + 2];       /* also s-f length_nodes (smaller) */
-       byte Stack[HSIZE + 2];           /* also s-f distance_nodes (smaller) */
-     } shrink;
-     byte Slide[WSIZE];
-   };
+union work
+{
+	struct
+	{
+		short Prefix_of[HSIZE + 2];      /* (8194 * sizeof(short)) */
+		byte Suffix_of[HSIZE + 2];       /* also s-f length_nodes (smaller) */
+		byte Stack[HSIZE + 2];           /* also s-f distance_nodes (smaller) */
+	} shrink;
+	byte Slide[WSIZE];
+};
 #endif
-   extern union work area;
+extern union work area;
 
 #  define prefix_of area.shrink.Prefix_of
 #  define suffix_of area.shrink.Suffix_of
 #  define stack area.shrink.Stack
 #  define slide area.Slide
 
-   extern ULONG     crc32val;
-   extern UWORD     mask_bits[];
-   extern int       bits_left;
-   extern ULONG     bitbuf;
-   extern boolean   zipeof;
+extern ULONG     crc32val;
+extern UWORD     mask_bits[];
+extern int       bits_left;
+extern ULONG     bitbuf;
+extern boolean   zipeof;
 

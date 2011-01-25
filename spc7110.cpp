@@ -4,7 +4,7 @@
 * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
 *                           Jerremy Koot (jkoot@snes9x.com)
 *
-* Super FX C emulator code 
+* Super FX C emulator code
 * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
 *                           Gary Henderson.
 * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -223,40 +223,42 @@ void MovePackData()
 		log->used_len=s7r.bank50Internal;
 		log->used_offset=decompack->last_offset;
 	}
-	
+
 	//set up for next logging
 	decompack->last_offset=(s7r.reg4805)|(s7r.reg4806<<8);
-	
+
 	decompack->last_idx=s7r.reg4804;
 
 	//start decompression
 	int table=(s7r.reg4803<<16)|(s7r.reg4802<<8)|s7r.reg4801;
-	
+
 	//the table is a offset multiplier byte and a big-endian pointer
 	int j= 4*s7r.reg4804;
 	j+=s7r.DataRomOffset;
 	j+=table;
-	
+
 	//set proper offsetting.
 	if(s7r.reg480B==0)
+	{
 		s7r.AlignBy=0;
+	}
 	else
 	{
 		switch(ROM[j])
 		{
-		case 0x03:
-			s7r.AlignBy=8;
-			break;
-		case 0x01:
-			s7r.AlignBy=2;
-			break;
-		case 0x02:
-			s7r.AlignBy=4;
-			break;
-		case 0x00:
-		default:
-			s7r.AlignBy=1;
-			break;
+			case 0x03:
+				s7r.AlignBy=8;
+				break;
+			case 0x01:
+				s7r.AlignBy=2;
+				break;
+			case 0x02:
+				s7r.AlignBy=4;
+				break;
+			case 0x00:
+			default:
+				s7r.AlignBy=1;
+				break;
 		}
 	}
 	//note that we are still setting up for the next log.
@@ -268,7 +270,9 @@ void MovePackData()
 	{
 		int i=0;
 		while(i<MAX_TABLES&&decompack->tableEnts[i].table!=table)
+		{
 			i++;
+		}
 		if(i==MAX_TABLES)
 		{
 #ifdef _XBOX
@@ -289,8 +293,8 @@ void MovePackData()
 	if(decompack->binfiles[decompack->idx])
 	{
 		memcpy(s7r.bank50,
-			&(decompack->binfiles[decompack->idx][decompack->tableEnts[decompack->idx].location[s7r.reg4804].offset]),
-			decompack->tableEnts[decompack->idx].location[s7r.reg4804].size);
+		       &(decompack->binfiles[decompack->idx][decompack->tableEnts[decompack->idx].location[s7r.reg4804].offset]),
+		       decompack->tableEnts[decompack->idx].location[s7r.reg4804].size);
 	}
 }
 
@@ -303,7 +307,7 @@ void ReadPackData()
 	static int table_age_3;
 	static int table_age_4;
 	static int table_age_5;
-	
+
 	int table=(s7r.reg4803<<16)|(s7r.reg4802<<8)|s7r.reg4801;
 
 	if(table==0)
@@ -313,41 +317,45 @@ void ReadPackData()
 	}
 
 	if(table_age_2==0&&table_age_3==0&&table_age_4==0&&table_age_5==0)
+	{
 		table_age_2=table_age_3=table_age_4=table_age_5=MAX_TABLES;
+	}
 	Data7110* log=&(decompack->tableEnts[decompack->idx].location[decompack->last_idx]);
 	if((log->used_len+log->used_offset)<(decompack->last_offset+(unsigned short)s7r.bank50Internal))
 	{
 		log->used_len=s7r.bank50Internal;
 		log->used_offset=decompack->last_offset;
 	}
-	
+
 	decompack->last_offset=(s7r.reg4805)|(s7r.reg4806<<8);
-	
+
 	decompack->last_idx=s7r.reg4804;
-	
+
 	int j= 4*s7r.reg4804;
 	j+=s7r.DataRomOffset;
 	j+=table;
-	
+
 	if(s7r.reg480B==0)
+	{
 		s7r.AlignBy=0;
+	}
 	else
 	{
 		switch(ROM[j])
 		{
-		case 0x03:
-			s7r.AlignBy=8;
-			break;
-		case 0x01:
-			s7r.AlignBy=2;
-			break;
-		case 0x02:
-			s7r.AlignBy=4;
-			break;
-		case 0x00:
-		default:
-			s7r.AlignBy=1;
-			break;
+			case 0x03:
+				s7r.AlignBy=8;
+				break;
+			case 0x01:
+				s7r.AlignBy=2;
+				break;
+			case 0x02:
+				s7r.AlignBy=4;
+				break;
+			case 0x00:
+			default:
+				s7r.AlignBy=1;
+				break;
 		}
 	}
 	decompack->last_offset*=s7r.AlignBy;
@@ -356,7 +364,9 @@ void ReadPackData()
 	{
 		int i=0;
 		while(i<MAX_TABLES&&decompack->tableEnts[i].table!=table)
+		{
 			i++;
+		}
 		if(i==MAX_TABLES)
 		{
 			FILE* fp=fopen("sp7err.out","a");
@@ -448,35 +458,37 @@ void GetPackData()
 		log->used_len=s7r.bank50Internal;
 		log->used_offset=decompack->last_offset;
 	}
-	
+
 	decompack->last_offset=(s7r.reg4805)|(s7r.reg4806<<8);
-	
+
 	decompack->last_idx=s7r.reg4804;
 	int table=(s7r.reg4803<<16)|(s7r.reg4802<<8)|s7r.reg4801;
-	
+
 	int j= 4*s7r.reg4804;
 	j+=s7r.DataRomOffset;
 	j+=table;
-	
+
 	if(s7r.reg480B==0)
+	{
 		s7r.AlignBy=0;
+	}
 	else
 	{
 		switch(ROM[j])
 		{
-		case 0x03:
-			s7r.AlignBy=8;
-			break;
-		case 0x01:
-			s7r.AlignBy=2;
-			break;
-		case 0x02:
-			s7r.AlignBy=4;
-			break;
-		case 0x00:
-		default:
-			s7r.AlignBy=1;
-			break;
+			case 0x03:
+				s7r.AlignBy=8;
+				break;
+			case 0x01:
+				s7r.AlignBy=2;
+				break;
+			case 0x02:
+				s7r.AlignBy=4;
+				break;
+			case 0x00:
+			default:
+				s7r.AlignBy=1;
+				break;
 		}
 	}
 	decompack->last_offset*=s7r.AlignBy;
@@ -485,7 +497,9 @@ void GetPackData()
 	{
 		int i=0;
 		while(i<MAX_TABLES&&decompack->tableEnts[i].table!=table)
+		{
 			i++;
+		}
 		if(i==MAX_TABLES)
 		{
 			FILE* fp=fopen("sp7err.out","a");
@@ -506,407 +520,469 @@ void GetPackData()
 		else
 		{
 			memcpy(s7r.bank50,
-				&(decompack->binfiles[decompack->idx][decompack->tableEnts[decompack->idx].location[s7r.reg4804].offset]),
-				decompack->tableEnts[decompack->idx].location[s7r.reg4804].size);
+			       &(decompack->binfiles[decompack->idx][decompack->tableEnts[decompack->idx].location[s7r.reg4804].offset]),
+			       decompack->tableEnts[decompack->idx].location[s7r.reg4804].size);
 		}
 	}
 }
 
-extern "C"{
+extern "C" {
 //reads SPC7110 and RTC registers.
-uint8 S9xGetSPC7110(uint16 Address)
-{
-#ifdef SPC7110_DEBUG
-	printf("%04X read\n", Address);
-#endif
-	switch (Address)
+	uint8 S9xGetSPC7110(uint16 Address)
 	{
-		//decompressed data read port. decrements 4809-A (with wrap)
-		//4805-6 is the offset into the bank
-		//AlignBy is set (afaik) at decompression time, and is the offset multiplier
-		//bank50internal is an internal pointer to the actual byte to read.
-		//so you read from offset*multiplier + bank50internal
-		//the offset registers cannot be incremented due to the offset multiplier.
-	case 0x4800:
-		{
-			unsigned short count=s7r.reg4809|(s7r.reg480A<<8);
-			uint32 i, j;
-			j=(s7r.reg4805|(s7r.reg4806<<8));
-			j*=s7r.AlignBy;
-			i=j;
-			if(count >0)
-				count--;
-			else count = 0xFFFF;
-			s7r.reg4809=0x00ff&count;
-			s7r.reg480A=(0xff00&count)>>8;
-			i+=s7r.bank50Internal;
-			i%=DECOMP_BUFFER_SIZE;
-			s7r.reg4800=s7r.bank50[i];
-			
-			s7r.bank50Internal++;
-			s7r.bank50Internal%=DECOMP_BUFFER_SIZE;
 #ifdef SPC7110_DEBUG
-			printf("Returned %02X\n", s7r.reg4800);
+		printf("%04X read\n", Address);
 #endif
-		}
-		return s7r.reg4800;
-	//table register low
-	case 0x4801: return s7r.reg4801;
-	//table register middle
-	case 0x4802: return s7r.reg4802;
-	//table register high
-	case 0x4803: return s7r.reg4803;
-	//index of pointer in table (each entry is 4 bytes)
-	case 0x4804: return s7r.reg4804;
-	//offset register low
-	case 0x4805: return s7r.reg4805;
-	//offset register high
-	case 0x4806: return s7r.reg4806;
-	//DMA channel (not that I see this usually set,
-	//regardless of what channel DMA is on)
-	case 0x4807: return s7r.reg4807;
-	//C r/w option, unknown, defval:00 is what Dark Force says
-	//afaict, Snes9x doesn't use this at all.
-	case 0x4808: return s7r.reg4808;
-	//C-Length low
-	//counts down the number of bytes left to read from the decompression buffer.
-	//this is set by the ROM, and wraps on bounds.
-	case 0x4809: return s7r.reg4809;
-	//C Length high
-	case 0x480A: return s7r.reg480A;
-	//Offset enable.
-	//if this is zero, 4805-6 are useless. Emulated by setting AlignBy to 0
-	case 0x480B:
-		return s7r.reg480B;
-	//decompression finished: just emulated by switching each read.
-	case 0x480C: 
-		s7r.reg480C^=0x80;
-		return s7r.reg480C^0x80;
-	
-	//Data access port
-	//reads from the data ROM (anywhere over the first 8 mbits
-	//behavior is complex, will document later,
-	//possibly missing cases, because of the number of switches in play
-	case 0x4810:
-		if(s7r.written==0)
-			return 0;
-		if((s7r.written&0x07)==0x07)
+		switch (Address)
 		{
-			uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
-			i%=s7r.DataRomSize;
-			if(s7r.reg4818&0x02)
-			{
-				if(s7r.reg4818&0x08)
+				//decompressed data read port. decrements 4809-A (with wrap)
+				//4805-6 is the offset into the bank
+				//AlignBy is set (afaik) at decompression time, and is the offset multiplier
+				//bank50internal is an internal pointer to the actual byte to read.
+				//so you read from offset*multiplier + bank50internal
+				//the offset registers cannot be incremented due to the offset multiplier.
+			case 0x4800:
 				{
-					signed short r4814;
-					r4814=(s7r.reg4815<<8)|s7r.reg4814;
-					i+=r4814;
-					r4814++;
-					s7r.reg4815=(uint8)(r4814>>8);
-					s7r.reg4814=(uint8)(r4814&0x00FF);
-				}
-				else
-				{
-					unsigned short r4814;
-					r4814=(s7r.reg4815<<8)|s7r.reg4814;
-					i+=r4814;
-					if(r4814!=0xFFFF)
-						r4814++;
-					else r4814=0;
-					s7r.reg4815=(uint8)(r4814>>8);
-					s7r.reg4814=(uint8)(r4814&0x00FF);
-					
-				}
-			}
-			i+=s7r.DataRomOffset;
-			uint8 tmp=ROM[i];
-			i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
-			
-			if(s7r.reg4818&0x02)
-			{
-			}
-			else if(s7r.reg4818&0x01)
-			{
-				if(s7r.reg4818&0x04)
-				{
-					signed short inc;
-					inc=(s7r.reg4817<<8)|s7r.reg4816;
-					
-					if(!(s7r.reg4818&0x10))
-						i+=inc;
+					unsigned short count=s7r.reg4809|(s7r.reg480A<<8);
+					uint32 i, j;
+					j=(s7r.reg4805|(s7r.reg4806<<8));
+					j*=s7r.AlignBy;
+					i=j;
+					if(count >0)
+					{
+						count--;
+					}
 					else
+					{
+						count = 0xFFFF;
+					}
+					s7r.reg4809=0x00ff&count;
+					s7r.reg480A=(0xff00&count)>>8;
+					i+=s7r.bank50Internal;
+					i%=DECOMP_BUFFER_SIZE;
+					s7r.reg4800=s7r.bank50[i];
+
+					s7r.bank50Internal++;
+					s7r.bank50Internal%=DECOMP_BUFFER_SIZE;
+#ifdef SPC7110_DEBUG
+					printf("Returned %02X\n", s7r.reg4800);
+#endif
+				}
+				return s7r.reg4800;
+				//table register low
+			case 0x4801:
+				return s7r.reg4801;
+				//table register middle
+			case 0x4802:
+				return s7r.reg4802;
+				//table register high
+			case 0x4803:
+				return s7r.reg4803;
+				//index of pointer in table (each entry is 4 bytes)
+			case 0x4804:
+				return s7r.reg4804;
+				//offset register low
+			case 0x4805:
+				return s7r.reg4805;
+				//offset register high
+			case 0x4806:
+				return s7r.reg4806;
+				//DMA channel (not that I see this usually set,
+				//regardless of what channel DMA is on)
+			case 0x4807:
+				return s7r.reg4807;
+				//C r/w option, unknown, defval:00 is what Dark Force says
+				//afaict, Snes9x doesn't use this at all.
+			case 0x4808:
+				return s7r.reg4808;
+				//C-Length low
+				//counts down the number of bytes left to read from the decompression buffer.
+				//this is set by the ROM, and wraps on bounds.
+			case 0x4809:
+				return s7r.reg4809;
+				//C Length high
+			case 0x480A:
+				return s7r.reg480A;
+				//Offset enable.
+				//if this is zero, 4805-6 are useless. Emulated by setting AlignBy to 0
+			case 0x480B:
+				return s7r.reg480B;
+				//decompression finished: just emulated by switching each read.
+			case 0x480C:
+				s7r.reg480C^=0x80;
+				return s7r.reg480C^0x80;
+
+				//Data access port
+				//reads from the data ROM (anywhere over the first 8 mbits
+				//behavior is complex, will document later,
+				//possibly missing cases, because of the number of switches in play
+			case 0x4810:
+				if(s7r.written==0)
+				{
+					return 0;
+				}
+				if((s7r.written&0x07)==0x07)
+				{
+					uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
+					i%=s7r.DataRomSize;
+					if(s7r.reg4818&0x02)
 					{
 						if(s7r.reg4818&0x08)
 						{
 							signed short r4814;
 							r4814=(s7r.reg4815<<8)|s7r.reg4814;
-							r4814+=inc;
-							s7r.reg4815=(r4814&0xFF00)>>8;
-							s7r.reg4814=r4814&0xFF;
+							i+=r4814;
+							r4814++;
+							s7r.reg4815=(uint8)(r4814>>8);
+							s7r.reg4814=(uint8)(r4814&0x00FF);
 						}
 						else
 						{
 							unsigned short r4814;
 							r4814=(s7r.reg4815<<8)|s7r.reg4814;
-							r4814+=inc;
-							s7r.reg4815=(r4814&0xFF00)>>8;
-							s7r.reg4814=r4814&0xFF;
-							
+							i+=r4814;
+							if(r4814!=0xFFFF)
+							{
+								r4814++;
+							}
+							else
+							{
+								r4814=0;
+							}
+							s7r.reg4815=(uint8)(r4814>>8);
+							s7r.reg4814=(uint8)(r4814&0x00FF);
+
 						}
 					}
-					//is signed
-				}
-				else
-				{
-					uint16 inc;
-					inc=(s7r.reg4817<<8)|s7r.reg4816;
-					if(!(s7r.reg4818&0x10))
-						i+=inc;
-					else
+					i+=s7r.DataRomOffset;
+					uint8 tmp=ROM[i];
+					i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
+
+					if(s7r.reg4818&0x02)
 					{
-						if(s7r.reg4818&0x08)
+					}
+					else if(s7r.reg4818&0x01)
+					{
+						if(s7r.reg4818&0x04)
 						{
-							signed short r4814;
-							r4814=(s7r.reg4815<<8)|s7r.reg4814;
-							r4814+=inc;
-							s7r.reg4815=(r4814&0xFF00)>>8;
-							s7r.reg4814=r4814&0xFF;
+							signed short inc;
+							inc=(s7r.reg4817<<8)|s7r.reg4816;
+
+							if(!(s7r.reg4818&0x10))
+							{
+								i+=inc;
+							}
+							else
+							{
+								if(s7r.reg4818&0x08)
+								{
+									signed short r4814;
+									r4814=(s7r.reg4815<<8)|s7r.reg4814;
+									r4814+=inc;
+									s7r.reg4815=(r4814&0xFF00)>>8;
+									s7r.reg4814=r4814&0xFF;
+								}
+								else
+								{
+									unsigned short r4814;
+									r4814=(s7r.reg4815<<8)|s7r.reg4814;
+									r4814+=inc;
+									s7r.reg4815=(r4814&0xFF00)>>8;
+									s7r.reg4814=r4814&0xFF;
+
+								}
+							}
+							//is signed
 						}
 						else
 						{
-							unsigned short r4814;
-							r4814=(s7r.reg4815<<8)|s7r.reg4814;
-							r4814+=inc;
-							s7r.reg4815=(r4814&0xFF00)>>8;
-							s7r.reg4814=r4814&0xFF;
-							
+							uint16 inc;
+							inc=(s7r.reg4817<<8)|s7r.reg4816;
+							if(!(s7r.reg4818&0x10))
+							{
+								i+=inc;
+							}
+							else
+							{
+								if(s7r.reg4818&0x08)
+								{
+									signed short r4814;
+									r4814=(s7r.reg4815<<8)|s7r.reg4814;
+									r4814+=inc;
+									s7r.reg4815=(r4814&0xFF00)>>8;
+									s7r.reg4814=r4814&0xFF;
+								}
+								else
+								{
+									unsigned short r4814;
+									r4814=(s7r.reg4815<<8)|s7r.reg4814;
+									r4814+=inc;
+									s7r.reg4815=(r4814&0xFF00)>>8;
+									s7r.reg4814=r4814&0xFF;
+
+								}
+							}
 						}
-					}
-				}
-			}
-			else
-			{
-				if(!(s7r.reg4818&0x10))
-					i+=1;
-				else
-				{
-					if(s7r.reg4818&0x08)
-					{
-						signed short r4814;
-						r4814=(s7r.reg4815<<8)|s7r.reg4814;
-						r4814+=1;
-						s7r.reg4815=(r4814&0xFF00)>>8;
-						s7r.reg4814=r4814&0xFF;
 					}
 					else
 					{
-						unsigned short r4814;
-						r4814=(s7r.reg4815<<8)|s7r.reg4814;
-						r4814+=1;
-						s7r.reg4815=(r4814&0xFF00)>>8;
-						s7r.reg4814=r4814&0xFF;
-						
+						if(!(s7r.reg4818&0x10))
+						{
+							i+=1;
+						}
+						else
+						{
+							if(s7r.reg4818&0x08)
+							{
+								signed short r4814;
+								r4814=(s7r.reg4815<<8)|s7r.reg4814;
+								r4814+=1;
+								s7r.reg4815=(r4814&0xFF00)>>8;
+								s7r.reg4814=r4814&0xFF;
+							}
+							else
+							{
+								unsigned short r4814;
+								r4814=(s7r.reg4815<<8)|s7r.reg4814;
+								r4814+=1;
+								s7r.reg4815=(r4814&0xFF00)>>8;
+								s7r.reg4814=r4814&0xFF;
+
+							}
+						}
 					}
-				}
-			}
-			
+
 #ifdef SPC7110_DEBUG
-			printf("Returned %02X\n", tmp);
+					printf("Returned %02X\n", tmp);
 #endif
-			
-			i%=s7r.DataRomSize;
-			s7r.reg4811=i&0x00FF;
-			s7r.reg4812=(i&0x00FF00)>>8;
-			s7r.reg4813=((i&0xFF0000)>>16);
-			return tmp;
-		}
-		else return 0;
-	//direct read address low
-	case 0x4811: return s7r.reg4811;
-	//direct read address middle
-	case 0x4812: return s7r.reg4812;
-	//direct read access high
-	case 0x4813: return s7r.reg4813;
-	//read adjust low
-	case 0x4814: return s7r.reg4814;
-	//read adjust high
-	case 0x4815: return s7r.reg4815;
-	//read increment low
-	case 0x4816: return s7r.reg4816;
-	//read increment high
-	case 0x4817: return s7r.reg4817;
-	//Data ROM command mode
-	//essentially, this controls the insane code of $4810 and $481A
-	case 0x4818: return s7r.reg4818;
-	//read after adjust port
-	//what this does, besides more nasty stuff like 4810,
-	//I don't know. Just assume it is a different implementation of $4810,
-	//if it helps your sanity
-	case 0x481A:
-		if(s7r.written==0x1F)
-		{
-			uint32 i=((s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811);
-			if(s7r.reg4818&0x08)
-			{
-				short adj;
-				adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
-				i+=adj;
-			}
-			else
-			{
-				uint16 adj;
-				adj=(s7r.reg4815<<8)|s7r.reg4814;
-				i+=adj;
-			}
-			
-			i%=s7r.DataRomSize;
-			i+=s7r.DataRomOffset;
-			uint8 tmp=ROM[i];
-			i=((s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811);
-			if(0x60==(s7r.reg4818&0x60))
-			{
-				i=((s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811);
-				
-				if(!(s7r.reg4818&0x10))
-				{
-					if(s7r.reg4818&0x08)
-					{
-						short adj;
-						adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
-						i+=adj;
-					}
-					else
-					{
-						uint16 adj;
-						adj=(s7r.reg4815<<8)|s7r.reg4814;
-						i+=adj;
-					}
+
 					i%=s7r.DataRomSize;
 					s7r.reg4811=i&0x00FF;
 					s7r.reg4812=(i&0x00FF00)>>8;
 					s7r.reg4813=((i&0xFF0000)>>16);
+					return tmp;
 				}
 				else
 				{
+					return 0;
+				}
+				//direct read address low
+			case 0x4811:
+				return s7r.reg4811;
+				//direct read address middle
+			case 0x4812:
+				return s7r.reg4812;
+				//direct read access high
+			case 0x4813:
+				return s7r.reg4813;
+				//read adjust low
+			case 0x4814:
+				return s7r.reg4814;
+				//read adjust high
+			case 0x4815:
+				return s7r.reg4815;
+				//read increment low
+			case 0x4816:
+				return s7r.reg4816;
+				//read increment high
+			case 0x4817:
+				return s7r.reg4817;
+				//Data ROM command mode
+				//essentially, this controls the insane code of $4810 and $481A
+			case 0x4818:
+				return s7r.reg4818;
+				//read after adjust port
+				//what this does, besides more nasty stuff like 4810,
+				//I don't know. Just assume it is a different implementation of $4810,
+				//if it helps your sanity
+			case 0x481A:
+				if(s7r.written==0x1F)
+				{
+					uint32 i=((s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811);
 					if(s7r.reg4818&0x08)
 					{
 						short adj;
 						adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
-						adj+=adj;
-						s7r.reg4815=(adj&0xFF00)>>8;
-						s7r.reg4814=adj&0xFF;
+						i+=adj;
 					}
 					else
 					{
 						uint16 adj;
 						adj=(s7r.reg4815<<8)|s7r.reg4814;
-						adj+=adj;
-						s7r.reg4815=(adj&0xFF00)>>8;
-						s7r.reg4814=adj&0xFF;
+						i+=adj;
 					}
-				}
-			}
-#ifdef SPC7110_DEBUG
-			printf("Returned %02X\n", tmp);
-#endif
-			return tmp;
-		}
-		else return 0;
-	
-	//multiplicand low or dividend lowest
-	case 0x4820: return s7r.reg4820;
-	//multiplicand high or divdend lower
-	case 0x4821: return s7r.reg4821;
-	//dividend higher
-	case 0x4822: return s7r.reg4822;
-	//dividend highest
-	case 0x4823: return s7r.reg4823;
-	//multiplier low
-	case 0x4824: return s7r.reg4824;
-	//multiplier high
-	case 0x4825: return s7r.reg4825;
-	//divisor low
-	case 0x4826: return s7r.reg4826;
-	//divisor high
-	case 0x4827: return s7r.reg4827;
-	
-	//result lowest
-	case 0x4828:
-		return s7r.reg4828;
-	//result lower
-	case 0x4829:
-		return s7r.reg4829;
-	//result higher
-	case 0x482A:
-		return s7r.reg482A;
-	//result highest
-	case 0x482B:
-		return s7r.reg482B;
-	//remainder (division) low
-	case 0x482C: return s7r.reg482C;
-	//remainder (division) high
-	case 0x482D: return s7r.reg482D;
-	//signed/unsigned
-	case 0x482E: return s7r.reg482E;
-	//finished flag, emulated as an on-read toggle.
-	case 0x482F:
-		if(s7r.reg482F)
-		{
-			s7r.reg482F=0;
-			return 0x80;
-		}
-		return 0;
-		break;
 
-	//SRAM toggle
-	case 0x4830:
-		return s7r.reg4830;
-	//DX bank mapping
-	case 0x4831:
-		return s7r.reg4831;
-	//EX bank mapping
-	case 0x4832:
-		return s7r.reg4832;
-	//FX bank mapping
-	case 0x4833:
-		return s7r.reg4833;
-	//SRAM mapping? We have no clue!
-	case 0x4834:
-		return s7r.reg4834;
+					i%=s7r.DataRomSize;
+					i+=s7r.DataRomOffset;
+					uint8 tmp=ROM[i];
+					i=((s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811);
+					if(0x60==(s7r.reg4818&0x60))
+					{
+						i=((s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811);
+
+						if(!(s7r.reg4818&0x10))
+						{
+							if(s7r.reg4818&0x08)
+							{
+								short adj;
+								adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
+								i+=adj;
+							}
+							else
+							{
+								uint16 adj;
+								adj=(s7r.reg4815<<8)|s7r.reg4814;
+								i+=adj;
+							}
+							i%=s7r.DataRomSize;
+							s7r.reg4811=i&0x00FF;
+							s7r.reg4812=(i&0x00FF00)>>8;
+							s7r.reg4813=((i&0xFF0000)>>16);
+						}
+						else
+						{
+							if(s7r.reg4818&0x08)
+							{
+								short adj;
+								adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
+								adj+=adj;
+								s7r.reg4815=(adj&0xFF00)>>8;
+								s7r.reg4814=adj&0xFF;
+							}
+							else
+							{
+								uint16 adj;
+								adj=(s7r.reg4815<<8)|s7r.reg4814;
+								adj+=adj;
+								s7r.reg4815=(adj&0xFF00)>>8;
+								s7r.reg4814=adj&0xFF;
+							}
+						}
+					}
+#ifdef SPC7110_DEBUG
+					printf("Returned %02X\n", tmp);
+#endif
+					return tmp;
+				}
+				else
+				{
+					return 0;
+				}
+
+				//multiplicand low or dividend lowest
+			case 0x4820:
+				return s7r.reg4820;
+				//multiplicand high or divdend lower
+			case 0x4821:
+				return s7r.reg4821;
+				//dividend higher
+			case 0x4822:
+				return s7r.reg4822;
+				//dividend highest
+			case 0x4823:
+				return s7r.reg4823;
+				//multiplier low
+			case 0x4824:
+				return s7r.reg4824;
+				//multiplier high
+			case 0x4825:
+				return s7r.reg4825;
+				//divisor low
+			case 0x4826:
+				return s7r.reg4826;
+				//divisor high
+			case 0x4827:
+				return s7r.reg4827;
+
+				//result lowest
+			case 0x4828:
+				return s7r.reg4828;
+				//result lower
+			case 0x4829:
+				return s7r.reg4829;
+				//result higher
+			case 0x482A:
+				return s7r.reg482A;
+				//result highest
+			case 0x482B:
+				return s7r.reg482B;
+				//remainder (division) low
+			case 0x482C:
+				return s7r.reg482C;
+				//remainder (division) high
+			case 0x482D:
+				return s7r.reg482D;
+				//signed/unsigned
+			case 0x482E:
+				return s7r.reg482E;
+				//finished flag, emulated as an on-read toggle.
+			case 0x482F:
+				if(s7r.reg482F)
+				{
+					s7r.reg482F=0;
+					return 0x80;
+				}
+				return 0;
+				break;
+
+				//SRAM toggle
+			case 0x4830:
+				return s7r.reg4830;
+				//DX bank mapping
+			case 0x4831:
+				return s7r.reg4831;
+				//EX bank mapping
+			case 0x4832:
+				return s7r.reg4832;
+				//FX bank mapping
+			case 0x4833:
+				return s7r.reg4833;
+				//SRAM mapping? We have no clue!
+			case 0x4834:
+				return s7r.reg4834;
 //RTC enable
-	case 0x4840:
-		if(!Settings.SPC7110RTC)
-			return Address>>8;
-		return s7r.reg4840;
+			case 0x4840:
+				if(!Settings.SPC7110RTC)
+				{
+					return Address>>8;
+				}
+				return s7r.reg4840;
 //command/index/value of RTC (essentially, zero unless we're in read mode
-	case 0x4841:
-		if(!Settings.SPC7110RTC)
-			return Address>>8;
-		if(rtc_f9.init)
-		{
-			S9xUpdateRTC();
-			uint8 tmp=rtc_f9.reg[rtc_f9.index];
-			rtc_f9.index++;
-			rtc_f9.index%=0x10;
+			case 0x4841:
+				if(!Settings.SPC7110RTC)
+				{
+					return Address>>8;
+				}
+				if(rtc_f9.init)
+				{
+					S9xUpdateRTC();
+					uint8 tmp=rtc_f9.reg[rtc_f9.index];
+					rtc_f9.index++;
+					rtc_f9.index%=0x10;
 #ifdef SPC7110_DEBUG
-			printf("$4841 returned %02X\n", tmp);
+					printf("$4841 returned %02X\n", tmp);
 #endif
-			return tmp;
-		}
-		else return 0;
+					return tmp;
+				}
+				else
+				{
+					return 0;
+				}
 //RTC done flag
-	case 0x4842:
-		if(!Settings.SPC7110RTC)
-			return Address>>8;
-		s7r.reg4842^=0x80;
-		return s7r.reg4842^0x80;
-	default:
+			case 0x4842:
+				if(!Settings.SPC7110RTC)
+				{
+					return Address>>8;
+				}
+				s7r.reg4842^=0x80;
+				return s7r.reg4842^0x80;
+			default:
 #ifdef SPC7110_DEBUG
-		printf("Access to Reg %04X\n", Address);
+				printf("Access to Reg %04X\n", Address);
 #endif
-		return 0x00;
+				return 0x00;
+		}
 	}
-}
 }
 void S9xSetSPC7110 (uint8 data, uint16 Address)
 {
@@ -917,522 +993,527 @@ void S9xSetSPC7110 (uint8 data, uint16 Address)
 	{
 //Writes to $4800 are undefined.
 
-	//table low, middle, and high.
-	case 0x4801:
-		s7r.reg4801=data;
-		break;
-	case 0x4802:
-		s7r.reg4802=data;
-		break;
-	case 0x4803:
-		s7r.reg4803=data;
-		break;
+			//table low, middle, and high.
+		case 0x4801:
+			s7r.reg4801=data;
+			break;
+		case 0x4802:
+			s7r.reg4802=data;
+			break;
+		case 0x4803:
+			s7r.reg4803=data;
+			break;
 
-	//table index (4 byte entries, bigendian with a multiplier byte)
-	case 0x4804:
-		s7r.reg4804=data;
-		break;
+			//table index (4 byte entries, bigendian with a multiplier byte)
+		case 0x4804:
+			s7r.reg4804=data;
+			break;
 
-	//offset low
-	case 0x4805:
-		s7r.reg4805=data;
-		break;
+			//offset low
+		case 0x4805:
+			s7r.reg4805=data;
+			break;
 
-	//offset high, starts decompression
-	case 0x4806:
-		s7r.reg4806=data;
-		(*Copy7110)();
-		s7r.bank50Internal=0;
-		s7r.reg480C&=0x7F;
-		break;
+			//offset high, starts decompression
+		case 0x4806:
+			s7r.reg4806=data;
+			(*Copy7110)();
+			s7r.bank50Internal=0;
+			s7r.reg480C&=0x7F;
+			break;
 
-	//DMA channel register (Is it used??)
-	case 0x4807:
-		s7r.reg4807=data;
-		break;
+			//DMA channel register (Is it used??)
+		case 0x4807:
+			s7r.reg4807=data;
+			break;
 
-	//C r/w? I have no idea. If you get weird values written here before a bug,
-	//The Dumper should probably be contacted about running a test.
-	case 0x4808:
-		s7r.reg4808=data;
-		break;
+			//C r/w? I have no idea. If you get weird values written here before a bug,
+			//The Dumper should probably be contacted about running a test.
+		case 0x4808:
+			s7r.reg4808=data;
+			break;
 
-	//C-Length low
-	case 0x4809:
-		s7r.reg4809=data;
-		break;
-	//C-Length high
-	case 0x480A:
-		s7r.reg480A=data;
-		break;
+			//C-Length low
+		case 0x4809:
+			s7r.reg4809=data;
+			break;
+			//C-Length high
+		case 0x480A:
+			s7r.reg480A=data;
+			break;
 
-	//Offset enable
-	case 0x480B:
-		{
-			s7r.reg480B=data;
-			int table=(s7r.reg4803<<16)|(s7r.reg4802<<8)|s7r.reg4801;
-			
-			int j= 4*s7r.reg4804;
-			j+=s7r.DataRomOffset;
-			j+=table;
-			
-			if(s7r.reg480B==0)
-				s7r.AlignBy=0;
-			else
+			//Offset enable
+		case 0x480B:
 			{
-				switch(ROM[j])
+				s7r.reg480B=data;
+				int table=(s7r.reg4803<<16)|(s7r.reg4802<<8)|s7r.reg4801;
+
+				int j= 4*s7r.reg4804;
+				j+=s7r.DataRomOffset;
+				j+=table;
+
+				if(s7r.reg480B==0)
 				{
-				case 0x03:
-					s7r.AlignBy=8;
-					break;
-				case 0x01:
-					s7r.AlignBy=2;
-					break;
-				case 0x02:
-					s7r.AlignBy=4;
-					break;
-				case 0x00:
-				default:
-					s7r.AlignBy=1;
-					break;
+					s7r.AlignBy=0;
 				}
-			}
+				else
+				{
+					switch(ROM[j])
+					{
+						case 0x03:
+							s7r.AlignBy=8;
+							break;
+						case 0x01:
+							s7r.AlignBy=2;
+							break;
+						case 0x02:
+							s7r.AlignBy=4;
+							break;
+						case 0x00:
+						default:
+							s7r.AlignBy=1;
+							break;
+					}
+				}
 //			s7r.decomp_set=true;
-		}
-		break;
+			}
+			break;
 //$4810 is probably read only.
 
-	//Data port address low
-	case 0x4811:
-		s7r.reg4811=data;
-		s7r.written|=0x01;
-		break;
-
-	//data port address middle
-	case 0x4812:
-		s7r.reg4812=data;
-		s7r.written|=0x02;
-		break;
-
-	//data port address high
-	case 0x4813:
-		s7r.reg4813=data;
-		s7r.written|=0x04;
-		break;
-
-	//data port adjust low (has a funky immediate increment mode)
-	case 0x4814:
-		s7r.reg4814=data;
-		if(s7r.reg4818&0x02)
-		{
-			if((s7r.reg4818&0x20)&&!(s7r.reg4818&0x40))
-			{
-				s7r.offset_add|=0x01;
-				if(s7r.offset_add==3)
-				{
-					if(s7r.reg4818&0x10)
-					{
-					}
-					else
-					{
-						uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
-						if(s7r.reg4818&0x08)
-						{
-							i+=(signed char)s7r.reg4814;
-						}
-						else
-						{
-							i+=s7r.reg4814;
-						}
-						i%=s7r.DataRomSize;
-						s7r.reg4811=i&0x00FF;
-						s7r.reg4812=(i&0x00FF00)>>8;
-						s7r.reg4813=((i&0xFF0000)>>16);
-					}
-				}
-			}
-			else if((s7r.reg4818&0x40)&&!(s7r.reg4818&0x20))
-			{
-				s7r.offset_add|=0x01;
-				if(s7r.offset_add==3)
-				{
-					if(s7r.reg4818&0x10)
-					{
-					}
-					else
-					{
-						uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
-						if(s7r.reg4818&0x08)
-						{
-							short adj;
-							adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
-							i+=adj;
-						}
-						else
-						{
-							uint16 adj;
-							adj=(s7r.reg4815<<8)|s7r.reg4814;
-							i+=adj;
-						}
-						i%=s7r.DataRomSize;
-						s7r.reg4811=i&0x00FF;
-						s7r.reg4812=(i&0x00FF00)>>8;
-						s7r.reg4813=((i&0xFF0000)>>16);
-					}
-				}
-				
-			}
-		}
-		
-		s7r.written|=0x08;
-		break;
-		
-	//data port adjust high (has a funky immediate increment mode)
-	case 0x4815:
-		s7r.reg4815=data;
-		if(s7r.reg4818&0x02)
-		{
-			if(s7r.reg4818&0x20&&!(s7r.reg4818&0x40))
-			{
-				s7r.offset_add|=0x02;
-				if(s7r.offset_add==3)
-				{
-					if(s7r.reg4818&0x10)
-					{
-					}
-					else
-					{
-						uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
-						
-						if(s7r.reg4818&0x08)
-						{
-							i+=(signed char)s7r.reg4814;
-						}
-						else
-						{
-							i+=s7r.reg4814;
-						}
-						i%=s7r.DataRomSize;
-						s7r.reg4811=i&0x00FF;
-						s7r.reg4812=(i&0x00FF00)>>8;
-						s7r.reg4813=((i&0xFF0000)>>16);
-					}
-				}
-			}
-			else if(s7r.reg4818&0x40&&!(s7r.reg4818&0x20))
-			{
-				s7r.offset_add|=0x02;
-				if(s7r.offset_add==3)
-				{
-					if(s7r.reg4818&0x10)
-					{
-					}
-					else
-					{
-						uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
-						if(s7r.reg4818&0x08)
-						{
-							short adj;
-							adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
-							i+=adj;
-						}
-						else
-						{
-							uint16 adj;
-							adj=(s7r.reg4815<<8)|s7r.reg4814;
-							i+=adj;
-						}
-						i%=s7r.DataRomSize;
-						s7r.reg4811=i&0x00FF;
-						s7r.reg4812=(i&0x00FF00)>>8;
-						s7r.reg4813=((i&0xFF0000)>>16);
-					}
-				}
-			}
-		}
-		s7r.written|=0x10;
-		break;
-	//data port increment low
-	case 0x4816:
-		s7r.reg4816=data;
-		break;
-	//data port increment high
-	case 0x4817:
-		s7r.reg4817=data;
-		break;
-
-	//data port mode switches
-	//note that it starts inactive.
-	case 0x4818:
-		if((s7r.written&0x18)!=0x18)
+			//Data port address low
+		case 0x4811:
+			s7r.reg4811=data;
+			s7r.written|=0x01;
 			break;
-		s7r.offset_add=0;
-		s7r.reg4818=data;
-		break;
 
-	//multiplicand low or dividend lowest
-	case 0x4820:
-		s7r.reg4820=data;
-		break;
-	//multiplicand high or dividend lower
-	case 0x4821:
-		s7r.reg4821=data;
-		break;
-	//dividend higher
-	case 0x4822:
-		s7r.reg4822=data;
-		break;
-	//dividend highest
-	case 0x4823:
-		s7r.reg4823=data;
-		break;
-	//multiplier low
-	case 0x4824:
-		s7r.reg4824=data;
-		break;
-	//multiplier high (triggers operation)
-	case 0x4825:
-		s7r.reg4825=data;
-		if(s7r.reg482E&0x01)
-		{
-			int mul;
-			short m1=(short)((s7r.reg4824)|(s7r.reg4825<<8));
-			short m2=(short)((s7r.reg4820)|(s7r.reg4821<<8));
-			
-			mul=m1*m2;
-			s7r.reg4828=(uint8)(mul&0x000000FF);
-			s7r.reg4829=(uint8)((mul&0x0000FF00)>>8);
-			s7r.reg482A=(uint8)((mul&0x00FF0000)>>16);
-			s7r.reg482B=(uint8)((mul&0xFF000000)>>24);
-		}
-		else
-		{
-			uint32 mul;
-			uint16 m1=(uint16)((s7r.reg4824)|(s7r.reg4825<<8));
-			uint16 m2=(uint16)((s7r.reg4820)|(s7r.reg4821<<8));
-			
-			mul=m1*m2;
-			s7r.reg4828=(uint8)(mul&0x000000FF);
-			s7r.reg4829=(uint8)((mul&0x0000FF00)>>8);
-			s7r.reg482A=(uint8)((mul&0x00FF0000)>>16);
-			s7r.reg482B=(uint8)((mul&0xFF000000)>>24);
-		}
-		s7r.reg482F=0x80;
-		break;
-	//divisor low
-	case 0x4826:
-		s7r.reg4826=data;
-		break;
-	//divisor high (triggers operation)
-	case 0x4827:
-		s7r.reg4827=data;
-		if(s7r.reg482E&0x01)
-		{
-			int quotient;
-			short remainder;
-			int dividend=(int)(s7r.reg4820|(s7r.reg4821<<8)|(s7r.reg4822<<16)|(s7r.reg4823<<24));
-			short divisor=(short)(s7r.reg4826|(s7r.reg4827<<8));
-			if(divisor != 0)
-			{
-				quotient=(int)(dividend/divisor);
-				remainder=(short)(dividend%divisor);
-			}
-			else
-			{
-				quotient=0;
-				remainder=dividend&0x0000FFFF;
-			}
-			s7r.reg4828=(uint8)(quotient&0x000000FF);
-			s7r.reg4829=(uint8)((quotient&0x0000FF00)>>8);
-			s7r.reg482A=(uint8)((quotient&0x00FF0000)>>16);
-			s7r.reg482B=(uint8)((quotient&0xFF000000)>>24);
-			s7r.reg482C=(uint8)remainder&0x00FF;
-			s7r.reg482D=(uint8)((remainder&0xFF00)>>8);
-		}
-		else
-		{
-			uint32 quotient;
-			uint16 remainder;
-			uint32 dividend=(uint32)(s7r.reg4820|(s7r.reg4821<<8)|(s7r.reg4822<<16)|(s7r.reg4823<<24));
-			uint16 divisor=(uint16)(s7r.reg4826|(s7r.reg4827<<8));
-			if(divisor != 0)
-			{
-				quotient=(uint32)(dividend/divisor);
-				remainder=(uint16)(dividend%divisor);
-			}
-			else
-			{
-				quotient=0;
-				remainder=dividend&0x0000FFFF;
-			}
-			s7r.reg4828=(uint8)(quotient&0x000000FF);
-			s7r.reg4829=(uint8)((quotient&0x0000FF00)>>8);
-			s7r.reg482A=(uint8)((quotient&0x00FF0000)>>16);
-			s7r.reg482B=(uint8)((quotient&0xFF000000)>>24);
-			s7r.reg482C=(uint8)remainder&0x00FF;
-			s7r.reg482D=(uint8)((remainder&0xFF00)>>8);
-		}
-		s7r.reg482F=0x80;
-		break;
-	//result registers are possibly read-only
+			//data port address middle
+		case 0x4812:
+			s7r.reg4812=data;
+			s7r.written|=0x02;
+			break;
 
-	//reset: writes here nuke the whole math unit
-	//Zero indicates unsigned math, resets with non-zero values turn on signed math
-	case 0x482E:
-		s7r.reg4820=s7r.reg4821=s7r.reg4822=s7r.reg4823=s7r.reg4824=s7r.reg4825=s7r.reg4826=s7r.reg4827=s7r.reg4828=s7r.reg4829=s7r.reg482A=s7r.reg482B=s7r.reg482C=s7r.reg482D=0;
-		s7r.reg482E=data;
-		break;
+			//data port address high
+		case 0x4813:
+			s7r.reg4813=data;
+			s7r.written|=0x04;
+			break;
 
-	//math status register possibly read only
-
-	//SRAM toggle
-	case 0x4830:
-		Memory.SPC7110Sram(data);
-		s7r.reg4830=data;
-		break;
-	//Bank DX mapping
-	case 0x4831:
-		s7r.reg4831=data;
-		break;
-	//Bank EX mapping
-	case 0x4832:
-		s7r.reg4832=data;
-		break;
-	//Bank FX mapping
-	case 0x4833:
-		s7r.reg4833=data;
-		break;
-	//S-RAM mapping? who knows?
-	case 0x4834:
-		s7r.reg4834=data;
-		break;
-	//RTC Toggle
-	case 0x4840:
-		if(0==data)
-		{
-			S9xUpdateRTC();
-			//	rtc_f9.init=false;
-			//	rtc_f9.index=-1;
-		}
-		if(data&0x01)
-		{
-			s7r.reg4842=0x80;
-			//rtc_f9.last_used=time(NULL);//????
-			rtc_f9.init=false;
-			rtc_f9.index=-1;
-		}
-		s7r.reg4840=data;
-		break;
-	//RTC init/command/index register
-	case 0x4841:
-		if(rtc_f9.init)
-		{
-			if(-1==rtc_f9.index)
+			//data port adjust low (has a funky immediate increment mode)
+		case 0x4814:
+			s7r.reg4814=data;
+			if(s7r.reg4818&0x02)
 			{
-				rtc_f9.index=data&0x0F;
+				if((s7r.reg4818&0x20)&&!(s7r.reg4818&0x40))
+				{
+					s7r.offset_add|=0x01;
+					if(s7r.offset_add==3)
+					{
+						if(s7r.reg4818&0x10)
+						{
+						}
+						else
+						{
+							uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
+							if(s7r.reg4818&0x08)
+							{
+								i+=(signed char)s7r.reg4814;
+							}
+							else
+							{
+								i+=s7r.reg4814;
+							}
+							i%=s7r.DataRomSize;
+							s7r.reg4811=i&0x00FF;
+							s7r.reg4812=(i&0x00FF00)>>8;
+							s7r.reg4813=((i&0xFF0000)>>16);
+						}
+					}
+				}
+				else if((s7r.reg4818&0x40)&&!(s7r.reg4818&0x20))
+				{
+					s7r.offset_add|=0x01;
+					if(s7r.offset_add==3)
+					{
+						if(s7r.reg4818&0x10)
+						{
+						}
+						else
+						{
+							uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
+							if(s7r.reg4818&0x08)
+							{
+								short adj;
+								adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
+								i+=adj;
+							}
+							else
+							{
+								uint16 adj;
+								adj=(s7r.reg4815<<8)|s7r.reg4814;
+								i+=adj;
+							}
+							i%=s7r.DataRomSize;
+							s7r.reg4811=i&0x00FF;
+							s7r.reg4812=(i&0x00FF00)>>8;
+							s7r.reg4813=((i&0xFF0000)>>16);
+						}
+					}
+
+				}
+			}
+
+			s7r.written|=0x08;
+			break;
+
+			//data port adjust high (has a funky immediate increment mode)
+		case 0x4815:
+			s7r.reg4815=data;
+			if(s7r.reg4818&0x02)
+			{
+				if(s7r.reg4818&0x20&&!(s7r.reg4818&0x40))
+				{
+					s7r.offset_add|=0x02;
+					if(s7r.offset_add==3)
+					{
+						if(s7r.reg4818&0x10)
+						{
+						}
+						else
+						{
+							uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
+
+							if(s7r.reg4818&0x08)
+							{
+								i+=(signed char)s7r.reg4814;
+							}
+							else
+							{
+								i+=s7r.reg4814;
+							}
+							i%=s7r.DataRomSize;
+							s7r.reg4811=i&0x00FF;
+							s7r.reg4812=(i&0x00FF00)>>8;
+							s7r.reg4813=((i&0xFF0000)>>16);
+						}
+					}
+				}
+				else if(s7r.reg4818&0x40&&!(s7r.reg4818&0x20))
+				{
+					s7r.offset_add|=0x02;
+					if(s7r.offset_add==3)
+					{
+						if(s7r.reg4818&0x10)
+						{
+						}
+						else
+						{
+							uint32 i=(s7r.reg4813<<16)|(s7r.reg4812<<8)|s7r.reg4811;
+							if(s7r.reg4818&0x08)
+							{
+								short adj;
+								adj=((short)(s7r.reg4815<<8))|s7r.reg4814;
+								i+=adj;
+							}
+							else
+							{
+								uint16 adj;
+								adj=(s7r.reg4815<<8)|s7r.reg4814;
+								i+=adj;
+							}
+							i%=s7r.DataRomSize;
+							s7r.reg4811=i&0x00FF;
+							s7r.reg4812=(i&0x00FF00)>>8;
+							s7r.reg4813=((i&0xFF0000)>>16);
+						}
+					}
+				}
+			}
+			s7r.written|=0x10;
+			break;
+			//data port increment low
+		case 0x4816:
+			s7r.reg4816=data;
+			break;
+			//data port increment high
+		case 0x4817:
+			s7r.reg4817=data;
+			break;
+
+			//data port mode switches
+			//note that it starts inactive.
+		case 0x4818:
+			if((s7r.written&0x18)!=0x18)
+			{
 				break;
 			}
-			if(rtc_f9.control==0x0C)
+			s7r.offset_add=0;
+			s7r.reg4818=data;
+			break;
+
+			//multiplicand low or dividend lowest
+		case 0x4820:
+			s7r.reg4820=data;
+			break;
+			//multiplicand high or dividend lower
+		case 0x4821:
+			s7r.reg4821=data;
+			break;
+			//dividend higher
+		case 0x4822:
+			s7r.reg4822=data;
+			break;
+			//dividend highest
+		case 0x4823:
+			s7r.reg4823=data;
+			break;
+			//multiplier low
+		case 0x4824:
+			s7r.reg4824=data;
+			break;
+			//multiplier high (triggers operation)
+		case 0x4825:
+			s7r.reg4825=data;
+			if(s7r.reg482E&0x01)
 			{
-				rtc_f9.index=data&0x0F;
-				s7r.reg4842=0x80;
-				rtc_f9.last_used=time(NULL);
+				int mul;
+				short m1=(short)((s7r.reg4824)|(s7r.reg4825<<8));
+				short m2=(short)((s7r.reg4820)|(s7r.reg4821<<8));
+
+				mul=m1*m2;
+				s7r.reg4828=(uint8)(mul&0x000000FF);
+				s7r.reg4829=(uint8)((mul&0x0000FF00)>>8);
+				s7r.reg482A=(uint8)((mul&0x00FF0000)>>16);
+				s7r.reg482B=(uint8)((mul&0xFF000000)>>24);
 			}
 			else
 			{
-				
-				if(0x0D==rtc_f9.index)
-				{
-					if(data&0x08)
-					{
-						if(rtc_f9.reg[1]<3)
-						{
-							S9xUpdateRTC();
-							rtc_f9.reg[0]=0;
-							rtc_f9.reg[1]=0;
-							rtc_f9.last_used=time(NULL);
-						}
-						else
-						{
-							S9xUpdateRTC();
-							rtc_f9.reg[0]=0;
-							rtc_f9.reg[1]=0;
-							rtc_f9.last_used=time(NULL)-60;
-							S9xUpdateRTC();
-							rtc_f9.last_used=time(NULL);
-						}
-						data&=0x07;
-					}
-					if(rtc_f9.reg[0x0D]&0x01)
-					{
-						if(!(data%2))
-						{
-							rtc_f9.reg[rtc_f9.index&0x0F]=data;
-							rtc_f9.last_used=time(NULL)-1;
-							S9xUpdateRTC();
-							rtc_f9.last_used=time(NULL);
-						}
-					}
-				}
-				if(0x0F==rtc_f9.index)
-				{
-					if(data&0x01&&!(rtc_f9.reg[0x0F]&0x01))
-					{
-						S9xUpdateRTC();
-						rtc_f9.reg[0]=0;
-						rtc_f9.reg[1]=0;
-						rtc_f9.last_used=time(NULL);
-					}
-					if(data&0x02&&!(rtc_f9.reg[0x0F]&0x02))
-					{
-						S9xUpdateRTC();
-						rtc_f9.last_used=time(NULL);
-					}
-				}
-				rtc_f9.reg[rtc_f9.index&0x0F]=data;
-				s7r.reg4842=0x80;
-				rtc_f9.index=(rtc_f9.index+1)%0x10;
+				uint32 mul;
+				uint16 m1=(uint16)((s7r.reg4824)|(s7r.reg4825<<8));
+				uint16 m2=(uint16)((s7r.reg4820)|(s7r.reg4821<<8));
+
+				mul=m1*m2;
+				s7r.reg4828=(uint8)(mul&0x000000FF);
+				s7r.reg4829=(uint8)((mul&0x0000FF00)>>8);
+				s7r.reg482A=(uint8)((mul&0x00FF0000)>>16);
+				s7r.reg482B=(uint8)((mul&0xFF000000)>>24);
 			}
-		}
-		else
-		{
-			if(data==0x03||data==0x0C)
+			s7r.reg482F=0x80;
+			break;
+			//divisor low
+		case 0x4826:
+			s7r.reg4826=data;
+			break;
+			//divisor high (triggers operation)
+		case 0x4827:
+			s7r.reg4827=data;
+			if(s7r.reg482E&0x01)
 			{
-				rtc_f9.init=true;
-				rtc_f9.control=data;
+				int quotient;
+				short remainder;
+				int dividend=(int)(s7r.reg4820|(s7r.reg4821<<8)|(s7r.reg4822<<16)|(s7r.reg4823<<24));
+				short divisor=(short)(s7r.reg4826|(s7r.reg4827<<8));
+				if(divisor != 0)
+				{
+					quotient=(int)(dividend/divisor);
+					remainder=(short)(dividend%divisor);
+				}
+				else
+				{
+					quotient=0;
+					remainder=dividend&0x0000FFFF;
+				}
+				s7r.reg4828=(uint8)(quotient&0x000000FF);
+				s7r.reg4829=(uint8)((quotient&0x0000FF00)>>8);
+				s7r.reg482A=(uint8)((quotient&0x00FF0000)>>16);
+				s7r.reg482B=(uint8)((quotient&0xFF000000)>>24);
+				s7r.reg482C=(uint8)remainder&0x00FF;
+				s7r.reg482D=(uint8)((remainder&0xFF00)>>8);
+			}
+			else
+			{
+				uint32 quotient;
+				uint16 remainder;
+				uint32 dividend=(uint32)(s7r.reg4820|(s7r.reg4821<<8)|(s7r.reg4822<<16)|(s7r.reg4823<<24));
+				uint16 divisor=(uint16)(s7r.reg4826|(s7r.reg4827<<8));
+				if(divisor != 0)
+				{
+					quotient=(uint32)(dividend/divisor);
+					remainder=(uint16)(dividend%divisor);
+				}
+				else
+				{
+					quotient=0;
+					remainder=dividend&0x0000FFFF;
+				}
+				s7r.reg4828=(uint8)(quotient&0x000000FF);
+				s7r.reg4829=(uint8)((quotient&0x0000FF00)>>8);
+				s7r.reg482A=(uint8)((quotient&0x00FF0000)>>16);
+				s7r.reg482B=(uint8)((quotient&0xFF000000)>>24);
+				s7r.reg482C=(uint8)remainder&0x00FF;
+				s7r.reg482D=(uint8)((remainder&0xFF00)>>8);
+			}
+			s7r.reg482F=0x80;
+			break;
+			//result registers are possibly read-only
+
+			//reset: writes here nuke the whole math unit
+			//Zero indicates unsigned math, resets with non-zero values turn on signed math
+		case 0x482E:
+			s7r.reg4820=s7r.reg4821=s7r.reg4822=s7r.reg4823=s7r.reg4824=s7r.reg4825=s7r.reg4826=s7r.reg4827=s7r.reg4828=s7r.reg4829=s7r.reg482A=s7r.reg482B=s7r.reg482C=s7r.reg482D=0;
+			s7r.reg482E=data;
+			break;
+
+			//math status register possibly read only
+
+			//SRAM toggle
+		case 0x4830:
+			Memory.SPC7110Sram(data);
+			s7r.reg4830=data;
+			break;
+			//Bank DX mapping
+		case 0x4831:
+			s7r.reg4831=data;
+			break;
+			//Bank EX mapping
+		case 0x4832:
+			s7r.reg4832=data;
+			break;
+			//Bank FX mapping
+		case 0x4833:
+			s7r.reg4833=data;
+			break;
+			//S-RAM mapping? who knows?
+		case 0x4834:
+			s7r.reg4834=data;
+			break;
+			//RTC Toggle
+		case 0x4840:
+			if(0==data)
+			{
+				S9xUpdateRTC();
+				//	rtc_f9.init=false;
+				//	rtc_f9.index=-1;
+			}
+			if(data&0x01)
+			{
+				s7r.reg4842=0x80;
+				//rtc_f9.last_used=time(NULL);//????
+				rtc_f9.init=false;
 				rtc_f9.index=-1;
 			}
-		}
-		break;
-	//writes to RTC status register aren't expected to be meaningful
-	default:
-		Address-=0x4800;
-		break;
-		//16 BIT MULTIPLIER: ($FF00) high byte, defval:00
+			s7r.reg4840=data;
+			break;
+			//RTC init/command/index register
+		case 0x4841:
+			if(rtc_f9.init)
+			{
+				if(-1==rtc_f9.index)
+				{
+					rtc_f9.index=data&0x0F;
+					break;
+				}
+				if(rtc_f9.control==0x0C)
+				{
+					rtc_f9.index=data&0x0F;
+					s7r.reg4842=0x80;
+					rtc_f9.last_used=time(NULL);
+				}
+				else
+				{
+
+					if(0x0D==rtc_f9.index)
+					{
+						if(data&0x08)
+						{
+							if(rtc_f9.reg[1]<3)
+							{
+								S9xUpdateRTC();
+								rtc_f9.reg[0]=0;
+								rtc_f9.reg[1]=0;
+								rtc_f9.last_used=time(NULL);
+							}
+							else
+							{
+								S9xUpdateRTC();
+								rtc_f9.reg[0]=0;
+								rtc_f9.reg[1]=0;
+								rtc_f9.last_used=time(NULL)-60;
+								S9xUpdateRTC();
+								rtc_f9.last_used=time(NULL);
+							}
+							data&=0x07;
+						}
+						if(rtc_f9.reg[0x0D]&0x01)
+						{
+							if(!(data%2))
+							{
+								rtc_f9.reg[rtc_f9.index&0x0F]=data;
+								rtc_f9.last_used=time(NULL)-1;
+								S9xUpdateRTC();
+								rtc_f9.last_used=time(NULL);
+							}
+						}
+					}
+					if(0x0F==rtc_f9.index)
+					{
+						if(data&0x01&&!(rtc_f9.reg[0x0F]&0x01))
+						{
+							S9xUpdateRTC();
+							rtc_f9.reg[0]=0;
+							rtc_f9.reg[1]=0;
+							rtc_f9.last_used=time(NULL);
+						}
+						if(data&0x02&&!(rtc_f9.reg[0x0F]&0x02))
+						{
+							S9xUpdateRTC();
+							rtc_f9.last_used=time(NULL);
+						}
+					}
+					rtc_f9.reg[rtc_f9.index&0x0F]=data;
+					s7r.reg4842=0x80;
+					rtc_f9.index=(rtc_f9.index+1)%0x10;
+				}
+			}
+			else
+			{
+				if(data==0x03||data==0x0C)
+				{
+					rtc_f9.init=true;
+					rtc_f9.control=data;
+					rtc_f9.index=-1;
+				}
+			}
+			break;
+			//writes to RTC status register aren't expected to be meaningful
+		default:
+			Address-=0x4800;
+			break;
+			//16 BIT MULTIPLIER: ($FF00) high byte, defval:00
 	}
 }
-extern "C"{
+extern "C" {
 //emulate the SPC7110's ability to remap banks Dx, Ex, and Fx.
-uint8 S9xGetS7110Byte(uint32 Address)
-{
-	uint32 i;
-	switch((Address&0x00F00000)>>16)
+	uint8 S9xGetS7110Byte(uint32 Address)
 	{
-	case 0xD0:
-		i=s7r.reg4831*0x00100000;
-		break;
-	case 0xE0:
-		i=s7r.reg4832*0x00100000;
-		break;
-	case 0xF0:
-		i=s7r.reg4833*0x00100000;
-		break;
-	default:i=0;
+		uint32 i;
+		switch((Address&0x00F00000)>>16)
+		{
+			case 0xD0:
+				i=s7r.reg4831*0x00100000;
+				break;
+			case 0xE0:
+				i=s7r.reg4832*0x00100000;
+				break;
+			case 0xF0:
+				i=s7r.reg4833*0x00100000;
+				break;
+			default:
+				i=0;
+		}
+		i+=Address&0x000FFFFF;
+		i+=s7r.DataRomOffset;
+		return ROM[i];
 	}
-	i+=Address&0x000FFFFF;
-	i+=s7r.DataRomOffset;
-	return ROM[i];
-}
 }
 /**********************************************************************************************/
 /* S9xSRTCDaysInMonth()                                                                       */
@@ -1441,30 +1522,34 @@ uint8 S9xGetS7110Byte(uint32 Address)
 /**********************************************************************************************/
 int	S9xRTCDaysInMonth( int month, int year )
 {
-    int		mdays;
-	
-    switch ( month )
-    {
-	case 2:
-		if ( ( year % 4 == 0 ) )    // DKJM2 only uses 199x - 22xx
-			mdays = 29;
-		else
-			mdays = 28;
-		break;
-		
-	case 4:
-	case 6:
-	case 9:
-	case 11:
-		mdays = 30;
-		break;
-		
-	default:	// months 1,3,5,7,8,10,12
-		mdays = 31;
-		break;
-    }
-	
-    return mdays;
+	int		mdays;
+
+	switch ( month )
+	{
+		case 2:
+			if ( ( year % 4 == 0 ) )    // DKJM2 only uses 199x - 22xx
+			{
+				mdays = 29;
+			}
+			else
+			{
+				mdays = 28;
+			}
+			break;
+
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+			mdays = 30;
+			break;
+
+		default:	// months 1,3,5,7,8,10,12
+			mdays = 31;
+			break;
+	}
+
+	return mdays;
 }
 
 
@@ -1482,24 +1567,24 @@ void	S9xUpdateRTC ()
 {
 	time_t	cur_systime;
 	long    time_diff;
-	
-    // Keep track of game time by computing the number of seconds that pass on the system
-    // clock and adding the same number of seconds to the RTC clock structure.
-	
-    if (rtc_f9.init && 0==(rtc_f9.reg[0x0D]&0x01) && 0==(rtc_f9.reg[0x0F]&0x03))
-    {
-        cur_systime = time (NULL);
-		
-        // This method assumes one time_t clock tick is one second
-        //        which should work on PCs and GNU systems.
-        //        If your tick interval is different adjust the
+
+	// Keep track of game time by computing the number of seconds that pass on the system
+	// clock and adding the same number of seconds to the RTC clock structure.
+
+	if (rtc_f9.init && 0==(rtc_f9.reg[0x0D]&0x01) && 0==(rtc_f9.reg[0x0F]&0x03))
+	{
+		cur_systime = time (NULL);
+
+		// This method assumes one time_t clock tick is one second
+		//        which should work on PCs and GNU systems.
+		//        If your tick interval is different adjust the
 		//        DAYTICK, HOURTICK, and MINUTETICK defines
-		
-        time_diff = (long) (cur_systime - rtc_f9.last_used);
+
+		time_diff = (long) (cur_systime - rtc_f9.last_used);
 		rtc_f9.last_used = cur_systime;
-        
-        if ( time_diff > 0 )
-        {
+
+		if ( time_diff > 0 )
+		{
 			int		seconds;
 			int		minutes;
 			int		hours;
@@ -1507,12 +1592,12 @@ void	S9xUpdateRTC ()
 			int		month;
 			int		year;
 			int		temp_days;
-			
+
 			int		year_hundreds;
 			int		year_tens;
 			int		year_ones;
-			
-			
+
+
 			if ( time_diff > DAYTICKS )
 			{
 				days = time_diff / DAYTICKS;
@@ -1522,7 +1607,7 @@ void	S9xUpdateRTC ()
 			{
 				days = 0;
 			}
-			
+
 			if ( time_diff > HOURTICKS )
 			{
 				hours = time_diff / HOURTICKS;
@@ -1532,7 +1617,7 @@ void	S9xUpdateRTC ()
 			{
 				hours = 0;
 			}
-			
+
 			if ( time_diff > MINUTETICKS )
 			{
 				minutes = time_diff / MINUTETICKS;
@@ -1542,7 +1627,7 @@ void	S9xUpdateRTC ()
 			{
 				minutes = 0;
 			}
-			
+
 			if ( time_diff > 0 )
 			{
 				seconds = time_diff;
@@ -1551,29 +1636,29 @@ void	S9xUpdateRTC ()
 			{
 				seconds = 0;
 			}
-			
-			
+
+
 			seconds += (rtc_f9.reg[1]*10 + rtc_f9.reg[0]);
 			if ( seconds >= 60 )
 			{
 				seconds -= 60;
 				minutes += 1;
 			}
-			
+
 			minutes += (rtc_f9.reg[3]*10 + rtc_f9.reg[2]);
 			if ( minutes >= 60 )
 			{
 				minutes -= 60;
 				hours += 1;
 			}
-			
+
 			hours += (rtc_f9.reg[5]*10 + rtc_f9.reg[4]);
 			if ( hours >= 24 )
 			{
 				hours -= 24;
 				days += 1;
 			}
-			
+
 			year =  rtc_f9.reg[11]*10 + rtc_f9.reg[10];
 			year += ( 1900 );
 			month = rtc_f9.reg[8]+10*rtc_f9.reg[9];
@@ -1597,7 +1682,7 @@ void	S9xUpdateRTC ()
 			year_ones = year_tens % 10;
 			year_tens /= 10;
 			year_hundreds = (year - 1000) / 100;
-			
+
 			rtc_f9.reg[0] = seconds % 10;
 			rtc_f9.reg[1] = seconds / 10;
 			rtc_f9.reg[2] = minutes % 10;
@@ -1612,33 +1697,34 @@ void	S9xUpdateRTC ()
 			rtc_f9.reg[11] = year_tens;
 			rtc_f9.reg[12] %= 7;
 			return;
-        }
-    }
+		}
+	}
 }
-extern "C"{
+extern "C" {
 
 //allows DMA from the ROM (is this even possible on the SPC7110?
-uint8* Get7110BasePtr(uint32 Address)
-{
-	uint32 i;
-	switch((Address&0x00F00000)>>16)
+	uint8* Get7110BasePtr(uint32 Address)
 	{
-	case 0xD0:
-		i=s7r.reg4831*0x100000;
-		break;
-	case 0xE0:
-		i=s7r.reg4832*0x100000;
-		break;
-	case 0xF0:
-		i=s7r.reg4833*0x100000;
-		break;
-	default:i=0;
-	}
-	i+=Address&0x000F0000;
+		uint32 i;
+		switch((Address&0x00F00000)>>16)
+		{
+			case 0xD0:
+				i=s7r.reg4831*0x100000;
+				break;
+			case 0xE0:
+				i=s7r.reg4832*0x100000;
+				break;
+			case 0xF0:
+				i=s7r.reg4833*0x100000;
+				break;
+			default:
+				i=0;
+		}
+		i+=Address&0x000F0000;
 //not that anything DMAs from ROM, but...
 //	i+=s7r.DataRomOffset;
-	return &ROM[i];
-}
+		return &ROM[i];
+	}
 //end extern
 }
 
@@ -1656,7 +1742,9 @@ bool Load7110Index(char* filename)
 	int i=0;
 	fp=fopen(filename, "rb");
 	if(NULL==fp)
+	{
 		return false;
+	}
 	do
 	{
 		i=0;
@@ -1667,9 +1755,13 @@ bool Load7110Index(char* filename)
 		size=(buffer[11]<<24)|(buffer[10]<<16)|(buffer[9]<<8)|buffer[8];
 		//while(i<MAX_TABLES&&decompack.tableEnts[i].table!=table)
 		while(i<MAX_TABLES&&decompack->tableEnts[i].table!=table&&decompack->tableEnts[i].table!=0)
+		{
 			i++;
+		}
 		if(i==MAX_TABLES)
+		{
 			return false;
+		}
 		//added
 		decompack->tableEnts[i].table=table;
 		//-----
@@ -1677,7 +1769,7 @@ bool Load7110Index(char* filename)
 		decompack->tableEnts[i].location[index].size=size;
 		decompack->tableEnts[i].location[index].used_len=0;
 		decompack->tableEnts[i].location[index].used_offset=0;
-		
+
 	}
 	while(!feof(fp));
 	fclose(fp);
@@ -1691,10 +1783,10 @@ void SPC7110Load(char* dirname)
 	char finder[PATH_MAX];
 	char temp_path[PATH_MAX];
 	char filename [PATH_MAX + 1];
-    char drive [_MAX_DRIVE + 1];
-    char dir [_MAX_DIR + 1];
-    char fname [_MAX_FNAME + 1];
-    char ext [_MAX_EXT + 1];
+	char drive [_MAX_DRIVE + 1];
+	char dir [_MAX_DIR + 1];
+	char fname [_MAX_FNAME + 1];
+	char ext [_MAX_EXT + 1];
 	int i=0;
 
 	decompack=new Pack7110;
@@ -1704,13 +1796,13 @@ void SPC7110Load(char* dirname)
 #endif
 
 	ZeroMemory(decompack, sizeof(Pack7110));
-	
-    if (strlen (FREEZEFOLDER))
-    {
-  //      splitpath (Memory.ROMFilename, drive, dir, fname, ext);
-        strcpy (filename, FREEZEFOLDER);
+
+	if (strlen (FREEZEFOLDER))
+	{
+		//      splitpath (Memory.ROMFilename, drive, dir, fname, ext);
+		strcpy (filename, FREEZEFOLDER);
 #ifndef _XBOX
-        strcat (filename, "/");
+		strcat (filename, "/");
 		chdir(filename);
 		if(-1==chdir(dirname))
 		{
@@ -1722,10 +1814,10 @@ void SPC7110Load(char* dirname)
 		strcat (filename,dirname);
 		strcat (filename,"\\");
 #endif
-    }
-    else
-    {
-        splitpath (Memory.ROMFilename, drive, dir, fname, ext);
+	}
+	else
+	{
+		splitpath (Memory.ROMFilename, drive, dir, fname, ext);
 		strcpy(filename, drive);
 		//strcat(filename, "\\");
 		strcat(filename, dir);
@@ -1740,7 +1832,7 @@ void SPC7110Load(char* dirname)
 		}
 #endif
 
-    }
+	}
 
 #ifndef _XBOX
 	getcwd(finder, PATH_MAX);
@@ -1750,9 +1842,9 @@ void SPC7110Load(char* dirname)
 	// D:\\ is always app.path in Xbox
 	Load7110Index("d:\\index.bin");
 #endif
-		//	Load7110Index(index);
+	//	Load7110Index(index);
 
-	for(i=0;i<MAX_TABLES;i++)
+	for(i=0; i<MAX_TABLES; i++)
 	{
 		if(decompack->tableEnts[i].table!=0)
 		{
@@ -1764,7 +1856,9 @@ void SPC7110Load(char* dirname)
 #endif
 			struct stat buf;
 			if(-1!=stat(binname, &buf))
+			{
 				decompack->binfiles[i]=new uint8[buf.st_size];
+			}
 			FILE* fp=fopen(binname, "rb");
 			if(fp)
 			{
@@ -1774,16 +1868,16 @@ void SPC7110Load(char* dirname)
 		}
 	}
 
-#ifndef _XBOX	
+#ifndef _XBOX
 	chdir(temp_path);
 #endif
 
 	Copy7110=&MovePackData;
 	CleanUp7110=&Del7110Gfx;
 #ifdef __WIN32__
-	#ifndef _XBOX
-		EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_ENABLED);
-	#endif
+#ifndef _XBOX
+	EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_ENABLED);
+#endif
 #endif
 }
 
@@ -1793,10 +1887,10 @@ void SPC7110Open(char* dirname)
 	char finder[PATH_MAX];
 	char temp_path[PATH_MAX];
 	char filename [PATH_MAX + 1];
-    char drive [_MAX_DRIVE + 1];
-    char dir [_MAX_DIR + 1];
-    char fname [_MAX_FNAME + 1];
-    char ext [_MAX_EXT + 1];
+	char drive [_MAX_DRIVE + 1];
+	char dir [_MAX_DIR + 1];
+	char fname [_MAX_FNAME + 1];
+	char ext [_MAX_EXT + 1];
 	int i=0;
 
 	decompack=new Pack7110;
@@ -1806,18 +1900,18 @@ void SPC7110Open(char* dirname)
 #endif
 
 	ZeroMemory(decompack, sizeof(Pack7110));
-	
-    if (strlen (FREEZEFOLDER))
-    {
-        //splitpath (Memory.ROMFilename, drive, dir, fname, ext);
-        strcpy (filename, FREEZEFOLDER);
-        
+
+	if (strlen (FREEZEFOLDER))
+	{
+		//splitpath (Memory.ROMFilename, drive, dir, fname, ext);
+		strcpy (filename, FREEZEFOLDER);
+
 #ifndef _XBOX
 		strcat (filename, "/");
 		chdir(filename);
 		if(-1==chdir(dirname))
 		{
-						S9xMessage(0,0,"Graphics Pack not found!");
+			S9xMessage(0,0,"Graphics Pack not found!");
 //Settings.SPC7110=false;
 //			return;
 		}
@@ -1827,10 +1921,10 @@ void SPC7110Open(char* dirname)
 
 #endif
 
-    }
-    else
-    {
-        splitpath (Memory.ROMFilename, drive, dir, fname, ext);
+	}
+	else
+	{
+		splitpath (Memory.ROMFilename, drive, dir, fname, ext);
 		strcpy(filename, drive);
 		//strcat(filename, "\\");
 		strcat(filename, dir);
@@ -1839,25 +1933,27 @@ void SPC7110Open(char* dirname)
 		chdir(filename);
 		if(-1==chdir(dirname))
 		{
-						S9xMessage(0,0,"Graphics Pack not found!");
+			S9xMessage(0,0,"Graphics Pack not found!");
 //			Settings.SPC7110=false;
 //			return;
 		}
 #endif
 
-    }
+	}
 
 #ifndef _XBOX
 	getcwd(finder, PATH_MAX);
 	strcat(finder, "/*.bin");
 	Load7110Index("index.bin");
 #else
-		// D:\\ is always app.path in Xbox
+	// D:\\ is always app.path in Xbox
 	Load7110Index("d:\\index.bin");
 #endif
 
 	for (i=0; i<MAX_TABLES; i++)
+	{
 		decompack->binfiles[i]=NULL;
+	}
 
 	ReadPackData();
 
@@ -1869,9 +1965,9 @@ void SPC7110Open(char* dirname)
 	CleanUp7110=&Close7110Gfx;
 
 #ifdef __WIN32__
-	#ifndef _XBOX
-		EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_ENABLED);
-	#endif
+#ifndef _XBOX
+	EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_ENABLED);
+#endif
 #endif
 }
 
@@ -1881,10 +1977,10 @@ void SPC7110Grab(char* dirname)
 	char finder[PATH_MAX];
 	char temp_path[PATH_MAX];
 	char filename [PATH_MAX + 1];
-    char drive [_MAX_DRIVE + 1];
-    char dir [_MAX_DIR + 1];
-    char fname [_MAX_FNAME + 1];
-    char ext [_MAX_EXT + 1];
+	char drive [_MAX_DRIVE + 1];
+	char dir [_MAX_DIR + 1];
+	char fname [_MAX_FNAME + 1];
+	char ext [_MAX_EXT + 1];
 	int i=0;
 
 	decompack=new Pack7110;
@@ -1896,12 +1992,12 @@ void SPC7110Grab(char* dirname)
 	int32 buffer_size=1024*1024*cacheMegs;//*some setting
 
 	ZeroMemory(decompack, sizeof(Pack7110));
-	
-    if (strlen (FREEZEFOLDER))
-    {
-        strcpy (filename, FREEZEFOLDER);
+
+	if (strlen (FREEZEFOLDER))
+	{
+		strcpy (filename, FREEZEFOLDER);
 #ifndef _XBOX
-        strcat (filename, "/");
+		strcat (filename, "/");
 		chdir(filename);
 		if(-1==chdir(dirname))
 		{
@@ -1912,10 +2008,10 @@ void SPC7110Grab(char* dirname)
 		strcat (filename,"\\");
 
 #endif
-    }
-    else
-    {
-        splitpath (Memory.ROMFilename, drive, dir, fname, ext);
+	}
+	else
+	{
+		splitpath (Memory.ROMFilename, drive, dir, fname, ext);
 		strcpy(filename, drive);
 		strcat(filename, dir);
 
@@ -1927,7 +2023,7 @@ void SPC7110Grab(char* dirname)
 		}
 #endif
 
-    }
+	}
 
 #ifndef _XBOX
 	getcwd(finder, PATH_MAX);
@@ -1939,7 +2035,7 @@ void SPC7110Grab(char* dirname)
 	Load7110Index("d:\\index.bin");
 #endif
 
-	for(i=0;i<MAX_TABLES;i++)
+	for(i=0; i<MAX_TABLES; i++)
 	{
 		if(decompack->tableEnts[i].table!=0)
 		{
@@ -1954,7 +2050,9 @@ void SPC7110Grab(char* dirname)
 			if(-1!=stat(binname, &buf))
 			{
 				if(buf.st_size<buffer_size)
+				{
 					decompack->binfiles[i]=new uint8[buf.st_size];
+				}
 				FILE* fp=fopen(binname, "rb");
 				//use them here
 				if(fp)
@@ -1985,9 +2083,9 @@ void SPC7110Grab(char* dirname)
 
 
 #ifdef __WIN32__
-	#ifndef _XBOX
-		EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_ENABLED);
-	#endif
+#ifndef _XBOX
+	EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_ENABLED);
+#endif
 #endif
 }
 
@@ -1998,13 +2096,13 @@ void Del7110Gfx()
 	if(Settings.SPC7110)
 	{
 #ifdef __WIN32__
-	#ifndef _XBOX
+#ifndef _XBOX
 		EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_GRAYED);
-	#endif
+#endif
 #endif
 		Do7110Logging();
 	}
-	for(i=0;i<MAX_TABLES;i++)
+	for(i=0; i<MAX_TABLES; i++)
 	{
 		if(decompack->binfiles[i]!=NULL)
 		{
@@ -2015,7 +2113,9 @@ void Del7110Gfx()
 	Settings.SPC7110=false;
 	Settings.SPC7110RTC=false;
 	if(NULL!=decompack)
+	{
 		delete decompack;
+	}
 	decompack=NULL;
 	CleanUp7110=NULL;
 	Copy7110=NULL;
@@ -2028,13 +2128,13 @@ void Close7110Gfx()
 	if(Settings.SPC7110)
 	{
 #ifdef __WIN32__
-	#ifndef _XBOX
+#ifndef _XBOX
 		EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_GRAYED);
-	#endif
+#endif
 #endif
 		Do7110Logging();
 	}
-	for(i=0;i<MAX_TABLES;i++)
+	for(i=0; i<MAX_TABLES; i++)
 	{
 		if(decompack->binfiles[i]!=NULL)
 		{
@@ -2045,7 +2145,9 @@ void Close7110Gfx()
 	Settings.SPC7110=false;
 	Settings.SPC7110RTC=false;
 	if(NULL!=decompack)
+	{
 		delete decompack;
+	}
 	decompack=NULL;
 	CleanUp7110=NULL;
 	Copy7110=NULL;
@@ -2058,13 +2160,13 @@ void Drop7110Gfx()
 	if(Settings.SPC7110)
 	{
 #ifdef __WIN32__
-	#ifndef _XBOX
+#ifndef _XBOX
 		EnableMenuItem(GUI.hMenu, IDM_LOG_7110, MF_GRAYED);
-	#endif
+#endif
 #endif
 		Do7110Logging();
 	}
-	for(i=0;i<MAX_TABLES;i++)
+	for(i=0; i<MAX_TABLES; i++)
 	{
 		if(decompack->binfiles[i]!=NULL)
 		{
@@ -2083,7 +2185,9 @@ void Drop7110Gfx()
 	Settings.SPC7110=false;
 	Settings.SPC7110RTC=false;
 	if(NULL!=decompack)
+	{
 		delete decompack;
+	}
 	decompack=NULL;
 	CleanUp7110=NULL;
 	Copy7110=NULL;
@@ -2154,12 +2258,12 @@ void Do7110Logging()
 	uint8 ent_temp;
 	FILE* flog;
 	int entries=0;
-	
+
 	if(Settings.SPC7110)
 	{
 		//flush last read into logging
 		(*Copy7110)();
-		
+
 		if(!strncmp((char*)&Memory.ROM [0xffc0], "SUPER POWER LEAG 4   ", 21))
 		{
 #ifdef _XBOX
@@ -2200,7 +2304,7 @@ void Do7110Logging()
 			flog=fopen("misc-sp7.dat","rb");
 #endif
 		}
-		
+
 		if(flog)
 		{
 			uint8 buffer[8];
@@ -2233,8 +2337,8 @@ void Do7110Logging()
 			while(!feof(flog));
 			fclose(flog);
 		}
-		
-		
+
+
 		if(!strncmp((char*)&Memory.ROM [0xffc0], "SUPER POWER LEAG 4   ", 21))
 		{
 #ifdef _XBOX	// cwd could be the dvd-rom, so write to T:\\ which is storage region for each title
@@ -2280,12 +2384,14 @@ void Do7110Logging()
 		{
 			int j=0;
 			int temp=0;
-			for(j=0;j<MAX_TABLES;j++)
+			for(j=0; j<MAX_TABLES; j++)
 			{
-				for(int k=0;k<256;k++)
+				for(int k=0; k<256; k++)
 				{
 					if(decompack->tableEnts[j].location[k].used_len!=0)
+					{
 						entries++;
+					}
 				}
 			}
 			ent_temp=entries&0xFF;
@@ -2303,17 +2409,17 @@ void Do7110Logging()
 			fwrite(&temp,1,4,flog);
 			fwrite(&temp,1,4,flog);
 			fwrite(&temp,1,4,flog);
-			
+
 			ent_temp=0;
 			fwrite(&ent_temp,1,1,flog);
 			ent_temp=0;
 			fwrite(&ent_temp,1,1,flog);
 			ent_temp=0;
 			fwrite(&ent_temp,1,1,flog);
-			
-			for(j=0;j<MAX_TABLES;j++)
+
+			for(j=0; j<MAX_TABLES; j++)
 			{
-				for(int k=0;k<256;k++)
+				for(int k=0; k<256; k++)
 				{
 					if(decompack->tableEnts[j].location[k].used_len!=0)
 					{
@@ -2326,7 +2432,7 @@ void Do7110Logging()
 						ent_temp=k&0xFF;
 						fwrite(&ent_temp,1,1,flog);//804
 						ent_temp=decompack->tableEnts[j].location[k].used_len&0xFF;
-						fwrite(&ent_temp,1,1,flog);//lsb of 
+						fwrite(&ent_temp,1,1,flog);//lsb of
 						ent_temp=(decompack->tableEnts[j].location[k].used_len>>8)&0xFF;
 						fwrite(&ent_temp,1,1,flog);//msb of
 						ent_temp=(decompack->tableEnts[j].location[k].used_offset)&0xFF;

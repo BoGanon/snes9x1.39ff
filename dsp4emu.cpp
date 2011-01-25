@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,46 +43,46 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
@@ -113,11 +113,12 @@ void DSP4_Multiply(short Multiplicand, short Multiplier, int &Product)
 void DSP4_UnknownOP11(short A, short B, short C, short D, short &M)
 {
 	// 0x155 = 341 = Horizontal Width of the Screen
-	M = ((A * 0x0155 >>  2) & 0xf000) | ((B * 0x0155 >>  6) & 0x0f00) | 
-	    ((C * 0x0155 >> 10) & 0x00f0) | ((D * 0x0155 >> 14) & 0x000f); 
+	M = ((A * 0x0155 >>  2) & 0xf000) | ((B * 0x0155 >>  6) & 0x0f00) |
+	    ((C * 0x0155 >> 10) & 0x00f0) | ((D * 0x0155 >> 14) & 0x000f);
 }
 
-const unsigned short Op0A_Values[16] = {
+const unsigned short Op0A_Values[16] =
+{
 	0x0000, 0x0030, 0x0060, 0x0090, 0x00c0, 0x00f0, 0x0120, 0x0150,
 	0xfe80, 0xfeb0, 0xfee0, 0xff10, 0xff40, 0xff70, 0xffa0, 0xffd0
 };
@@ -146,8 +147,10 @@ void DSP4_Op03()
 	MaxTilesPerRow = 33;
 
 	for (int i=0; i < 32; i++)
+	{
 		RowCount[i] = 0;
-	
+	}
+
 	// reset op09 data
 	op09_mode = 0;
 }
@@ -161,8 +164,10 @@ void DSP4_Op0E()
 	MaxTilesPerRow = 16;
 
 	for (int i=0; i < 32; i++)
+	{
 		RowCount[i] = 0;
-	
+	}
+
 	// reset op09 data
 	op09_mode = 1;
 }
@@ -195,9 +200,14 @@ void DSP4_Op01()
 	DSP4.waiting4command = FALSE;
 
 	// op flow control
-	switch(DSP4_Logic) {
-		case 1: goto resume1; break;
-		case 2: goto resume2; break;
+	switch(DSP4_Logic)
+	{
+		case 1:
+			goto resume1;
+			break;
+		case 2:
+			goto resume2;
+			break;
 	}
 
 	////////////////////////////////////////////////////
@@ -240,23 +250,27 @@ void DSP4_Op01()
 	////////////////////////////////////////////////////
 	// command check
 
-	do {
+	do
+	{
 		// scan next command
 		DSP4.in_count = 2;
 
-		DSP4_WAIT(1) resume1:
+DSP4_WAIT(1) resume1:
 
 		// inspect input
 		command = DSP4_READ_WORD(0);
 
 		// check for termination
-		if(command == 0x8000) break;
+		if(command == 0x8000)
+		{
+			break;
+		}
 
 		// already have 2 bytes in queue
 		DSP4.in_index = 2;
 		DSP4.in_count = 8;
 
-		DSP4_WAIT(2) resume2:
+DSP4_WAIT(2) resume2:
 
 		////////////////////////////////////////////////////
 		// process one iteration of projection
@@ -270,7 +284,10 @@ void DSP4_Op01()
 		int16 project_x;
 
 		// ignore invalid data
-		if((uint16) plane == 0x8001) continue;
+		if((uint16) plane == 0x8001)
+		{
+			continue;
+		}
 
 		// one-time init
 		if(far_plane)
@@ -292,22 +309,31 @@ void DSP4_Op01()
 		project_y2 = project_focaly * plane / view_plane;
 
 		// quadratic regression (rough)
-		if(project_focaly>=-0x0f) 
+		if(project_focaly>=-0x0f)
 			py_dy = project_focaly * project_focaly * -0.20533553
-							- 1.08330005 * project_focaly - 69.61094639;
+			        - 1.08330005 * project_focaly - 69.61094639;
 		else
 			py_dy = project_focaly * project_focaly * -0.000657035759
-							- 1.07629051 * project_focaly - 65.69315963;
+			        - 1.07629051 * project_focaly - 65.69315963;
 
 		// approximate # of raster lines
 		segments = abs(project_y2-project_y1);
 
 		// prevent overdraw
-		if(project_y2>=raster) segments=0;
-		else raster=project_y2;
+		if(project_y2>=raster)
+		{
+			segments=0;
+		}
+		else
+		{
+			raster=project_y2;
+		}
 
 		// don't draw outside the window
-		if(project_y2<viewport_top) segments=0;
+		if(project_y2<viewport_top)
+		{
+			segments=0;
+		}
 
 		// project new positions
 		if(segments>0)
@@ -331,7 +357,7 @@ void DSP4_Op01()
 		DSP4_WRITE_WORD(4,project_focaly);
 		DSP4_WRITE_WORD(6,project_y2);
 		DSP4_WRITE_WORD(8,segments);
-		
+
 #if 0
 		DSP4_WRITE_WORD(0,-1);
 		DSP4_WRITE_WORD(2,-1);
@@ -393,7 +419,8 @@ void DSP4_Op01()
 
 		project_focaly += project_pitchy;
 		project_focalx += project_pitchx;
-	} while (1);
+	}
+	while (1);
 
 	// terminate op
 	DSP4.waiting4command = TRUE;
@@ -413,9 +440,14 @@ void DSP4_Op07()
 	DSP4.waiting4command = FALSE;
 
 	// op flow control
-	switch(DSP4_Logic) {
-		case 1: goto resume1; break;
-		case 2: goto resume2; break;
+	switch(DSP4_Logic)
+	{
+		case 1:
+			goto resume1;
+			break;
+		case 2:
+			goto resume2;
+			break;
 	}
 
 	////////////////////////////////////////////////////
@@ -453,23 +485,27 @@ void DSP4_Op07()
 	////////////////////////////////////////////////////
 	// command check
 
-	do {
+	do
+	{
 		// scan next command
 		DSP4.in_count = 2;
 
-		DSP4_WAIT(1) resume1:
+DSP4_WAIT(1) resume1:
 
 		// inspect input
 		command = DSP4_READ_WORD(0);
 
 		// check for opcode termination
-		if(command == 0x8000) break;
+		if(command == 0x8000)
+		{
+			break;
+		}
 
-			// already have 2 bytes in queue
+		// already have 2 bytes in queue
 		DSP4.in_index = 2;
 		DSP4.in_count = 12;
 
-		DSP4_WAIT(2) resume2:
+DSP4_WAIT(2) resume2:
 
 		////////////////////////////////////////////////////
 		// process one loop of projection
@@ -491,28 +527,40 @@ void DSP4_Op07()
 		int16 envelope = DSP4_READ_WORD(8);
 
 		// ignore invalid data
-		if((uint16) plane == 0x8001) continue;
+		if((uint16) plane == 0x8001)
+		{
+			continue;
+		}
 
 		// multi-op storage
 		project_focaly = multi_focaly[multi_index2];
 
 		// quadratic regression (rough)
-		if(project_focaly>=-0x0f) 
+		if(project_focaly>=-0x0f)
 			py_dy = project_focaly * project_focaly * -0.20533553
-							- 1.08330005 * project_focaly - 69.61094639;
+			        - 1.08330005 * project_focaly - 69.61094639;
 		else
 			py_dy = project_focaly * project_focaly * -0.000657035759
-							- 1.07629051 * project_focaly - 65.69315963;
+			        - 1.07629051 * project_focaly - 65.69315963;
 
 		// approximate # of raster lines
 		segments = abs(project_y2-project_y1);
 
 		// prevent overdraw
-		if(project_y2>=raster) segments=0;
-		else raster=project_y2;
+		if(project_y2>=raster)
+		{
+			segments=0;
+		}
+		else
+		{
+			raster=project_y2;
+		}
 
 		// don't draw outside the window
-		if(project_y2<viewport_top) segments=0;
+		if(project_y2<viewport_top)
+		{
+			segments=0;
+		}
 
 		// project new positions
 		if(segments>0)
@@ -579,7 +627,8 @@ void DSP4_Op07()
 			// multi-op storage
 			multi_index2++;
 		}
-	} while(1);
+	}
+	while(1);
 
 	DSP4.waiting4command = TRUE;
 	DSP4.out_count = 0;
@@ -598,9 +647,14 @@ void DSP4_Op08()
 	DSP4.waiting4command = FALSE;
 
 	// op flow control
-	switch(DSP4_Logic) {
-		case 1: goto resume1; break;
-		case 2: goto resume2; break;
+	switch(DSP4_Logic)
+	{
+		case 1:
+			goto resume1;
+			break;
+		case 2:
+			goto resume2;
+			break;
 	}
 
 	////////////////////////////////////////////////////
@@ -654,23 +708,27 @@ void DSP4_Op08()
 	////////////////////////////////////////////////////
 	// command check
 
-	do {
+	do
+	{
 		// scan next command
 		DSP4.in_count = 2;
 
-		DSP4_WAIT(1) resume1:
-	
+DSP4_WAIT(1) resume1:
+
 		// inspect input
 		command = DSP4_READ_WORD(0);
 
 		// terminate op
-		if(command == 0x8000) break;
+		if(command == 0x8000)
+		{
+			break;
+		}
 
 		// already have 2 bytes in queue
 		DSP4.in_index = 2;
 		DSP4.in_count = 18;
 
-		DSP4_WAIT(2) resume2:
+DSP4_WAIT(2) resume2:
 
 		////////////////////////////////////////////////////
 		// projection begins
@@ -696,7 +754,10 @@ void DSP4_Op08()
 		int16 envelope4 = DSP4_READ_WORD(0x10);
 
 		// ignore invalid data
-		if((uint16) plane == 0x8001) continue;
+		if((uint16) plane == 0x8001)
+		{
+			continue;
+		}
 
 		// first init
 		if(plane == 0x7fff)
@@ -720,10 +781,22 @@ void DSP4_Op08()
 			pos2 = path_pos[1]+envelope2;
 
 			// clip offscreen data
-			if(pos1<path_clipLeft[0]) pos1 = path_clipLeft[0];
-			if(pos1>path_clipRight[0]) pos1 = path_clipRight[0];
-			if(pos2<path_clipLeft[1]) pos2 = path_clipLeft[1];
-			if(pos2>path_clipRight[1]) pos2 = path_clipRight[1];
+			if(pos1<path_clipLeft[0])
+			{
+				pos1 = path_clipLeft[0];
+			}
+			if(pos1>path_clipRight[0])
+			{
+				pos1 = path_clipRight[0];
+			}
+			if(pos2<path_clipLeft[1])
+			{
+				pos2 = path_clipLeft[1];
+			}
+			if(pos2>path_clipRight[1])
+			{
+				pos2 = path_clipRight[1];
+			}
 
 #if 0
 			pos1=-1;
@@ -753,11 +826,20 @@ void DSP4_Op08()
 			segments = abs(y_left - path_y[0]);
 
 			// prevent overdraw
-			if(y_left>=path_raster[0]) segments=0;
-			else path_raster[0]=y_left;
+			if(y_left>=path_raster[0])
+			{
+				segments=0;
+			}
+			else
+			{
+				path_raster[0]=y_left;
+			}
 
 			// don't draw outside the window
-			if(path_raster[0]<path_top[0]) segments=0;
+			if(path_raster[0]<path_top[0])
+			{
+				segments=0;
+			}
 
 			// proceed if visibility rules apply
 			if(segments>0)
@@ -793,7 +875,8 @@ void DSP4_Op08()
 
 			// zone 1
 			DSP4.out_count = (2+4*segments);
-			DSP4_WRITE_WORD(index,segments); index+=2;
+			DSP4_WRITE_WORD(index,segments);
+			index+=2;
 
 			for( lcv=1; lcv<=segments; lcv++ )
 			{
@@ -804,21 +887,40 @@ void DSP4_Op08()
 				pos2 = path_pos[1]+((right_inc*lcv)>>8)+dx2;
 
 				// clip offscreen data
-				if(pos1<path_clipLeft[0]) pos1 = path_clipLeft[0];
-				if(pos1>path_clipRight[0]) pos1 = path_clipRight[0];
-				if(pos2<path_clipLeft[1]) pos2 = path_clipLeft[1];
-				if(pos2>path_clipRight[1]) pos2 = path_clipRight[1];
+				if(pos1<path_clipLeft[0])
+				{
+					pos1 = path_clipLeft[0];
+				}
+				if(pos1>path_clipRight[0])
+				{
+					pos1 = path_clipRight[0];
+				}
+				if(pos2<path_clipLeft[1])
+				{
+					pos2 = path_clipLeft[1];
+				}
+				if(pos2>path_clipRight[1])
+				{
+					pos2 = path_clipRight[1];
+				}
 
 #if 0
-				if(pos1==0x00ff) pos1=0;
-				if(pos2==0x00ff) pos2=0;
+				if(pos1==0x00ff)
+				{
+					pos1=0;
+				}
+				if(pos2==0x00ff)
+				{
+					pos2=0;
+				}
 				path_ptr[0] = -1;
 				pos1 = -1;
 				pos2 = -1;
 #endif
 
 				// data
-				DSP4_WRITE_WORD(index,path_ptr[0]); index+=2;
+				DSP4_WRITE_WORD(index,path_ptr[0]);
+				index+=2;
 				DSP4.output[index++]=pos1&0xFF;
 				DSP4.output[index++]=pos2&0xFF;
 
@@ -846,11 +948,20 @@ void DSP4_Op08()
 			segments = abs(y_right - path_y[1]);
 
 			// prevent overdraw
-			if(y_right>=path_raster[2]) segments=0;
-			else path_raster[2]=y_right;
+			if(y_right>=path_raster[2])
+			{
+				segments=0;
+			}
+			else
+			{
+				path_raster[2]=y_right;
+			}
 
 			// don't draw outside the window
-			if(path_raster[2]<path_top[2]) segments=0;
+			if(path_raster[2]<path_top[2])
+			{
+				segments=0;
+			}
 
 			// proceed if visibility rules apply
 			if(segments>0)
@@ -882,7 +993,8 @@ void DSP4_Op08()
 
 			// write out results
 			DSP4.out_count += (2+4*segments);
-			DSP4_WRITE_WORD(index,segments); index+=2;
+			DSP4_WRITE_WORD(index,segments);
+			index+=2;
 
 			for( lcv=1; lcv<=segments; lcv++ )
 			{
@@ -893,21 +1005,40 @@ void DSP4_Op08()
 				pos2 = path_pos[3]+((right_inc*lcv)>>8)+dx2;
 
 				// clip offscreen data
-				if(pos1<path_clipLeft[2]) pos1 = path_clipLeft[2];
-				if(pos1>path_clipRight[2]) pos1 = path_clipRight[2];
-				if(pos2<path_clipLeft[3]) pos2 = path_clipLeft[3];
-				if(pos2>path_clipRight[3]) pos2 = path_clipRight[3];
+				if(pos1<path_clipLeft[2])
+				{
+					pos1 = path_clipLeft[2];
+				}
+				if(pos1>path_clipRight[2])
+				{
+					pos1 = path_clipRight[2];
+				}
+				if(pos2<path_clipLeft[3])
+				{
+					pos2 = path_clipLeft[3];
+				}
+				if(pos2>path_clipRight[3])
+				{
+					pos2 = path_clipRight[3];
+				}
 
 #if 0
-				if(pos1==0x00ff) pos1=0;
-				if(pos2==0x00ff) pos2=0;
+				if(pos1==0x00ff)
+				{
+					pos1=0;
+				}
+				if(pos2==0x00ff)
+				{
+					pos2=0;
+				}
 				path_ptr[2] = -1;
 				//pos1 = -1;
 				pos2 = -1;
 #endif
 
 				// data
-				DSP4_WRITE_WORD(index,path_ptr[2]); index+=2;
+				DSP4_WRITE_WORD(index,path_ptr[2]);
+				index+=2;
 				DSP4.output[index++]=pos1&0xFF;
 				DSP4.output[index++]=pos2&0xFF;
 
@@ -930,7 +1061,8 @@ void DSP4_Op08()
 				path_y[1] = y_right;
 			}
 		}
-	} while(1);
+	}
+	while(1);
 
 	DSP4.waiting4command = TRUE;
 	DSP4.out_count = 2;
@@ -950,9 +1082,14 @@ void DSP4_Op0D()
 	DSP4.waiting4command = FALSE;
 
 	// op flow control
-	switch(DSP4_Logic) {
-		case 1: goto resume1; break;
-		case 2: goto resume2; break;
+	switch(DSP4_Logic)
+	{
+		case 1:
+			goto resume1;
+			break;
+		case 2:
+			goto resume2;
+			break;
 	}
 
 	////////////////////////////////////////////////////
@@ -989,10 +1126,18 @@ void DSP4_Op0D()
 	// Op09: TL,TR,BL,BR (1,2,3,0)
 	switch(multi_index1)
 	{
-		case 1: multi_index2=3; break;
-		case 2: multi_index2=1; break;
-		case 3: multi_index2=0; break;
-		case 0: multi_index2=2; break;
+		case 1:
+			multi_index2=3;
+			break;
+		case 2:
+			multi_index2=1;
+			break;
+		case 3:
+			multi_index2=0;
+			break;
+		case 0:
+			multi_index2=2;
+			break;
 	}
 
 	// pre-compute
@@ -1007,23 +1152,27 @@ void DSP4_Op0D()
 	////////////////////////////////////////////////////
 	// command check
 
-	do {
+	do
+	{
 		// scan next command
 		DSP4.in_count = 2;
-		
-		DSP4_WAIT(1) resume1:
+
+DSP4_WAIT(1) resume1:
 
 		// inspect input
 		command = DSP4_READ_WORD(0);
 
 		// terminate op
-		if(command == 0x8000) break;
+		if(command == 0x8000)
+		{
+			break;
+		}
 
 		// already have 2 bytes in queue
 		DSP4.in_index = 2;
 		DSP4.in_count = 8;
 
-		DSP4_WAIT(2) resume2:
+DSP4_WAIT(2) resume2:
 
 		////////////////////////////////////////////////////
 		// project section of the track
@@ -1037,7 +1186,10 @@ void DSP4_Op0D()
 		int16 project_x;
 
 		// ignore invalid data
-		if((uint16) plane == 0x8001) continue;
+		if((uint16) plane == 0x8001)
+		{
+			continue;
+		}
 
 		// one-time init
 		if(far_plane)
@@ -1059,22 +1211,31 @@ void DSP4_Op0D()
 		project_y2 = project_focaly * plane / view_plane;
 
 		// quadratic regression (rough)
-		if(project_focaly>=-0x0f) 
+		if(project_focaly>=-0x0f)
 			py_dy = project_focaly * project_focaly * -0.20533553
-							- 1.08330005 * project_focaly - 69.61094639;
+			        - 1.08330005 * project_focaly - 69.61094639;
 		else
 			py_dy = project_focaly * project_focaly * -0.000657035759
-							- 1.07629051 * project_focaly - 65.69315963;
+			        - 1.07629051 * project_focaly - 65.69315963;
 
 		// approximate # of raster lines
 		segments = abs(project_y2-project_y1);
 
 		// prevent overdraw
-		if(project_y2>=raster) segments=0;
-		else raster=project_y2;
+		if(project_y2>=raster)
+		{
+			segments=0;
+		}
+		else
+		{
+			raster=project_y2;
+		}
 
 		// don't draw outside the window
-		if(project_y2<viewport_top) segments=0;
+		if(project_y2<viewport_top)
+		{
+			segments=0;
+		}
 
 		// project new positions
 		if(segments>0)
@@ -1155,8 +1316,9 @@ void DSP4_Op0D()
 
 		project_focaly += project_pitchy;
 		project_focalx += project_pitchx;
-	} while(1);
-	
+	}
+	while(1);
+
 	DSP4.waiting4command = TRUE;
 	DSP4.out_count = 0;
 }
@@ -1178,14 +1340,29 @@ void DSP4_Op09()
 	DSP4.waiting4command = FALSE;
 
 	// op flow control
-	switch(DSP4_Logic) {
-		case 1: goto resume1; break;
-		case 2: goto resume2; break;
-		case 3: goto resume3; break;
-		case 4: goto resume4; break;
-		case 5: goto resume5; break;
-		case 6: goto resume6; break;
-		case 7: goto resume7; break;
+	switch(DSP4_Logic)
+	{
+		case 1:
+			goto resume1;
+			break;
+		case 2:
+			goto resume2;
+			break;
+		case 3:
+			goto resume3;
+			break;
+		case 4:
+			goto resume4;
+			break;
+		case 5:
+			goto resume5;
+			break;
+		case 6:
+			goto resume6;
+			break;
+		case 7:
+			goto resume7;
+			break;
 	}
 
 	////////////////////////////////////////////////////
@@ -1206,7 +1383,7 @@ void DSP4_Op09()
 
 #ifdef PRINT2
 	printf("Window: (%04X,%04X) (%04X,%04X)\n",
-		viewport_left,viewport_right,viewport_top,viewport_bottom);
+	       viewport_left,viewport_right,viewport_top,viewport_bottom);
 #endif
 
 	// cycle through viewport window data
@@ -1215,23 +1392,28 @@ void DSP4_Op09()
 
 	goto no_sprite;
 
-	do {
+	do
+	{
 		////////////////////////////////////////////////////
 		// check for new sprites
 
-		do {
+		do
+		{
 			uint16 second;
 
 			DSP4.in_count = 4;
 			DSP4.in_index = 2;
 
-			DSP4_WAIT(1) resume1:
+DSP4_WAIT(1) resume1:
 
 			// try to classify sprite
 			second = DSP4_READ_WORD(2);
 
 			// op termination
-			if(second == 0x8000) goto terminate;
+			if(second == 0x8000)
+			{
+				goto terminate;
+			}
 
 			second >>= 8;
 			sprite_type = 0;
@@ -1254,9 +1436,10 @@ no_sprite:
 
 			DSP4.in_count = 2;
 
-			DSP4_WAIT(2) resume2:
+DSP4_WAIT(2) resume2:
 			;
-		} while (1);
+		}
+		while (1);
 
 		////////////////////////////////////////////////////
 		// process projection information
@@ -1274,7 +1457,7 @@ sprite_found:
 			DSP4.in_count = 6+12;
 			DSP4.in_index = 4;
 
-			DSP4_WAIT(3) resume3:
+DSP4_WAIT(3) resume3:
 
 			// filter inputs
 			project_y1 = DSP4_READ_WORD(0x00);
@@ -1321,7 +1504,7 @@ sprite_found:
 			// grab a few remaining vehicle values
 			DSP4.in_count = 4;
 
-			DSP4_WAIT(4) resume4:
+DSP4_WAIT(4) resume4:
 
 			// store final values
 			int height = DSP4_READ_WORD(0);
@@ -1343,7 +1526,7 @@ sprite_found:
 			DSP4.in_count = 6+6+2;
 			DSP4.in_index = 4;
 
-			DSP4_WAIT(5) resume5:
+DSP4_WAIT(5) resume5:
 
 			// sort loop inputs
 			project_y1 = DSP4_READ_WORD(0x00);
@@ -1377,15 +1560,19 @@ sprite_found:
 		////////////////////////////////////////////////////
 		// convert tile data to OAM
 
-		do {
+		do
+		{
 			DSP4.in_count = 2;
 
-			DSP4_WAIT(6) resume6:
+DSP4_WAIT(6) resume6:
 
 			command = DSP4_READ_WORD(0);
 
 			// opcode termination
-			if(command == 0x8000) goto terminate;
+			if(command == 0x8000)
+			{
+				goto terminate;
+			}
 
 			// toggle sprite size
 			if(command == 0x0000)
@@ -1400,14 +1587,16 @@ sprite_found:
 			// new sprite information
 			command >>= 8;
 			if(command != 0x20 && command != 0x40 &&
-				 command != 0x60 && command != 0xa0 &&
-				 command != 0xc0 && command != 0xe0)
+			        command != 0x60 && command != 0xa0 &&
+			        command != 0xc0 && command != 0xe0)
+			{
 				break;
+			}
 
 			DSP4.in_count = 6;
 			DSP4.in_index = 2;
 
-			DSP4_WAIT(7) resume7:
+DSP4_WAIT(7) resume7:
 
 			/////////////////////////////////////
 			// process tile data
@@ -1429,13 +1618,22 @@ sprite_found:
 			clip = FALSE;
 
 			// window clipping
-			if(sp_x < viewport_left-expand || sp_x > viewport_right) clip=TRUE;
-			if(sp_y < viewport_top || sp_y > viewport_bottom) clip=TRUE;
+			if(sp_x < viewport_left-expand || sp_x > viewport_right)
+			{
+				clip=TRUE;
+			}
+			if(sp_y < viewport_top || sp_y > viewport_bottom)
+			{
+				clip=TRUE;
+			}
 
 			// track occlusion:
 			// clip any tiles that are below the road
 			if(far_plane <= multi_farplane[multi_index1] &&
-				 (sp_y>>3) >= (multi_raster[multi_index1]>>3)) clip=TRUE;
+			        (sp_y>>3) >= (multi_raster[multi_index1]>>3))
+			{
+				clip=TRUE;
+			}
 
 			// tile limitations
 			if ((sp_y >= -expand) && ((sp_y < 0) || ((sp_y & 0x01ff) < 0x00eb)) && !clip)
@@ -1446,27 +1644,33 @@ sprite_found:
 				{
 					// 1x1 tile
 					if (RowCount[Row] < MaxTilesPerRow)
+					{
 						RowCount[Row]++;
+					}
 					else
+					{
 						clip=TRUE;
+					}
 				}
 				else
 				{
 					// 2x2 tile
 					if ((RowCount[Row+0]+1 < MaxTilesPerRow) &&
-						  (RowCount[Row+1]+1 < MaxTilesPerRow))
+					        (RowCount[Row+1]+1 < MaxTilesPerRow))
 					{
 						RowCount[Row+0]+=2;
 						RowCount[Row+1]+=2;
 					}
 					else
+					{
 						clip=TRUE;
+					}
 				}
 			}
-	
+
 #ifdef PRINT
 			printf("(line %d) %04X, %04X, %04X / %04X %04X\n",line,
-				(uint16)sp_x,(uint16)sp_y,(uint16)far_plane,(uint16)multi_farplane[multi_index1],(uint16)multi_raster[multi_index1]);
+			       (uint16)sp_x,(uint16)sp_y,(uint16)far_plane,(uint16)multi_farplane[multi_index1],(uint16)multi_raster[multi_index1]);
 #endif
 
 			// don't draw offscreen coordinates
@@ -1481,17 +1685,17 @@ sprite_found:
 				sp_msb = (sp_x<0 || sp_x>255);
 
 #ifdef PRINT2
-			printf("(line %d) %04X, %04X, %04X, %04X, %04X\n",line,
-				(uint16)sp_oam,(uint16)sprite_offset,(uint16)offset,
-				(uint16)sp_x,(uint16)sp_y);
+				printf("(line %d) %04X, %04X, %04X, %04X, %04X\n",line,
+				       (uint16)sp_oam,(uint16)sprite_offset,(uint16)offset,
+				       (uint16)sp_x,(uint16)sp_y);
 #endif
 
 				// emit transparency information
 				if(
-						(sprite_offset&0x08) &&
-						((sprite_type==1 && sp_y>=0xcc) ||
-						 (sprite_type==2 && sp_y>=0xbb))
-					)
+				    (sprite_offset&0x08) &&
+				    ((sprite_type==1 && sp_y>=0xcc) ||
+				     (sprite_type==2 && sp_y>=0xbb))
+				)
 				{
 					DSP4.out_count = 6;
 
@@ -1538,14 +1742,15 @@ sprite_found:
 				DSP4_WRITE_WORD(out_index+4,-1);
 #endif
 			}
-			
+
 			// no sprite information
 			if(DSP4.out_count == 0)
 			{
 				DSP4.out_count = 2;
 				DSP4_WRITE_WORD(0,0);
 			}
-		} while (1);
+		}
+		while (1);
 
 		/////////////////////////////////////
 		// special cases: plane == 0x0000
@@ -1576,7 +1781,8 @@ sprite_found:
 
 			goto sprite_found;
 		}
-	} while (1);
+	}
+	while (1);
 
 terminate:
 	DSP4.waiting4command = TRUE;

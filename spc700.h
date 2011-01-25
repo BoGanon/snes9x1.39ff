@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -87,19 +87,26 @@
 typedef union
 {
 #ifdef LSB_FIRST
-    struct { uint8 A, Y; } B;
+	struct
+	{
+		uint8 A, Y;
+	} B;
 #else
-    struct { uint8 Y, A; } B;
+	struct
+	{
+		uint8 Y, A;
+	} B;
 #endif
-    uint16 W;
+	uint16 W;
 } YAndA;
 
-struct SAPURegisters{
-    uint16_32	PC;
-    uint8_32	P;
-    YAndA		YA;
-    uint8_32	X;
-    uint8_32	S;
+struct SAPURegisters
+{
+	uint16_32	PC;
+	uint8_32	P;
+	YAndA		YA;
+	uint8_32	X;
+	uint8_32	S;
 };
 
 /*

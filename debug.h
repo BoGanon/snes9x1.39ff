@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -48,7 +48,8 @@ void S9xSA1Trace ();
 void S9xTraceMessage (const char *);
 
 // Structures
-struct SBreakPoint{
+struct SBreakPoint
+{
 	bool8   Enabled;
 	uint8  Bank;
 	uint16 Address;

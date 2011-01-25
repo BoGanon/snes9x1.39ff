@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -116,104 +116,129 @@ int test2=0;
 
 int AudioOpen(unsigned long freq, unsigned long minbufsize, unsigned long bitrate, unsigned long stereo)
 {
-        ULONG Type;
+	ULONG Type;
 
-        Frequency = freq;
+	Frequency = freq;
 
-    so.playback_rate = Frequency;
-    
-    if(stereo) so.stereo = TRUE;
-    else so.stereo = FALSE;
+	so.playback_rate = Frequency;
 
-        switch(bitrate)
-        {
-                case 8:
-            so.sixteen_bit = FALSE;
-                        BitRate=1;
-                        if(stereo)
-                        {
-                                Stereo=2;
-                                Type = AHIST_S8S;
-                        }
-                        else
-                        {
-                                Stereo=1;
-                                Type = AHIST_M8S;
-                        }
+	if(stereo)
+	{
+		so.stereo = TRUE;
+	}
+	else
+	{
+		so.stereo = FALSE;
+	}
 
-                break;
+	switch(bitrate)
+	{
+		case 8:
+			so.sixteen_bit = FALSE;
+			BitRate=1;
+			if(stereo)
+			{
+				Stereo=2;
+				Type = AHIST_S8S;
+			}
+			else
+			{
+				Stereo=1;
+				Type = AHIST_M8S;
+			}
 
-                default:        //defaulting to 16bit, because it means it won't crash atleast
-                case QUAL_16BIT:
-            so.sixteen_bit = TRUE;
-                        BitRate=2;
-                        if(stereo)
-                        {
-                                Stereo=2;
-                                Type = AHIST_S16S;
-                        }
-                        else
-                        {
-                                Stereo=1;
-                                Type = AHIST_M16S;
-                        }
-                break;
-        }
+			break;
 
-    if(prelude) prelude = OpenPrelude(Type, freq, minbufsize);
-    
-    
-    if(prelude) return 1; else printf("Defaulting to AHI...\n");
+		default:        //defaulting to 16bit, because it means it won't crash atleast
+		case QUAL_16BIT:
+			so.sixteen_bit = TRUE;
+			BitRate=2;
+			if(stereo)
+			{
+				Stereo=2;
+				Type = AHIST_S16S;
+			}
+			else
+			{
+				Stereo=1;
+				Type = AHIST_M16S;
+			}
+			break;
+	}
 
-    /* only 1 channel right? */
-    /* NOTE: The buffersize will not always be what you requested
-     * it finds the minimun AHI requires and then rounds it up to
-     * nearest 32 bytes.  Check AHIData->BufferSize or Samples[n].something_Length
-     */
-    if(AHIData = OpenAHI(1, Type, AHI_INVALID_ID, AHI_DEFAULT_FREQ, 0, minbufsize))
-    {
-        printf("AHI opened\n");
-        printf("BuffSize %d\n", AHIData->BufferSize);
-    }
-    else
-    {
-        printf("AHI failed to open: %d\n", AHIData);
-        return 0;
-    }
-    
-    so.buffer_size = AHIData->BufferSize; // in bytes
-        if (so.buffer_size > MAX_BUFFER_SIZE) so.buffer_size = MAX_BUFFER_SIZE;
+	if(prelude)
+	{
+		prelude = OpenPrelude(Type, freq, minbufsize);
+	}
 
-    /* Lots of useful fields in the AHIData struct, have a look */
-    AHIBase = AHIData->AHIBase;
-    actrl = AHIData->AudioCtrl;
-    Frequency = AHIData->MixingFreq;
 
-        printf("signal %ld\n", AHIData->SoundFuncSignal);
+	if(prelude)
+	{
+		return 1;
+	}
+	else
+	{
+		printf("Defaulting to AHI...\n");
+	}
 
-        Wait(AHIData->SoundFuncSignal);
+	/* only 1 channel right? */
+	/* NOTE: The buffersize will not always be what you requested
+	 * it finds the minimun AHI requires and then rounds it up to
+	 * nearest 32 bytes.  Check AHIData->BufferSize or Samples[n].something_Length
+	 */
+	if(AHIData = OpenAHI(1, Type, AHI_INVALID_ID, AHI_DEFAULT_FREQ, 0, minbufsize))
+	{
+		printf("AHI opened\n");
+		printf("BuffSize %d\n", AHIData->BufferSize);
+	}
+	else
+	{
+		printf("AHI failed to open: %d\n", AHIData);
+		return 0;
+	}
 
-        /* I don't think it should start playing until there is something
-         * In the buffer, however to set off the SoundFunc it should
-         * probably go through the buffer at least once, just silently.
-         */
-        AHI_SetFreq(0, Frequency, actrl, AHISF_IMM);
+	so.buffer_size = AHIData->BufferSize; // in bytes
+	if (so.buffer_size > MAX_BUFFER_SIZE)
+	{
+		so.buffer_size = MAX_BUFFER_SIZE;
+	}
 
-        Wait(AHIData->SoundFuncSignal);
+	/* Lots of useful fields in the AHIData struct, have a look */
+	AHIBase = AHIData->AHIBase;
+	actrl = AHIData->AudioCtrl;
+	Frequency = AHIData->MixingFreq;
 
-        AHI_SetVol(0, 0x10000, 0x8000, actrl, AHISF_IMM);
+	printf("signal %ld\n", AHIData->SoundFuncSignal);
 
-        mixsamples=AHIData->BufferSamples;
+	Wait(AHIData->SoundFuncSignal);
 
-        SoundSignal = AHIData->SoundFuncSignal;
-    
-    return 1;
+	/* I don't think it should start playing until there is something
+	 * In the buffer, however to set off the SoundFunc it should
+	 * probably go through the buffer at least once, just silently.
+	 */
+	AHI_SetFreq(0, Frequency, actrl, AHISF_IMM);
+
+	Wait(AHIData->SoundFuncSignal);
+
+	AHI_SetVol(0, 0x10000, 0x8000, actrl, AHISF_IMM);
+
+	mixsamples=AHIData->BufferSamples;
+
+	SoundSignal = AHIData->SoundFuncSignal;
+
+	return 1;
 }
 
 void AudioClose( void )
 {
-    if(prelude) ClosePrelude();
-        else ;//CloseAHI(AHIData);
+	if(prelude)
+	{
+		ClosePrelude();
+	}
+	else
+	{
+		;    //CloseAHI(AHIData);
+	}
 }
 
 
@@ -223,8 +248,8 @@ extern int main(int argc, char **argv);
 
 void wbmain(struct WBStartup * argmsg)
 {
- char argv[1][]={"WarpSNES"};
- int argc=1;
- main(argc,(char **)argv);
+	char argv[1][]= {"WarpSNES"};
+	int argc=1;
+	main(argc,(char **)argv);
 }
 

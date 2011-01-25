@@ -231,89 +231,90 @@
 
 struct SNPClient
 {
-    volatile uint8 SendSequenceNum;
-    volatile uint8 ReceiveSequenceNum;
-    volatile bool8 Connected;
-    volatile bool8 SaidHello;
-    volatile bool8 Paused;
-    volatile bool8 Ready;
-    int Socket;
-    char *ROMName;
-    char *HostName;
-    char *Who;
+	volatile uint8 SendSequenceNum;
+	volatile uint8 ReceiveSequenceNum;
+	volatile bool8 Connected;
+	volatile bool8 SaidHello;
+	volatile bool8 Paused;
+	volatile bool8 Ready;
+	int Socket;
+	char *ROMName;
+	char *HostName;
+	char *Who;
 };
 
-enum {
-    NP_SERVER_SEND_ROM_IMAGE,
-    NP_SERVER_SYNC_ALL,
-    NP_SERVER_SYNC_CLIENT,
-    NP_SERVER_SEND_FREEZE_FILE_ALL,
-    NP_SERVER_SEND_ROM_LOAD_REQUEST_ALL,
-    NP_SERVER_RESET_ALL,
-    NP_SERVER_SEND_SRAM_ALL,
-    NP_SERVER_SEND_SRAM
+enum
+{
+	NP_SERVER_SEND_ROM_IMAGE,
+	NP_SERVER_SYNC_ALL,
+	NP_SERVER_SYNC_CLIENT,
+	NP_SERVER_SEND_FREEZE_FILE_ALL,
+	NP_SERVER_SEND_ROM_LOAD_REQUEST_ALL,
+	NP_SERVER_RESET_ALL,
+	NP_SERVER_SEND_SRAM_ALL,
+	NP_SERVER_SEND_SRAM
 };
 
 #define NP_MAX_TASKS 20
 
 struct NPServerTask
 {
-    uint32 Task;
-    void  *Data;
+	uint32 Task;
+	void  *Data;
 };
 
 struct SNPServer
 {
-    struct SNPClient Clients [NP_MAX_CLIENTS];
-    int    NumClients;
-    volatile struct NPServerTask TaskQueue [NP_MAX_TASKS];
-    volatile uint32 TaskHead;
-    volatile uint32 TaskTail;
-    int    Socket;
-    uint32 FrameTime;
-    uint32 FrameCount;
-    char   ROMName [30];
-    uint32 Joypads [NP_MAX_CLIENTS];
-    bool8  ClientPaused;
-    uint32 Paused;
-    bool8  SendROMImageOnConnect;
-    bool8  SyncByReset;
+	struct SNPClient Clients [NP_MAX_CLIENTS];
+	int    NumClients;
+	volatile struct NPServerTask TaskQueue [NP_MAX_TASKS];
+	volatile uint32 TaskHead;
+	volatile uint32 TaskTail;
+	int    Socket;
+	uint32 FrameTime;
+	uint32 FrameCount;
+	char   ROMName [30];
+	uint32 Joypads [NP_MAX_CLIENTS];
+	bool8  ClientPaused;
+	uint32 Paused;
+	bool8  SendROMImageOnConnect;
+	bool8  SyncByReset;
 };
 
 #define NP_MAX_ACTION_LEN 200
 
 struct SNetPlay
 {
-    volatile uint8  MySequenceNum;
-    volatile uint8  ServerSequenceNum;
-    volatile bool8  Connected;
-    volatile bool8  Abort;
-    volatile uint8  Player;
-    volatile bool8  ClientsReady [NP_MAX_CLIENTS];
-    volatile bool8  ClientsPaused [NP_MAX_CLIENTS];
-    volatile bool8  Paused;
-    volatile bool8  PendingWait4Sync;
-    volatile uint8  PercentageComplete;
-    volatile bool8  Waiting4EmulationThread;
-    volatile bool8  Answer;
+	volatile uint8  MySequenceNum;
+	volatile uint8  ServerSequenceNum;
+	volatile bool8  Connected;
+	volatile bool8  Abort;
+	volatile uint8  Player;
+	volatile bool8  ClientsReady [NP_MAX_CLIENTS];
+	volatile bool8  ClientsPaused [NP_MAX_CLIENTS];
+	volatile bool8  Paused;
+	volatile bool8  PendingWait4Sync;
+	volatile uint8  PercentageComplete;
+	volatile bool8  Waiting4EmulationThread;
+	volatile bool8  Answer;
 #ifdef __WIN32__
-    HANDLE          ReplyEvent;
+	HANDLE          ReplyEvent;
 #endif
-    volatile int    Socket;
-    char *ServerHostName;
-    char *ROMName;
-    int Port;
-    volatile uint32 JoypadWriteInd;
-    volatile uint32 JoypadReadInd;
-    uint32 Joypads [NP_JOYPAD_HIST_SIZE][NP_MAX_CLIENTS];
-    uint32 Frame [NP_JOYPAD_HIST_SIZE];
-    uint32 FrameCount;
-    uint32 MaxFrameSkip;
-    uint32 MaxBehindFrameCount;
-    bool8 JoypadsReady [NP_JOYPAD_HIST_SIZE][NP_MAX_CLIENTS];
-    char   ActionMsg [NP_MAX_ACTION_LEN];
-    char   ErrorMsg [NP_MAX_ACTION_LEN];
-    char   WarningMsg [NP_MAX_ACTION_LEN];
+	volatile int    Socket;
+	char *ServerHostName;
+	char *ROMName;
+	int Port;
+	volatile uint32 JoypadWriteInd;
+	volatile uint32 JoypadReadInd;
+	uint32 Joypads [NP_JOYPAD_HIST_SIZE][NP_MAX_CLIENTS];
+	uint32 Frame [NP_JOYPAD_HIST_SIZE];
+	uint32 FrameCount;
+	uint32 MaxFrameSkip;
+	uint32 MaxBehindFrameCount;
+	bool8 JoypadsReady [NP_JOYPAD_HIST_SIZE][NP_MAX_CLIENTS];
+	char   ActionMsg [NP_MAX_ACTION_LEN];
+	char   ErrorMsg [NP_MAX_ACTION_LEN];
+	char   WarningMsg [NP_MAX_ACTION_LEN];
 };
 
 extern "C" struct SNetPlay NetPlay;

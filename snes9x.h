@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -125,13 +125,14 @@
 #define SNES_Y_MASK	    (1 << 14)
 #define SNES_B_MASK	    (1 << 15)
 
-enum {
-    SNES_MULTIPLAYER5,
-    SNES_JOYPAD,
-    SNES_MOUSE_SWAPPED,
-    SNES_MOUSE,
-    SNES_SUPERSCOPE,
-    SNES_MAX_CONTROLLER_OPTIONS
+enum
+{
+	SNES_MULTIPLAYER5,
+	SNES_JOYPAD,
+	SNES_MOUSE_SWAPPED,
+	SNES_MOUSE,
+	SNES_SUPERSCOPE,
+	SNES_MAX_CONTROLLER_OPTIONS
 };
 
 #define DEBUG_MODE_FLAG	    (1 << 0)
@@ -161,48 +162,49 @@ enum {
 #define MEMMAP_BLOCK_SIZE (0x1000)
 #define MEMMAP_NUM_BLOCKS (0x1000000 / MEMMAP_BLOCK_SIZE)
 
-struct SCPUState{
-    uint32  Flags;
-    bool8_32   BranchSkip;
-    bool8_32   NMIActive;
-    bool8_32   IRQActive;
-    bool8_32   WaitingForInterrupt;
-    bool8_32   InDMA;
-    uint8_32   WhichEvent;
-    uint8   *PC;
-    uint8   *PCBase;
-    uint8   *PCAtOpcodeStart;
-    uint8   *WaitAddress;
-    uint32  WaitCounter;
-    long   Cycles;
-    long   NextEvent;
-    long   V_Counter;
-    long   MemSpeed;
-    long   MemSpeedx2;
-    long   FastROMSpeed;
-    uint32 AutoSaveTimer;
-    bool8_32  SRAMModified;
-    uint32 NMITriggerPoint;
-    bool8_32  BRKTriggered;
-    bool8_32  TriedInterleavedMode2;
-    uint32 NMICycleCount;
-    uint32 IRQCycleCount;
+struct SCPUState
+{
+	uint32  Flags;
+	bool8_32   BranchSkip;
+	bool8_32   NMIActive;
+	bool8_32   IRQActive;
+	bool8_32   WaitingForInterrupt;
+	bool8_32   InDMA;
+	uint8_32   WhichEvent;
+	uint8   *PC;
+	uint8   *PCBase;
+	uint8   *PCAtOpcodeStart;
+	uint8   *WaitAddress;
+	uint32  WaitCounter;
+	long   Cycles;
+	long   NextEvent;
+	long   V_Counter;
+	long   MemSpeed;
+	long   MemSpeedx2;
+	long   FastROMSpeed;
+	uint32 AutoSaveTimer;
+	bool8_32  SRAMModified;
+	uint32 NMITriggerPoint;
+	bool8_32  BRKTriggered;
+	bool8_32  TriedInterleavedMode2;
+	uint32 NMICycleCount;
+	uint32 IRQCycleCount;
 	//Needed for SA1
 	bool8_32   Executing;
 	bool8_32   Waiting;
 	uint8   *BWRAM;
 	uint8   *WaitByteAddress1;
-    uint8   *WaitByteAddress2;
+	uint8   *WaitByteAddress2;
 	uint8   *Map [MEMMAP_NUM_BLOCKS];
-    uint8   *WriteMap [MEMMAP_NUM_BLOCKS];
-    int16   op1;
-    int16   op2;
-    int     arithmetic_op;
-    int64   sum;
-    bool8_32   overflow;
-    uint8   VirtualBitmapFormat;
-    bool8_32   in_char_dma;
-    uint8   variable_bit_pos;
+	uint8   *WriteMap [MEMMAP_NUM_BLOCKS];
+	int16   op1;
+	int16   op2;
+	int     arithmetic_op;
+	int64   sum;
+	bool8_32   overflow;
+	uint8   VirtualBitmapFormat;
+	bool8_32   in_char_dma;
+	uint8   variable_bit_pos;
 
 
 };
@@ -213,152 +215,153 @@ struct SCPUState{
 #define HTIMER_AFTER_EVENT 3
 #define NO_EVENT 4
 
-struct SSettings{
-    // CPU options
-    bool8_32  APUEnabled;
-    bool8_32  Shutdown;
-    uint8  SoundSkipMethod;
-    long   H_Max;
-    long   HBlankStart;
-    long   CyclesPercentage;
-    bool8_32  DisableIRQ;
-    bool8_32  Paused;
-    bool8_32  ForcedPause;
-    bool8_32  StopEmulation;
+struct SSettings
+{
+	// CPU options
+	bool8_32  APUEnabled;
+	bool8_32  Shutdown;
+	uint8  SoundSkipMethod;
+	long   H_Max;
+	long   HBlankStart;
+	long   CyclesPercentage;
+	bool8_32  DisableIRQ;
+	bool8_32  Paused;
+	bool8_32  ForcedPause;
+	bool8_32  StopEmulation;
 
-    // Tracing options
-    bool8_32  TraceDMA;
-    bool8_32  TraceHDMA;
-    bool8_32  TraceVRAM;
-    bool8_32  TraceUnknownRegisters;
-    bool8_32  TraceDSP;
+	// Tracing options
+	bool8_32  TraceDMA;
+	bool8_32  TraceHDMA;
+	bool8_32  TraceVRAM;
+	bool8_32  TraceUnknownRegisters;
+	bool8_32  TraceDSP;
 
-    // Joystick options
-    bool8_32  SwapJoypads;
-    bool8_32  JoystickEnabled;
+	// Joystick options
+	bool8_32  SwapJoypads;
+	bool8_32  JoystickEnabled;
 
-    // ROM timing options (see also H_Max above)
-    bool8_32  ForcePAL;
-    bool8_32  ForceNTSC;
-    bool8_32  PAL;
-    uint32 FrameTimePAL;
-    uint32 FrameTimeNTSC;
-    uint32 FrameTime;
-    uint32 SkipFrames;
+	// ROM timing options (see also H_Max above)
+	bool8_32  ForcePAL;
+	bool8_32  ForceNTSC;
+	bool8_32  PAL;
+	uint32 FrameTimePAL;
+	uint32 FrameTimeNTSC;
+	uint32 FrameTime;
+	uint32 SkipFrames;
 
-    // ROM image options
-    bool8_32  ForceLoROM;
-    bool8_32  ForceHiROM;
-    bool8_32  ForceHeader;
-    bool8_32  ForceNoHeader;
-    bool8_32  ForceInterleaved;
-    bool8_32  ForceInterleaved2;
-    bool8_32  ForceNotInterleaved;
+	// ROM image options
+	bool8_32  ForceLoROM;
+	bool8_32  ForceHiROM;
+	bool8_32  ForceHeader;
+	bool8_32  ForceNoHeader;
+	bool8_32  ForceInterleaved;
+	bool8_32  ForceInterleaved2;
+	bool8_32  ForceNotInterleaved;
 
-    // Peripherial options
-    bool8_32  ForceSuperFX;
-    bool8_32  ForceNoSuperFX;
-    bool8_32  ForceDSP1;
-    bool8_32  ForceNoDSP1;
-    bool8_32  ForceSA1;
-    bool8_32  ForceNoSA1;
-    bool8_32  ForceC4;
-    bool8_32  ForceNoC4;
-    bool8_32  ForceSDD1;
-    bool8_32  ForceNoSDD1;
-    bool8_32  MultiPlayer5;
-    bool8_32  Mouse;
-    bool8_32  SuperScope;
-    bool8_32  SRTC;
-    uint32 ControllerOption;
-    
-    bool8_32  ShutdownMaster;
-    bool8_32  MultiPlayer5Master;
-    bool8_32  SuperScopeMaster;
-    bool8_32  MouseMaster;
-    bool8_32  SuperFX;
-    bool8_32  DSP1Master;
-    bool8_32  SA1;
-    bool8_32  C4;
-    bool8_32  SDD1;
+	// Peripherial options
+	bool8_32  ForceSuperFX;
+	bool8_32  ForceNoSuperFX;
+	bool8_32  ForceDSP1;
+	bool8_32  ForceNoDSP1;
+	bool8_32  ForceSA1;
+	bool8_32  ForceNoSA1;
+	bool8_32  ForceC4;
+	bool8_32  ForceNoC4;
+	bool8_32  ForceSDD1;
+	bool8_32  ForceNoSDD1;
+	bool8_32  MultiPlayer5;
+	bool8_32  Mouse;
+	bool8_32  SuperScope;
+	bool8_32  SRTC;
+	uint32 ControllerOption;
+
+	bool8_32  ShutdownMaster;
+	bool8_32  MultiPlayer5Master;
+	bool8_32  SuperScopeMaster;
+	bool8_32  MouseMaster;
+	bool8_32  SuperFX;
+	bool8_32  DSP1Master;
+	bool8_32  SA1;
+	bool8_32  C4;
+	bool8_32  SDD1;
 //	bool8_32  SPC7110;
 //	bool8_32  SPC7110RTC;
 	bool8_32  OBC1;
 
-    // Sound options
-    uint32 SoundPlaybackRate;
-    bool8_32  TraceSoundDSP;
-    bool8_32  Stereo;
-    bool8_32  ReverseStereo;
-    bool8_32  SixteenBitSound;
-    int    SoundBufferSize;
-    int    SoundMixInterval;
-    bool8_32  SoundEnvelopeHeightReading;
-    bool8_32  DisableSoundEcho;
-    bool8_32  DisableSampleCaching;
-    bool8_32  DisableMasterVolume;
-    bool8_32  SoundSync;
-    bool8_32  InterpolatedSound;
-    bool8_32  ThreadSound;
-    bool8_32  Mute;
-    bool8_32  NextAPUEnabled;
-    uint8  AltSampleDecode;
-    bool8_32  FixFrequency;
-    
-    // Graphics options
-    bool8_32  SixteenBit;
-    bool8_32  Transparency;
-    bool8_32  SupportHiRes;
-    bool8_32  Mode7Interpolate;
+	// Sound options
+	uint32 SoundPlaybackRate;
+	bool8_32  TraceSoundDSP;
+	bool8_32  Stereo;
+	bool8_32  ReverseStereo;
+	bool8_32  SixteenBitSound;
+	int    SoundBufferSize;
+	int    SoundMixInterval;
+	bool8_32  SoundEnvelopeHeightReading;
+	bool8_32  DisableSoundEcho;
+	bool8_32  DisableSampleCaching;
+	bool8_32  DisableMasterVolume;
+	bool8_32  SoundSync;
+	bool8_32  InterpolatedSound;
+	bool8_32  ThreadSound;
+	bool8_32  Mute;
+	bool8_32  NextAPUEnabled;
+	uint8  AltSampleDecode;
+	bool8_32  FixFrequency;
 
-    // SNES graphics options
-    bool8_32  BGLayering;
-    bool8_32  DisableGraphicWindows;
-    bool8_32  ForceTransparency;
-    bool8_32  ForceNoTransparency;
-    bool8_32  DisableHDMA;
-    bool8_32  DisplayFrameRate;
+	// Graphics options
+	bool8_32  SixteenBit;
+	bool8_32  Transparency;
+	bool8_32  SupportHiRes;
+	bool8_32  Mode7Interpolate;
 
-    // Others
-    bool8_32  NetPlay;
-    bool8_32  NetPlayServer;
-    char   ServerName [128];
-    int    Port;
-    bool8_32  GlideEnable;
-    bool8_32  OpenGLEnable;
-    int32  AutoSaveDelay; // Time in seconds before S-RAM auto-saved if modified.
-    bool8_32  ApplyCheats;
-    bool8_32  TurboMode;
-    uint32 TurboSkipFrames;
-    uint32 AutoMaxSkipFrames;
-    
+	// SNES graphics options
+	bool8_32  BGLayering;
+	bool8_32  DisableGraphicWindows;
+	bool8_32  ForceTransparency;
+	bool8_32  ForceNoTransparency;
+	bool8_32  DisableHDMA;
+	bool8_32  DisplayFrameRate;
+
+	// Others
+	bool8_32  NetPlay;
+	bool8_32  NetPlayServer;
+	char   ServerName [128];
+	int    Port;
+	bool8_32  GlideEnable;
+	bool8_32  OpenGLEnable;
+	int32  AutoSaveDelay; // Time in seconds before S-RAM auto-saved if modified.
+	bool8_32  ApplyCheats;
+	bool8_32  TurboMode;
+	uint32 TurboSkipFrames;
+	uint32 AutoMaxSkipFrames;
+
 // Fixes for individual games
-    uint32 StrikeGunnerOffsetHack;
-    bool8_32  ChuckRock;
-    bool8_32  StarfoxHack;
-    bool8_32  WinterGold;
-    bool8_32  Dezaemon;
-    bool8_32  WrestlemaniaArcade;
-    bool8_32  BS;	// Japanese Satellite System games.
-    bool8_32  DaffyDuck;
-    uint8  APURAMInitialValue;
-    
+	uint32 StrikeGunnerOffsetHack;
+	bool8_32  ChuckRock;
+	bool8_32  StarfoxHack;
+	bool8_32  WinterGold;
+	bool8_32  Dezaemon;
+	bool8_32  WrestlemaniaArcade;
+	bool8_32  BS;	// Japanese Satellite System games.
+	bool8_32  DaffyDuck;
+	uint8  APURAMInitialValue;
+
 #ifdef __WIN32__
-    int    SoundDriver;
+	int    SoundDriver;
 #endif
 };
 
 struct SSNESGameFixes
 {
-    uint8 NeedInit0x2137;
-    uint8 umiharakawaseFix;
-    uint8 alienVSpredetorFix;
-    uint8 APU_OutPorts_ReturnValueFix;
-    uint8 Old_Read0x4200;
-    uint8 _0x213E_ReturnValue;
-    uint8 TouhaidenControllerFix;
-    uint8 SoundEnvelopeHeightReading2;
-    uint8 SRAMInitialValue;
+	uint8 NeedInit0x2137;
+	uint8 umiharakawaseFix;
+	uint8 alienVSpredetorFix;
+	uint8 APU_OutPorts_ReturnValueFix;
+	uint8 Old_Read0x4200;
+	uint8 _0x213E_ReturnValue;
+	uint8 TouhaidenControllerFix;
+	uint8 SoundEnvelopeHeightReading2;
+	uint8 SRAMInitialValue;
 	uint8 Uniracers;
 };
 
@@ -373,15 +376,16 @@ void S9xMessage (int type, int number, const char *message);
 void S9xLoadSDD1Data ();
 END_EXTERN_C
 
-enum {
-    PAUSE_NETPLAY_CONNECT = (1 << 0),
-    PAUSE_TOGGLE_FULL_SCREEN = (1 << 1),
-    PAUSE_EXIT = (1 << 2),
-    PAUSE_MENU = (1 << 3),
-    PAUSE_INACTIVE_WINDOW = (1 << 4),
-    PAUSE_WINDOW_ICONISED = (1 << 5),
-    PAUSE_RESTORE_GUI = (1 << 6),
-    PAUSE_FREEZE_FILE = (1 << 7)
+enum
+{
+	PAUSE_NETPLAY_CONNECT = (1 << 0),
+	PAUSE_TOGGLE_FULL_SCREEN = (1 << 1),
+	PAUSE_EXIT = (1 << 2),
+	PAUSE_MENU = (1 << 3),
+	PAUSE_INACTIVE_WINDOW = (1 << 4),
+	PAUSE_WINDOW_ICONISED = (1 << 5),
+	PAUSE_RESTORE_GUI = (1 << 6),
+	PAUSE_FREEZE_FILE = (1 << 7)
 };
 void S9xSetPause (uint32 mask);
 void S9xClearPause (uint32 mask);

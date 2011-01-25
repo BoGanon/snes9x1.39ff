@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -70,93 +70,95 @@
 #define MEMMAP_MASK (MEMMAP_BLOCK_SIZE - 1)
 #define MEMMAP_MAX_SDD1_LOGGED_ENTRIES (0x10000 / 8)
 
-class CMemory {
-public:
-    bool8_32 LoadROM (const char *);
-    void  InitROM (bool8_32);
-    bool8_32 LoadSRAM (const char *);
-    bool8_32 SaveSRAM (const char *);
-    bool8_32 Init ();
-    void  Deinit ();
-    void  FreeSDD1Data ();
-    
-    void WriteProtectROM ();
-    void FixROMSpeed ();
-    void MapRAM ();
-    void MapExtraRAM ();
-    char *Safe (const char *);
-    
-    void LoROMMap ();
-    void LoROM24MBSMap ();
-    void SRAM512KLoROMMap ();
-    void SRAM1024KLoROMMap ();
-    void SufamiTurboLoROMMap ();
-    void HiROMMap ();
-    void SuperFXROMMap ();
-    void TalesROMMap (bool8_32);
-    void AlphaROMMap ();
-    void SA1ROMMap ();
-    void BSHiROMMap ();
-    bool8_32 AllASCII (uint8 *b, int size);
-    int  ScoreHiROM (bool8_32 skip_header);
-    int  ScoreLoROM (bool8_32 skip_header);
-    void ApplyROMFixes ();
-    void CheckForIPSPatch (const char *rom_filename, bool8_32 header,
-			   int32 &rom_size);
-    
-    const char *TVStandard ();
-    const char *Speed ();
-    const char *StaticRAMSize ();
-    const char *MapType ();
-    const char *MapMode ();
-    const char *KartContents ();
-    const char *Size ();
-    const char *Headers ();
-    const char *ROMID ();
-    const char *CompanyID ();
-    
-    enum {
-	MAP_PPU, MAP_CPU, MAP_DSP, MAP_LOROM_SRAM, MAP_HIROM_SRAM,
-	MAP_NONE, MAP_DEBUG, MAP_C4, MAP_BWRAM, MAP_BWRAM_BITMAP,
-	MAP_BWRAM_BITMAP2, MAP_SA1RAM, MAP_OBC_RAM, MAP_LAST
-    };
-    enum { MAX_ROM_SIZE = 0x600000 };
-    
-    uint8 *RAM;
-    uint8 *ROM;
-    uint8 *VRAM;
-    uint8 *SRAM;
-    uint8 *BWRAM;
-    uint8 *FillRAM;
-    uint8 *C4RAM;
-    bool8_32 HiROM;
-    bool8_32 LoROM;
-    uint16 SRAMMask;
-    uint8 SRAMSize;
-    uint8 *Map [MEMMAP_NUM_BLOCKS];
-    uint8 *WriteMap [MEMMAP_NUM_BLOCKS];
-    uint8 MemorySpeed [MEMMAP_NUM_BLOCKS];
-    uint8 BlockIsRAM [MEMMAP_NUM_BLOCKS];
-    uint8 BlockIsROM [MEMMAP_NUM_BLOCKS];
-    char  ROMName [ROM_NAME_LEN];
-    char  ROMId [5];
-    char  CompanyId [3];
-    uint8 ROMSpeed;
-    uint8 ROMType;
-    uint8 ROMSize;
-    int32 ROMFramesPerSecond;
-    int32 HeaderCount;
-    uint32 CalculatedSize;
-    uint32 CalculatedChecksum;
-    uint32 ROMChecksum;
-    uint32 ROMComplementChecksum;
-    uint8  *SDD1Index;
-    uint8  *SDD1Data;
-    uint32 SDD1Entries;
-    uint32 SDD1LoggedDataCountPrev;
-    uint32 SDD1LoggedDataCount;
-    uint8  SDD1LoggedData [MEMMAP_MAX_SDD1_LOGGED_ENTRIES];
-    char ROMFilename [_MAX_PATH];
+class CMemory
+{
+	public:
+		bool8_32 LoadROM (const char *);
+		void  InitROM (bool8_32);
+		bool8_32 LoadSRAM (const char *);
+		bool8_32 SaveSRAM (const char *);
+		bool8_32 Init ();
+		void  Deinit ();
+		void  FreeSDD1Data ();
+
+		void WriteProtectROM ();
+		void FixROMSpeed ();
+		void MapRAM ();
+		void MapExtraRAM ();
+		char *Safe (const char *);
+
+		void LoROMMap ();
+		void LoROM24MBSMap ();
+		void SRAM512KLoROMMap ();
+		void SRAM1024KLoROMMap ();
+		void SufamiTurboLoROMMap ();
+		void HiROMMap ();
+		void SuperFXROMMap ();
+		void TalesROMMap (bool8_32);
+		void AlphaROMMap ();
+		void SA1ROMMap ();
+		void BSHiROMMap ();
+		bool8_32 AllASCII (uint8 *b, int size);
+		int  ScoreHiROM (bool8_32 skip_header);
+		int  ScoreLoROM (bool8_32 skip_header);
+		void ApplyROMFixes ();
+		void CheckForIPSPatch (const char *rom_filename, bool8_32 header,
+		                       int32 &rom_size);
+
+		const char *TVStandard ();
+		const char *Speed ();
+		const char *StaticRAMSize ();
+		const char *MapType ();
+		const char *MapMode ();
+		const char *KartContents ();
+		const char *Size ();
+		const char *Headers ();
+		const char *ROMID ();
+		const char *CompanyID ();
+
+		enum
+		{
+			MAP_PPU, MAP_CPU, MAP_DSP, MAP_LOROM_SRAM, MAP_HIROM_SRAM,
+			MAP_NONE, MAP_DEBUG, MAP_C4, MAP_BWRAM, MAP_BWRAM_BITMAP,
+			MAP_BWRAM_BITMAP2, MAP_SA1RAM, MAP_OBC_RAM, MAP_LAST
+		};
+		enum { MAX_ROM_SIZE = 0x600000 };
+
+		uint8 *RAM;
+		uint8 *ROM;
+		uint8 *VRAM;
+		uint8 *SRAM;
+		uint8 *BWRAM;
+		uint8 *FillRAM;
+		uint8 *C4RAM;
+		bool8_32 HiROM;
+		bool8_32 LoROM;
+		uint16 SRAMMask;
+		uint8 SRAMSize;
+		uint8 *Map [MEMMAP_NUM_BLOCKS];
+		uint8 *WriteMap [MEMMAP_NUM_BLOCKS];
+		uint8 MemorySpeed [MEMMAP_NUM_BLOCKS];
+		uint8 BlockIsRAM [MEMMAP_NUM_BLOCKS];
+		uint8 BlockIsROM [MEMMAP_NUM_BLOCKS];
+		char  ROMName [ROM_NAME_LEN];
+		char  ROMId [5];
+		char  CompanyId [3];
+		uint8 ROMSpeed;
+		uint8 ROMType;
+		uint8 ROMSize;
+		int32 ROMFramesPerSecond;
+		int32 HeaderCount;
+		uint32 CalculatedSize;
+		uint32 CalculatedChecksum;
+		uint32 ROMChecksum;
+		uint32 ROMComplementChecksum;
+		uint8  *SDD1Index;
+		uint8  *SDD1Data;
+		uint32 SDD1Entries;
+		uint32 SDD1LoggedDataCountPrev;
+		uint32 SDD1LoggedDataCount;
+		uint8  SDD1LoggedData [MEMMAP_MAX_SDD1_LOGGED_ENTRIES];
+		char ROMFilename [_MAX_PATH];
 };
 
 START_EXTERN_C

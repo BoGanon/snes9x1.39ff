@@ -4,7 +4,7 @@
 * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
 *                           Jerremy Koot (jkoot@snes9x.com)
 *
-* Super FX C emulator code 
+* Super FX C emulator code
 * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
 *                           Gary Henderson.
 * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -56,10 +56,10 @@ extern uint16 cacheMegs;
 void Del7110Gfx(void);
 void Close7110Gfx(void);
 void Drop7110Gfx(void);
-extern "C"{
-uint8 S9xGetSPC7110(uint16 Address);
-uint8 S9xGetS7110Byte(uint32 Address);
-uint8* Get7110BasePtr(uint32);
+extern "C" {
+	uint8 S9xGetSPC7110(uint16 Address);
+	uint8 S9xGetS7110Byte(uint32 Address);
+	uint8* Get7110BasePtr(uint32);
 }
 void S9xSetSPC7110 (uint8 data, uint16 Address);
 void S9xSpc7110Init();

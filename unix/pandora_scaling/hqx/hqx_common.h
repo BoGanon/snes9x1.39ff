@@ -49,8 +49,8 @@ static inline int Diff(uint16_t w1, uint16_t w2)
 	YUV1 = RGBtoYUV[w1];
 	YUV2 = RGBtoYUV[w2];
 	return ( ( abs((YUV1 & Ymask) - (YUV2 & Ymask)) > trY ) ||
-			( abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
-			( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) );
+	         ( abs((YUV1 & Umask) - (YUV2 & Umask)) > trU ) ||
+	         ( abs((YUV1 & Vmask) - (YUV2 & Vmask)) > trV ) );
 }
 
 /* Interpolate functions */
@@ -58,47 +58,50 @@ static inline int Diff(uint16_t w1, uint16_t w2)
 static inline void Interp1(uint16_t * pc, uint16_t c1, uint16_t c2)
 {
 
-	if (c1 == c2) {
+	if (c1 == c2)
+	{
 		*pc = c1;
 		return;
 	}
 	*pc = ((((c1 & MASK_2) * 3 + (c2 & MASK_2)) >> 2) & MASK_2) +
-		((((c1 & MASK_13) * 3 + (c2 & MASK_13)) >> 2) & MASK_13);
+	      ((((c1 & MASK_13) * 3 + (c2 & MASK_13)) >> 2) & MASK_13);
 }
 
 static inline void Interp2(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
 {
 	*pc = ((((c1 & MASK_2) * 2 + (c2 & MASK_2) + (c3 & MASK_2)) >> 2) & MASK_2) +
-		  ((((c1 & MASK_13) * 2 + (c2 & MASK_13) + (c3 & MASK_13)) >> 2) & MASK_13);
+	      ((((c1 & MASK_13) * 2 + (c2 & MASK_13) + (c3 & MASK_13)) >> 2) & MASK_13);
 }
 
 static inline void Interp3(uint32_t * pc, uint32_t c1, uint32_t c2)
 {
-    //*pc = (c1*7+c2)/8;
-    if (c1 == c2) {
-        *pc = c1;
-        return;
-    }
-    *pc = ((((c1 & MASK_2) * 7 + (c2 & MASK_2)) >> 3) & MASK_2) +
-        ((((c1 & MASK_13) * 7 + (c2 & MASK_13)) >> 3) & MASK_13);
+	//*pc = (c1*7+c2)/8;
+	if (c1 == c2)
+	{
+		*pc = c1;
+		return;
+	}
+	*pc = ((((c1 & MASK_2) * 7 + (c2 & MASK_2)) >> 3) & MASK_2) +
+	      ((((c1 & MASK_13) * 7 + (c2 & MASK_13)) >> 3) & MASK_13);
 }
 
 static inline void Interp4(uint32_t * pc, uint32_t c1, uint32_t c2, uint32_t c3)
 {
-    //*pc = (c1*2+(c2+c3)*7)/16;
-    *pc = ((((c1 & MASK_2) * 2 + (c2 & MASK_2) * 7 + (c3 & MASK_2) * 7) >> 4) & MASK_2) +
-          ((((c1 & MASK_13) * 2 + (c2 & MASK_13) * 7 + (c3 & MASK_13) * 7) >> 4) & MASK_13);
+	//*pc = (c1*2+(c2+c3)*7)/16;
+	*pc = ((((c1 & MASK_2) * 2 + (c2 & MASK_2) * 7 + (c3 & MASK_2) * 7) >> 4) & MASK_2) +
+	      ((((c1 & MASK_13) * 2 + (c2 & MASK_13) * 7 + (c3 & MASK_13) * 7) >> 4) & MASK_13);
 }
 
 static inline void Interp5(uint32_t * pc, uint32_t c1, uint32_t c2)
 {
-    //*pc = (c1+c2) >> 1;
-    if (c1 == c2) {
-        *pc = c1;
-        return;
-    }
-    *pc = ((((c1 & MASK_2) + (c2 & MASK_2)) >> 1) & MASK_2) +
-        ((((c1 & MASK_13) + (c2 & MASK_13)) >> 1) & MASK_13);
+	//*pc = (c1+c2) >> 1;
+	if (c1 == c2)
+	{
+		*pc = c1;
+		return;
+	}
+	*pc = ((((c1 & MASK_2) + (c2 & MASK_2)) >> 1) & MASK_2) +
+	      ((((c1 & MASK_13) + (c2 & MASK_13)) >> 1) & MASK_13);
 }
 
 static inline void Interp6(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
@@ -106,7 +109,7 @@ static inline void Interp6(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
 
 	//*pc = (c1*5+c2*2+c3)/8;
 	*pc = ((((c1 & MASK_2) * 5 + (c2 & MASK_2) * 2 + (c3 & MASK_2)) >> 3) & MASK_2) +
-		  ((((c1 & MASK_13) * 5 + (c2 & MASK_13) * 2 + (c3 & MASK_13)) >> 3) & MASK_13);
+	      ((((c1 & MASK_13) * 5 + (c2 & MASK_13) * 2 + (c3 & MASK_13)) >> 3) & MASK_13);
 
 
 }
@@ -116,18 +119,19 @@ static inline void Interp7(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
 
 	//*pc = (c1*6+c2+c3)/8;
 	*pc = ((((c1 & MASK_2) * 6 + (c2 & MASK_2) + (c3 & MASK_2)) >> 3) & MASK_2) +
-		  ((((c1 & MASK_13) * 6 + (c2 & MASK_13) + (c3 & MASK_13)) >> 3) & MASK_13);
+	      ((((c1 & MASK_13) * 6 + (c2 & MASK_13) + (c3 & MASK_13)) >> 3) & MASK_13);
 }
 
 static inline void Interp8(uint32_t * pc, uint32_t c1, uint32_t c2)
 {
-    //*pc = (c1*5+c2*3)/8;
-    if (c1 == c2) {
-        *pc = c1;
-        return;
-    }
-    *pc = ((((c1 & MASK_2) * 5 + (c2 & MASK_2) * 3) >> 3) & MASK_2) +
-          ((((c1 & MASK_13) * 5 + (c2 & MASK_13) * 3) >> 3) & MASK_13);
+	//*pc = (c1*5+c2*3)/8;
+	if (c1 == c2)
+	{
+		*pc = c1;
+		return;
+	}
+	*pc = ((((c1 & MASK_2) * 5 + (c2 & MASK_2) * 3) >> 3) & MASK_2) +
+	      ((((c1 & MASK_13) * 5 + (c2 & MASK_13) * 3) >> 3) & MASK_13);
 }
 
 static inline void Interp9(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
@@ -135,7 +139,7 @@ static inline void Interp9(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
 
 	//*pc = (c1*2+(c2+c3)*3)/8;
 	*pc = ((((c1 & MASK_2) * 2 + (c2 & MASK_2) * 3 + (c3 & MASK_2) * 3) >> 3) & MASK_2) +
-		  ((((c1 & MASK_13) * 2 + (c2 & MASK_13) * 3 + (c3 & MASK_13) * 3) >> 3) & MASK_13);
+	      ((((c1 & MASK_13) * 2 + (c2 & MASK_13) * 3 + (c3 & MASK_13) * 3) >> 3) & MASK_13);
 }
 
 static inline void Interp10(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3)
@@ -143,7 +147,7 @@ static inline void Interp10(uint16_t * pc, uint16_t c1, uint16_t c2, uint16_t c3
 
 	//*pc = (c1*14+c2+c3)/16;
 	*pc = ((((c1 & MASK_2) * 14 + (c2 & MASK_2) + (c3 & MASK_2)) >> 4) & MASK_2) +
-		  ((((c1 & MASK_13) * 14 + (c2 & MASK_13) + (c3 & MASK_13)) >> 4) & MASK_13);
+	      ((((c1 & MASK_13) * 14 + (c2 & MASK_13) + (c3 & MASK_13)) >> 4) & MASK_13);
 }
 
 #endif

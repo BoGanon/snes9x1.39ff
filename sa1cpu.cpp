@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -96,11 +96,11 @@
 
 void S9xSA1MainLoop ()
 {
-    int i;
+	int i;
 
 #if 0
-    if (SA1.Flags & NMI_FLAG)
-    {
+	if (SA1.Flags & NMI_FLAG)
+	{
 		SA1.Flags &= ~NMI_FLAG;
 		if (SA1.WaitingForInterrupt)
 		{
@@ -108,10 +108,10 @@ void S9xSA1MainLoop ()
 			SA1.PC++;
 		}
 		S9xSA1Opcode_NMI ();
-    }
+	}
 #endif
-    if (SA1.Flags & IRQ_PENDING_FLAG)
-    {
+	if (SA1.Flags & IRQ_PENDING_FLAG)
+	{
 		if (SA1.IRQActive)
 		{
 			if (SA1.WaitingForInterrupt)
@@ -120,26 +120,30 @@ void S9xSA1MainLoop ()
 				SA1.PC++;
 			}
 			if (!SA1CheckFlag (IRQ))
+			{
 				S9xSA1Opcode_IRQ ();
+			}
 		}
 		else
+		{
 			SA1.Flags &= ~IRQ_PENDING_FLAG;
-    }
+		}
+	}
 #ifdef DEBUGGER
-    if (SA1.Flags & TRACE_FLAG)
-    {
+	if (SA1.Flags & TRACE_FLAG)
+	{
 		for (i = 0; i < 3 && SA1.Executing; i++)
 		{
 			S9xSA1Trace ();
 #ifdef CPU_SHUTDOWN
-		    SA1.PCAtOpcodeStart = SA1.PC;
+			SA1.PCAtOpcodeStart = SA1.PC;
 #endif
-		    (*SA1.S9xOpcodes [*SA1.PC++].S9xOpcode) (&SA1Registers, &SA1ICPU, &SA1);
+			(*SA1.S9xOpcodes [*SA1.PC++].S9xOpcode) (&SA1Registers, &SA1ICPU, &SA1);
 		}
-    }
-    else
+	}
+	else
 #endif
-	    for (i = 0; i < 3 && SA1.Executing; i++)
+		for (i = 0; i < 3 && SA1.Executing; i++)
 		{
 #ifdef CPU_SHUTDOWN
 			SA1.PCAtOpcodeStart = SA1.PC;

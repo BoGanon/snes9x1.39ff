@@ -1,6 +1,6 @@
 /*******************************************************************************
   Snes9x - Portable Super Nintendo Entertainment System (TM) emulator.
- 
+
   (c) Copyright 1996 - 2002 Gary Henderson (gary.henderson@ntlworld.com) and
                             Jerremy Koot (jkoot@snes9x.com)
 
@@ -43,51 +43,52 @@
   S-DD1 C emulator code
   (c) Copyright 2003 Brad Jorsch with research by
                      Andreas Naive and John Weidman
- 
+
   S-RTC C emulator code
   (c) Copyright 2001 John Weidman
-  
+
   ST010 C++ emulator code
   (c) Copyright 2003 Feather, Kris Bleakley, John Weidman and Matthew Kendora
 
-  Super FX x86 assembler emulator code 
-  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault 
+  Super FX x86 assembler emulator code
+  (c) Copyright 1998 - 2003 zsKnight, _Demo_, and pagefault
 
-  Super FX C emulator code 
+  Super FX C emulator code
   (c) Copyright 1997 - 1999 Ivar, Gary Henderson and John Weidman
 
 
   SH assembler code partly based on x86 assembler code
-  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se) 
+  (c) Copyright 2002 - 2004 Marcus Comstedt (marcus@mc.pp.se)
 
- 
+
   Specific ports contains the works of other authors. See headers in
   individual files.
- 
+
   Snes9x homepage: http://www.snes9x.com
- 
+
   Permission to use, copy, modify and distribute Snes9x in both binary and
   source form, for non-commercial purposes, is hereby granted without fee,
   providing that this license information and copyright notice appear with
   all copies and any derived work.
- 
+
   This software is provided 'as-is', without any express or implied
   warranty. In no event shall the authors be held liable for any damages
   arising from the use of this software.
- 
+
   Snes9x is freeware for PERSONAL USE only. Commercial users should
   seek permission of the copyright holders first. Commercial use includes
   charging money for Snes9x or software derived from Snes9x.
- 
+
   The copyright holders request that bug fixes and improvements to the code
   should be forwarded to them so everyone can benefit from the modifications
   in future versions.
- 
+
   Super NES and Super Nintendo Entertainment System are trademarks of
   Nintendo Co., Limited and its subsidiary companies.
 *******************************************************************************/
 
-uint16 DSP3_DataROM[1024] = {
+uint16 DSP3_DataROM[1024] =
+{
 	0x8000, 0x4000, 0x2000, 0x1000, 0x0800, 0x0400, 0x0200, 0x0100,
 	0x0080, 0x0040, 0x0020, 0x0010, 0x0008, 0x0004, 0x0002, 0x0001,
 	0x0002, 0x0004, 0x0008, 0x0010, 0x0020, 0x0040, 0x0080, 0x0100,
@@ -219,9 +220,9 @@ uint16 DSP3_DataROM[1024] = {
 };
 
 #ifdef __WIN32__
-	void (__cdecl *SetDSP3)(void);
+void (__cdecl *SetDSP3)(void);
 #else
-	void (*SetDSP3)(void);
+void (*SetDSP3)(void);
 #endif
 
 uint16 DSP3_DR;
@@ -243,8 +244,10 @@ void DSP3_TestMemory()
 void DSP3_DumpDataROM()
 {
 	DSP3_DR = DSP3_DataROM[DSP3_MemoryIndex++];
-	if (DSP3_MemoryIndex == 1024) 
+	if (DSP3_MemoryIndex == 1024)
+	{
 		SetDSP3 = &DSP3_Reset;
+	}
 }
 
 void DSP3_MemoryDump()
@@ -288,22 +291,31 @@ void DSP3_OP07_A()
 	int16 Lo = (uint8)(DSP3_DR);
 	int16 Hi = (uint8)(DSP3_DR >> 8);
 
-	if (Lo & 1)	Hi += (DSP3_AddLo & 1);
+	if (Lo & 1)
+	{
+		Hi += (DSP3_AddLo & 1);
+	}
 
 	DSP3_AddLo += Lo;
 	DSP3_AddHi += Hi;
 
-	if (DSP3_AddLo < 0) 
+	if (DSP3_AddLo < 0)
+	{
 		DSP3_AddLo += DSP3_WinLo;
-	else
-		if (DSP3_AddLo >= DSP3_WinLo) 
-			DSP3_AddLo -= DSP3_WinLo;
+	}
+	else if (DSP3_AddLo >= DSP3_WinLo)
+	{
+		DSP3_AddLo -= DSP3_WinLo;
+	}
 
-	if (DSP3_AddHi < 0) 
+	if (DSP3_AddHi < 0)
+	{
 		DSP3_AddHi += DSP3_WinHi;
-	else
-		if (DSP3_AddHi >= DSP3_WinHi) 
-			DSP3_AddHi -= DSP3_WinHi;
+	}
+	else if (DSP3_AddHi >= DSP3_WinHi)
+	{
+		DSP3_AddHi -= DSP3_WinHi;
+	}
 
 	DSP3_DR = DSP3_AddLo | (DSP3_AddHi << 8) | ((DSP3_AddHi >> 8) & 0xff);
 	SetDSP3 = &DSP3_OP07_B;
@@ -316,7 +328,7 @@ void DSP3_OP07()
 	DSP3_AddHi = DSP3_DataROM[dataOfs];
 	DSP3_AddLo = DSP3_DataROM[dataOfs + 1];
 
-	SetDSP3 = &DSP3_OP07_A;  
+	SetDSP3 = &DSP3_OP07_A;
 	DSP3_SR = 0x0080;
 }
 
@@ -347,34 +359,36 @@ void DSP3_Coordinate()
 
 	switch (DSP3_Index)
 	{
-	case 3:
-		{
-			if (DSP3_DR == 0xffff)
-				DSP3_Reset();
-			break;
-		}
-	case 4:
-		{
-			DSP3_X = DSP3_DR;
-			break;
-		}
-	case 5:
-		{
-			DSP3_Y = DSP3_DR;
-			DSP3_DR = 1;
-			break;
-		}
-	case 6:
-		{
-			DSP3_DR = DSP3_X;
-			break;
-		}
-	case 7:
-		{
-			DSP3_DR = DSP3_Y;
-			DSP3_Index = 0;
-			break;
-		}
+		case 3:
+			{
+				if (DSP3_DR == 0xffff)
+				{
+					DSP3_Reset();
+				}
+				break;
+			}
+		case 4:
+			{
+				DSP3_X = DSP3_DR;
+				break;
+			}
+		case 5:
+			{
+				DSP3_Y = DSP3_DR;
+				DSP3_DR = 1;
+				break;
+			}
+		case 6:
+			{
+				DSP3_DR = DSP3_X;
+				break;
+			}
+		case 7:
+			{
+				DSP3_DR = DSP3_Y;
+				DSP3_Index = 0;
+				break;
+			}
 	}
 }
 
@@ -409,7 +423,10 @@ void DSP3_Convert_A()
 	{
 		if (DSP3_BPIndex == 8)
 		{
-			if (!DSP3_Count) DSP3_Reset();
+			if (!DSP3_Count)
+			{
+				DSP3_Reset();
+			}
 			DSP3_BMIndex = 0;
 		}
 		else
@@ -435,7 +452,8 @@ bool DSP3_GetBits(uint8 Count)
 		DSP3_ReqBits = 0;
 	}
 
-	do {
+	do
+	{
 		if (!DSP3_BitCount)
 		{
 			DSP3_SR = 0xC0;
@@ -443,13 +461,17 @@ bool DSP3_GetBits(uint8 Count)
 		}
 
 		DSP3_ReqBits <<= 1;
-		if (DSP3_ReqData & 0x8000) DSP3_ReqBits++;
+		if (DSP3_ReqData & 0x8000)
+		{
+			DSP3_ReqBits++;
+		}
 		DSP3_ReqData <<= 1;
-        
+
 		DSP3_BitCount--;
 		DSP3_BitsLeft--;
 
-	} while (DSP3_BitsLeft);
+	}
+	while (DSP3_BitsLeft);
 
 	return true;
 }
@@ -467,18 +489,24 @@ void DSP3_Decode_Data()
 		{
 			DSP3_SR = 0xC0;
 			return;
-		}	
+		}
 	}
 
 	if (DSP3_LZCode == 1)
 	{
 		if (!DSP3_GetBits(1))
+		{
 			return;
+		}
 
 		if (DSP3_ReqBits)
+		{
 			DSP3_LZLength = 12;
+		}
 		else
+		{
 			DSP3_LZLength = 8;
+		}
 
 		DSP3_LZCode++;
 	}
@@ -486,11 +514,16 @@ void DSP3_Decode_Data()
 	if (DSP3_LZCode == 2)
 	{
 		if (!DSP3_GetBits(DSP3_LZLength))
+		{
 			return;
+		}
 
 		DSP3_LZCode = 0;
 		DSP3_Outwords--;
-		if (!DSP3_Outwords) SetDSP3 = &DSP3_Reset;
+		if (!DSP3_Outwords)
+		{
+			SetDSP3 = &DSP3_Reset;
+		}
 
 		DSP3_SR = 0x80;
 		DSP3_DR = DSP3_ReqBits;
@@ -500,13 +533,17 @@ void DSP3_Decode_Data()
 	if (DSP3_BaseCode == 0xffff)
 	{
 		if (!DSP3_GetBits(DSP3_BaseLength))
+		{
 			return;
+		}
 
 		DSP3_BaseCode = DSP3_ReqBits;
 	}
 
 	if (!DSP3_GetBits(DSP3_CodeLengths[DSP3_BaseCode]))
+	{
 		return;
+	}
 
 	DSP3_Symbol = DSP3_Codes[DSP3_CodeOffsets[DSP3_BaseCode] + DSP3_ReqBits];
 	DSP3_BaseCode = 0xffff;
@@ -519,8 +556,10 @@ void DSP3_Decode_Data()
 	else
 	{
 		DSP3_Outwords--;
-		if (!DSP3_Outwords) 
+		if (!DSP3_Outwords)
+		{
 			SetDSP3 = &DSP3_Reset;
+		}
 	}
 
 	DSP3_SR = 0x80;
@@ -553,7 +592,9 @@ void DSP3_Decode_Tree()
 	while (DSP3_BaseCodes)
 	{
 		if (!DSP3_GetBits(3))
+		{
 			return;
+		}
 
 		DSP3_ReqBits++;
 
@@ -569,7 +610,10 @@ void DSP3_Decode_Tree()
 	DSP3_LZCode = 0;
 
 	SetDSP3 = &DSP3_Decode_Data;
-	if (DSP3_BitCount) DSP3_Decode_Data();
+	if (DSP3_BitCount)
+	{
+		DSP3_Decode_Data();
+	}
 }
 
 void DSP3_Decode_Symbols()
@@ -577,54 +621,71 @@ void DSP3_Decode_Symbols()
 	DSP3_ReqData = DSP3_DR;
 	DSP3_BitCount += 16;
 
-	do {
+	do
+	{
 
 		if (DSP3_BitCommand == 0xffff)
 		{
-			if (!DSP3_GetBits(2)) return;
+			if (!DSP3_GetBits(2))
+			{
+				return;
+			}
 			DSP3_BitCommand = DSP3_ReqBits;
 		}
 
 		switch (DSP3_BitCommand)
 		{
-		case 0:
-			{
-				if (!DSP3_GetBits(9)) return;
-				DSP3_Symbol = DSP3_ReqBits;
-				break;
-			}
-		case 1:
-			{
-				DSP3_Symbol++;
-				break;
-			}
-		case 2:
-			{
-				if (!DSP3_GetBits(1)) return;
-				DSP3_Symbol += 2 + DSP3_ReqBits;
-				break;
-			}
-		case 3:
-			{
-				if (!DSP3_GetBits(4)) return;
-				DSP3_Symbol += 4 + DSP3_ReqBits;
-				break;
-			}
+			case 0:
+				{
+					if (!DSP3_GetBits(9))
+					{
+						return;
+					}
+					DSP3_Symbol = DSP3_ReqBits;
+					break;
+				}
+			case 1:
+				{
+					DSP3_Symbol++;
+					break;
+				}
+			case 2:
+				{
+					if (!DSP3_GetBits(1))
+					{
+						return;
+					}
+					DSP3_Symbol += 2 + DSP3_ReqBits;
+					break;
+				}
+			case 3:
+				{
+					if (!DSP3_GetBits(4))
+					{
+						return;
+					}
+					DSP3_Symbol += 4 + DSP3_ReqBits;
+					break;
+				}
 		}
 
 		DSP3_BitCommand = 0xffff;
 
 		DSP3_Codes[DSP3_Index++] = DSP3_Symbol;
 		DSP3_Codewords--;
-		
-	} while (DSP3_Codewords);
+
+	}
+	while (DSP3_Codewords);
 
 	DSP3_Index = 0;
 	DSP3_Symbol = 0;
 	DSP3_BaseCodes = 0;
 
 	SetDSP3 = &DSP3_Decode_Tree;
-	if (DSP3_BitCount) DSP3_Decode_Tree();
+	if (DSP3_BitCount)
+	{
+		DSP3_Decode_Tree();
+	}
 }
 
 void DSP3_Decode_A()
@@ -651,15 +712,33 @@ void DSP3_Command()
 	{
 		switch (DSP3_DR)
 		{
-		case 0x02: SetDSP3 = &DSP3_Coordinate; break;
-		case 0x03: SetDSP3 = &DSP3_OP03; break;
-		case 0x06: SetDSP3 = &DSP3_OP06; break;
-		case 0x07: SetDSP3 = &DSP3_OP07; return;									 
-		case 0x0f: SetDSP3 = &DSP3_TestMemory; break;
-		case 0x18: SetDSP3 = &DSP3_Convert; break;
-		case 0x1f: SetDSP3 = &DSP3_MemoryDump; break;
-		case 0x2f: SetDSP3 = &DSP3_MemorySize; break;
-		case 0x38: SetDSP3 = &DSP3_Decode; break;
+			case 0x02:
+				SetDSP3 = &DSP3_Coordinate;
+				break;
+			case 0x03:
+				SetDSP3 = &DSP3_OP03;
+				break;
+			case 0x06:
+				SetDSP3 = &DSP3_OP06;
+				break;
+			case 0x07:
+				SetDSP3 = &DSP3_OP07;
+				return;
+			case 0x0f:
+				SetDSP3 = &DSP3_TestMemory;
+				break;
+			case 0x18:
+				SetDSP3 = &DSP3_Convert;
+				break;
+			case 0x1f:
+				SetDSP3 = &DSP3_MemoryDump;
+				break;
+			case 0x2f:
+				SetDSP3 = &DSP3_MemorySize;
+				break;
+			case 0x38:
+				SetDSP3 = &DSP3_Decode;
+				break;
 		}
 		DSP3_SR = 0x0080;
 		DSP3_Index = 0;
@@ -676,7 +755,7 @@ void DSP3_Reset()
 void DSP3SetByte(uint8 byte, uint16 address)
 {
 	if ((address & 0xC000) == 0x8000)
-    {
+	{
 		if (DSP3_SR & 0x04)
 		{
 			DSP3_DR = (DSP3_DR & 0xff00) + byte;
@@ -686,13 +765,15 @@ void DSP3SetByte(uint8 byte, uint16 address)
 		{
 			DSP3_SR ^= 0x10;
 
-			if (DSP3_SR & 0x10)	
+			if (DSP3_SR & 0x10)
+			{
 				DSP3_DR = (DSP3_DR & 0xff00) + byte;
+			}
 			else
 			{
 				DSP3_DR = (DSP3_DR & 0x00ff) + (byte << 8);
 				(*SetDSP3)();
-			}	
+			}
 		}
 	}
 }
@@ -700,7 +781,7 @@ void DSP3SetByte(uint8 byte, uint16 address)
 uint8 DSP3GetByte(uint16 address)
 {
 	if ((address & 0xC000) == 0x8000)
-    {
+	{
 		uint8 byte;
 
 		if (DSP3_SR & 0x04)
@@ -712,8 +793,10 @@ uint8 DSP3GetByte(uint16 address)
 		{
 			DSP3_SR ^= 0x10;
 
-			if (DSP3_SR & 0x10)	
+			if (DSP3_SR & 0x10)
+			{
 				byte = (uint8) (DSP3_DR);
+			}
 			else
 			{
 				byte = (uint8) (DSP3_DR >> 8);

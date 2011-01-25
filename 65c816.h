@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -102,23 +102,30 @@
 typedef union
 {
 #ifdef LSB_FIRST
-    struct { uint8 l,h; } B;
+	struct
+	{
+		uint8 l,h;
+	} B;
 #else
-    struct { uint8 h,l; } B;
+	struct
+	{
+		uint8 h,l;
+	} B;
 #endif
-    uint16 W;
+	uint16 W;
 } pair;
 
-struct SRegisters{
-    uint16_32	PC;
-    uint8_32	PB;
-    uint8_32	DB;
-    pair		P;
-    pair		A;
-    pair		D;
-    pair		S;
-    pair		X;
-    pair		Y;
+struct SRegisters
+{
+	uint16_32	PC;
+	uint8_32	PB;
+	uint8_32	DB;
+	pair		P;
+	pair		A;
+	pair		D;
+	pair		S;
+	pair		X;
+	pair		Y;
 };
 
 /*
@@ -136,18 +143,18 @@ struct SRegisters{
 */
 struct SICPU
 {
-    uint8		*Speed;
-    struct		SOpcodes *S9xOpcodes;
-    uint8_32	_Carry;
-    uint8_32	_Zero;
-    uint8_32	_Negative;
-    uint8_32	_Overflow;
-    bool8_32	CPUExecuting;
-    uint32		ShiftedPB;
-    uint32		ShiftedDB;
-    uint32		Frame;
-    uint32		Scanline;
-    uint32		FrameAdvanceCount;
+	uint8		*Speed;
+	struct		SOpcodes *S9xOpcodes;
+	uint8_32	_Carry;
+	uint8_32	_Zero;
+	uint8_32	_Negative;
+	uint8_32	_Overflow;
+	bool8_32	CPUExecuting;
+	uint32		ShiftedPB;
+	uint32		ShiftedDB;
+	uint32		Frame;
+	uint32		Scanline;
+	uint32		FrameAdvanceCount;
 };
 
 EXTERN_C struct SRegisters Registers;

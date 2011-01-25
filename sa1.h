@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -144,37 +144,46 @@ END_EXTERN_C
 
 STATIC inline void S9xSA1UnpackStatus()
 {
-    SA1ICPU._Zero = (SA1Registers.PL & Zero) == 0;
-    SA1ICPU._Negative = (SA1Registers.PL & Negative);
-    SA1ICPU._Carry = (SA1Registers.PL & Carry);
-    SA1ICPU._Overflow = (SA1Registers.PL & Overflow) >> 6;
+	SA1ICPU._Zero = (SA1Registers.PL & Zero) == 0;
+	SA1ICPU._Negative = (SA1Registers.PL & Negative);
+	SA1ICPU._Carry = (SA1Registers.PL & Carry);
+	SA1ICPU._Overflow = (SA1Registers.PL & Overflow) >> 6;
 }
 
 STATIC inline void S9xSA1PackStatus()
 {
-    SA1Registers.PL &= ~(Zero | Negative | Carry | Overflow);
-    SA1Registers.PL |= (SA1ICPU._Carry & 0xff) | (((SA1ICPU._Zero & 0xff) == 0) << 1) |
-		       ((SA1ICPU._Negative & 0xff) & 0x80) | ((SA1ICPU._Overflow & 0xff) << 6);
+	SA1Registers.PL &= ~(Zero | Negative | Carry | Overflow);
+	SA1Registers.PL |= (SA1ICPU._Carry & 0xff) | (((SA1ICPU._Zero & 0xff) == 0) << 1) |
+	                   ((SA1ICPU._Negative & 0xff) & 0x80) | ((SA1ICPU._Overflow & 0xff) << 6);
 }
 
 STATIC inline void S9xSA1FixCycles (struct SRegisters * reg, struct SICPU * icpu)
 {
-    if (SA1CheckEmulation ())
-	icpu->S9xOpcodes = S9xSA1OpcodesM1X1;
-    else
-    if (SA1CheckMemory ())
-    {
-	if (SA1CheckIndex ())
-	    icpu->S9xOpcodes = S9xSA1OpcodesM1X1;
+	if (SA1CheckEmulation ())
+	{
+		icpu->S9xOpcodes = S9xSA1OpcodesM1X1;
+	}
+	else if (SA1CheckMemory ())
+	{
+		if (SA1CheckIndex ())
+		{
+			icpu->S9xOpcodes = S9xSA1OpcodesM1X1;
+		}
+		else
+		{
+			icpu->S9xOpcodes = S9xSA1OpcodesM1X0;
+		}
+	}
 	else
-	    icpu->S9xOpcodes = S9xSA1OpcodesM1X0;
-    }
-    else
-    {
-	if (SA1CheckIndex ())
-	    icpu->S9xOpcodes = S9xSA1OpcodesM0X1;
-	else
-	    icpu->S9xOpcodes = S9xSA1OpcodesM0X0;
-    }
+	{
+		if (SA1CheckIndex ())
+		{
+			icpu->S9xOpcodes = S9xSA1OpcodesM0X1;
+		}
+		else
+		{
+			icpu->S9xOpcodes = S9xSA1OpcodesM0X0;
+		}
+	}
 }
 #endif

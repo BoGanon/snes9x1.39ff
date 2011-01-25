@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -48,7 +48,8 @@
     if (cpu->Cycles >= cpu->NextEvent) \
 	S9xDoHBlankProcessing (cpu, apu, iapu);
 
-struct SOpcodes {
+struct SOpcodes
+{
 #ifdef __WIN32__
 	void (__cdecl *S9xOpcode)(struct SRegisters *, struct SICPU *, struct SCPUState *);
 #else
@@ -102,17 +103,17 @@ END_EXTERN_C
 
 STATIC inline void S9xUnpackStatus()
 {
-    ICPU._Zero = (Registers.PL & Zero) == 0;
-    ICPU._Negative = (Registers.PL & Negative);
-    ICPU._Carry = (Registers.PL & Carry);
-    ICPU._Overflow = (Registers.PL & Overflow) >> 6;
+	ICPU._Zero = (Registers.PL & Zero) == 0;
+	ICPU._Negative = (Registers.PL & Negative);
+	ICPU._Carry = (Registers.PL & Carry);
+	ICPU._Overflow = (Registers.PL & Overflow) >> 6;
 }
 
 STATIC inline void S9xPackStatus()
 {
-    Registers.PL &= ~(Zero | Negative | Carry | Overflow);
-    Registers.PL |= ICPU._Carry | ((ICPU._Zero == 0) << 1) |
-		    (ICPU._Negative & 0x80) | (ICPU._Overflow << 6);
+	Registers.PL &= ~(Zero | Negative | Carry | Overflow);
+	Registers.PL |= ICPU._Carry | ((ICPU._Zero == 0) << 1) |
+	                (ICPU._Negative & 0x80) | (ICPU._Overflow << 6);
 }
 
 /*STATIC inline void CLEAR_IRQ_SOURCE (uint32 M)
@@ -127,82 +128,81 @@ STATIC inline void S9xPackStatus()
     if (!CPU.IRQActive) \
 	CPU.Flags &= ~IRQ_PENDING_FLAG; \
 }
-	
+
 STATIC inline void S9xFixCycles (struct SRegisters * reg, struct SICPU * icpu)
 {
-    if (CHECKEMULATION())
-    {
-#ifndef VAR_CYCLES
-	icpu->Speed = S9xE1M1X1;
-#endif
-	icpu->S9xOpcodes = S9xOpcodesM1X1;
-    }
-    else
-    if (CHECKMEMORY())
-    {
-	if (CHECKINDEX())
+	if (CHECKEMULATION())
 	{
 #ifndef VAR_CYCLES
-	    icpu->Speed = S9xE0M1X1;
+		icpu->Speed = S9xE1M1X1;
 #endif
-	    icpu->S9xOpcodes = S9xOpcodesM1X1;
+		icpu->S9xOpcodes = S9xOpcodesM1X1;
+	}
+	else if (CHECKMEMORY())
+	{
+		if (CHECKINDEX())
+		{
+#ifndef VAR_CYCLES
+			icpu->Speed = S9xE0M1X1;
+#endif
+			icpu->S9xOpcodes = S9xOpcodesM1X1;
+		}
+		else
+		{
+#ifndef VAR_CYCLES
+			icpu->Speed = S9xE0M1X0;
+#endif
+			icpu->S9xOpcodes = S9xOpcodesM1X0;
+		}
 	}
 	else
 	{
+		if (CHECKINDEX())
+		{
 #ifndef VAR_CYCLES
-	    icpu->Speed = S9xE0M1X0;
+			icpu->Speed = S9xE0M0X1;
 #endif
-	    icpu->S9xOpcodes = S9xOpcodesM1X0;
-	}
-    }
-    else
-    {
-	if (CHECKINDEX())
-	{
+			icpu->S9xOpcodes = S9xOpcodesM0X1;
+		}
+		else
+		{
 #ifndef VAR_CYCLES
-	    icpu->Speed = S9xE0M0X1;
+			icpu->Speed = S9xE0M0X0;
 #endif
-	    icpu->S9xOpcodes = S9xOpcodesM0X1;
+			icpu->S9xOpcodes = S9xOpcodesM0X0;
+		}
 	}
-	else
-	{
-#ifndef VAR_CYCLES
-	    icpu->Speed = S9xE0M0X0;
-#endif
-	    icpu->S9xOpcodes = S9xOpcodesM0X0;
-	}
-    }
 }
 
 STATIC inline void S9xReschedule ()
 {
-    uint8 which;
-    long max;
-    
-    if (CPU.WhichEvent == HBLANK_START_EVENT ||
-	CPU.WhichEvent == HTIMER_AFTER_EVENT)
-    {
-	which = HBLANK_END_EVENT;
-	max = Settings.H_Max;
-    }
-    else
-    {
-	which = HBLANK_START_EVENT;
-	max = Settings.HBlankStart;
-    }
+	uint8 which;
+	long max;
 
-    if (PPU.HTimerEnabled &&
-        (long) PPU.HTimerPosition < max &&
-	(long) PPU.HTimerPosition > CPU.NextEvent &&
-	(!PPU.VTimerEnabled ||
-	 (PPU.VTimerEnabled && CPU.V_Counter == PPU.IRQVBeamPos)))
-    {
-	which = (long) PPU.HTimerPosition < Settings.HBlankStart ?
-			HTIMER_BEFORE_EVENT : HTIMER_AFTER_EVENT;
-	max = PPU.HTimerPosition;
-    }
-    CPU.NextEvent = max;
-    CPU.WhichEvent = which;
+	if (CPU.WhichEvent == HBLANK_START_EVENT ||
+	        CPU.WhichEvent == HTIMER_AFTER_EVENT)
+	{
+		which = HBLANK_END_EVENT;
+		max = Settings.H_Max;
+	}
+	else
+	{
+		which = HBLANK_START_EVENT;
+		max = Settings.HBlankStart;
+	}
+
+	if (PPU.HTimerEnabled &&
+	        (long) PPU.HTimerPosition < max &&
+	        (long) PPU.HTimerPosition > CPU.NextEvent &&
+	        (!PPU.VTimerEnabled ||
+	         (PPU.VTimerEnabled && CPU.V_Counter == PPU.IRQVBeamPos)))
+	{
+		which = (long) PPU.HTimerPosition < Settings.HBlankStart ?
+		        HTIMER_BEFORE_EVENT : HTIMER_AFTER_EVENT;
+		max = PPU.HTimerPosition;
+	}
+	CPU.NextEvent = max;
+	CPU.WhichEvent = which;
 }
 
 #endif

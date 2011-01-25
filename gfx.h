@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -43,62 +43,65 @@
 
 #include "port.h"
 
-struct SGFX{
-    // Initialize these variables
-    uint8  *Screen;
-    uint8  *SubScreen;
-    uint8  *ZBuffer;
-    uint8  *SubZBuffer;
-    uint32 Pitch;
+struct SGFX
+{
+	// Initialize these variables
+	uint8  *Screen;
+	uint8  *SubScreen;
+	uint8  *ZBuffer;
+	uint8  *SubZBuffer;
+	uint32 Pitch;
 
-    // Setup in call to S9xGraphicsInit()
-    int   Delta;
-    uint16 *X2;
-    uint16 *ZERO_OR_X2;
-    uint16 *ZERO;
-    uint32 RealPitch; // True pitch of Screen buffer.
-    uint32 Pitch2;    // Same as RealPitch except while using speed up hack for Glide.
-    uint32 ZPitch;    // Pitch of ZBuffer
-    uint32 PPL;	      // Number of pixels on each of Screen buffer
-    uint32 PPLx2;
-    uint32 PixSize;
-    uint8  *S;
-    uint8  *DB;
-    uint16 *ScreenColors;
-    uint32 DepthDelta;
-    uint32 Z1;
-    uint32 Z2;
-    uint32 FixedColour;
-    const char *InfoString;
-    uint32 InfoStringTimeout;
-    uint32 StartY;
-    uint32 EndY;
-    struct ClipData *pCurrentClip;
-    uint32 Mode7Mask;
-    uint32 Mode7PriorityMask;
-    int	   OBJList [129];
-    uint32 Sizes [129];
-    int    VPositions [129];
+	// Setup in call to S9xGraphicsInit()
+	int   Delta;
+	uint16 *X2;
+	uint16 *ZERO_OR_X2;
+	uint16 *ZERO;
+	uint32 RealPitch; // True pitch of Screen buffer.
+	uint32 Pitch2;    // Same as RealPitch except while using speed up hack for Glide.
+	uint32 ZPitch;    // Pitch of ZBuffer
+	uint32 PPL;	      // Number of pixels on each of Screen buffer
+	uint32 PPLx2;
+	uint32 PixSize;
+	uint8  *S;
+	uint8  *DB;
+	uint16 *ScreenColors;
+	uint32 DepthDelta;
+	uint32 Z1;
+	uint32 Z2;
+	uint32 FixedColour;
+	const char *InfoString;
+	uint32 InfoStringTimeout;
+	uint32 StartY;
+	uint32 EndY;
+	struct ClipData *pCurrentClip;
+	uint32 Mode7Mask;
+	uint32 Mode7PriorityMask;
+	int	   OBJList [129];
+	uint32 Sizes [129];
+	int    VPositions [129];
 
-    uint8	r212c;
-    uint8	r212d;
-    uint8	r2130;
-    uint8	r2131;
-    bool8_32  Pseudo;
-    
+	uint8	r212c;
+	uint8	r212d;
+	uint8	r2130;
+	uint8	r2131;
+	bool8_32  Pseudo;
+
 #ifdef GFX_MULTI_FORMAT
-    uint32 PixelFormat;
-    uint32 (*BuildPixel) (uint32 R, uint32 G, uint32 B);
-    uint32 (*BuildPixel2) (uint32 R, uint32 G, uint32 B);
-    void   (*DecomposePixel) (uint32 Pixel, uint32 &R, uint32 &G, uint32 &B);
+	uint32 PixelFormat;
+	uint32 (*BuildPixel) (uint32 R, uint32 G, uint32 B);
+	uint32 (*BuildPixel2) (uint32 R, uint32 G, uint32 B);
+	void   (*DecomposePixel) (uint32 Pixel, uint32 &R, uint32 &G, uint32 &B);
 #endif
 };
 
-struct SLineData {
-    struct {
-	uint16 VOffset;
-	uint16 HOffset;
-    } BG [4];
+struct SLineData
+{
+	struct
+	{
+		uint16 VOffset;
+		uint16 HOffset;
+	} BG [4];
 };
 
 #define H_FLIP 0x4000
@@ -107,30 +110,30 @@ struct SLineData {
 
 struct SBG
 {
-    uint32 TileSize;
-    uint32 BitShift;
-    uint32 TileShift;
-    uint32 TileAddress;
-    uint32 NameSelect;
-    uint32 SCBase;
+	uint32 TileSize;
+	uint32 BitShift;
+	uint32 TileShift;
+	uint32 TileAddress;
+	uint32 NameSelect;
+	uint32 SCBase;
 
-    uint32 StartPalette;
-    uint32 PaletteShift;
-    uint32 PaletteMask;
-    
-    uint8 *Buffer;
-    uint8 *Buffered;
-    bool8_32  DirectColourMode;
+	uint32 StartPalette;
+	uint32 PaletteShift;
+	uint32 PaletteMask;
+
+	uint8 *Buffer;
+	uint8 *Buffered;
+	bool8_32  DirectColourMode;
 };
 
 struct SLineMatrixData
 {
-    uint32 MatrixA;
-    uint32 MatrixB;
-    uint32 MatrixC;
-    uint32 MatrixD;
-    uint32 CentreX;
-    uint32 CentreY;
+	uint32 MatrixA;
+	uint32 MatrixB;
+	uint32 MatrixC;
+	uint32 MatrixD;
+	uint32 CentreX;
+	uint32 CentreY;
 };
 
 extern uint32 odd_high [4][16];
@@ -178,7 +181,7 @@ GFX.X2 [((((C1) & RGB_REMOVE_LOW_BITS_MASK) + \
 (GFX.X2 [((((C1) & RGB_REMOVE_LOW_BITS_MASK) + \
 	  ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1) + \
 	 ((C1) & (C2) & RGB_LOW_BITS_MASK)] | \
- (((C1) ^ (C2)) & RGB_LOW_BITS_MASK))	   
+ (((C1) ^ (C2)) & RGB_LOW_BITS_MASK))
 #endif
 
 #define COLOR_ADD1_2(C1, C2) \
@@ -201,14 +204,14 @@ GFX.ZERO_OR_X2 [(((C1) | RGB_HI_BITS_MASKx2) - \
 GFX.ZERO [(((C1) | RGB_HI_BITS_MASKx2) - \
 	   ((C2) & RGB_REMOVE_LOW_BITS_MASK)) >> 1]
 
-typedef void (*NormalTileRenderer) (uint32 Tile, uint32 Offset, 
-				    uint32 StartLine, uint32 LineCount, struct SGFX * gfx);
+typedef void (*NormalTileRenderer) (uint32 Tile, uint32 Offset,
+                                    uint32 StartLine, uint32 LineCount, struct SGFX * gfx);
 typedef void (*ClippedTileRenderer) (uint32 Tile, uint32 Offset,
-				     uint32 StartPixel, uint32 Width,
-				     uint32 StartLine, uint32 LineCount, struct SGFX * gfx);
+                                     uint32 StartPixel, uint32 Width,
+                                     uint32 StartLine, uint32 LineCount, struct SGFX * gfx);
 typedef void (*LargePixelRenderer) (uint32 Tile, uint32 Offset,
-				    uint32 StartPixel, uint32 Pixels,
-				    uint32 StartLine, uint32 LineCount, struct SGFX * gfx);
+                                    uint32 StartPixel, uint32 Pixels,
+                                    uint32 StartLine, uint32 LineCount, struct SGFX * gfx);
 
 START_EXTERN_C
 void S9xStartScreenRefresh ();

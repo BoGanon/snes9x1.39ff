@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -111,9 +111,9 @@ typedef long			int16_32;
 }
 
 void _makepath (char *path, const char *drive, const char *dir,
-		const char *fname, const char *ext);
+                const char *fname, const char *ext);
 void _splitpath (const char *path, char *drive, char *dir, char *fname,
-		 char *ext);
+                 char *ext);
 
 EXTERN_C void S9xGenerateSound ();
 

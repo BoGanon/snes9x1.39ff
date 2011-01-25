@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -51,9 +51,9 @@
 #include <SDL/SDL.h>
 
 #ifdef PANDORA
-	#include <sys/types.h>
-	#include <sys/stat.h>
-	#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #endif
 
 #include "snes9x.h"
@@ -73,15 +73,15 @@ extern uint32 xs, ys, cl, cs;
 extern bool8_32 Scale;
 
 #ifdef PANDORA
-	#include "pandora_scaling/blitscale.h"
-	extern blit_scaler_e g_scale;
-	extern unsigned char g_fullscreen;
+#include "pandora_scaling/blitscale.h"
+extern blit_scaler_e g_scale;
+extern unsigned char g_fullscreen;
 #endif
 
 #ifndef _ZAURUS
 int S9xMinCommandLineArgs ()
 {
-    return (2);
+	return (2);
 }
 
 void S9xGraphicsMode ()
@@ -95,13 +95,13 @@ void S9xTextMode ()
 
 
 void S9xInitDisplay (int /*argc*/, char ** /*argv*/)
-{	
+{
 #ifdef CAANOO
 	if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_JOYSTICK /*|(Settings.NextAPUEnabled ? SDL_INIT_AUDIO : 0)*/) < 0 )
 #else
-	if (SDL_Init(SDL_INIT_VIDEO /*| (Settings.NextAPUEnabled ? SDL_INIT_AUDIO : 0)*/) < 0 ) 
+	if (SDL_Init(SDL_INIT_VIDEO /*| (Settings.NextAPUEnabled ? SDL_INIT_AUDIO : 0)*/) < 0 )
 #endif
- 	{
+	{
 		printf("Could not initialize SDL(%s)\n", SDL_GetError());
 		S9xExit();
 	}
@@ -114,30 +114,31 @@ void S9xInitDisplay (int /*argc*/, char ** /*argv*/)
 	//screen = SDL_SetVideoMode(xs * blit_scalers [ g_scale ].scale_x, ys * blit_scalers [ g_scale ].scale_y, 16,
 	//  g_fullscreen ? SDL_SWSURFACE|SDL_FULLSCREEN : SDL_SWSURFACE);
 	screen = SDL_SetVideoMode( 800 /* pandora horiz */, 480 /* pandora vert */, 16,
-				   g_fullscreen ? SDL_SWSURFACE|SDL_FULLSCREEN : SDL_SWSURFACE);
+	                           g_fullscreen ? SDL_SWSURFACE|SDL_FULLSCREEN : SDL_SWSURFACE);
 
 	// for vsync
 	{
-	  extern int g_fb;
-	  g_fb = open ("/dev/fb0", O_RDONLY /* O_RDWR */ );
-	  if ( g_fb < 0 ) {
-	    fprintf ( stderr, "Couldn't open /dev/fb0 for vsync\n" );
-	  }
+		extern int g_fb;
+		g_fb = open ("/dev/fb0", O_RDONLY /* O_RDWR */ );
+		if ( g_fb < 0 )
+		{
+			fprintf ( stderr, "Couldn't open /dev/fb0 for vsync\n" );
+		}
 	}
 
 	// for LCD refresh rate
 	switch ( (int) Memory.ROMFramesPerSecond )
 	{
 		case 60:
-		  fprintf ( stderr, "Assuming 60hz LCD\n" );
-		  break; // nothing to do
+			fprintf ( stderr, "Assuming 60hz LCD\n" );
+			break; // nothing to do
 		case 50:
-		  fprintf ( stderr, "Switching to 50hz LCD\n" );
-		  system ( "/usr/bin/sudo -n /usr/pandora/scripts/op_lcdrate.sh 50" );
-		  break;
+			fprintf ( stderr, "Switching to 50hz LCD\n" );
+			system ( "/usr/bin/sudo -n /usr/pandora/scripts/op_lcdrate.sh 50" );
+			break;
 		default:
-		  fprintf ( stderr, "Game reports %d hz display; ignoring.\n", (int) Memory.ROMFramesPerSecond );
-		  break;
+			fprintf ( stderr, "Game reports %d hz display; ignoring.\n", (int) Memory.ROMFramesPerSecond );
+			break;
 	}
 
 #else //DINGOO //CAANOO
@@ -149,7 +150,7 @@ void S9xInitDisplay (int /*argc*/, char ** /*argv*/)
 		printf("Couldn't set video mode: %s\n", SDL_GetError());
 		S9xExit();
 	}
-	
+
 	if (Settings.SupportHiRes)
 	{
 		gfxscreen = SDL_CreateRGBSurface(SDL_SWSURFACE, 512, 480, 16, 0, 0, 0, 0);
@@ -163,10 +164,12 @@ void S9xInitDisplay (int /*argc*/, char ** /*argv*/)
 		{
 			GFX.Screen = (uint8*) malloc ( ( 512 * 480 * 2 ) + 64 );
 			GFX.Pitch = 320 * 2;
-	    } else {
-	    	GFX.Screen = (uint8 *)screen->pixels + 64;
-	    	GFX.Pitch = 320 * 2;
-	    }
+		}
+		else
+		{
+			GFX.Screen = (uint8 *)screen->pixels + 64;
+			GFX.Pitch = 320 * 2;
+		}
 #else
 		if(Scale)
 		{
@@ -189,11 +192,11 @@ void S9xInitDisplay (int /*argc*/, char ** /*argv*/)
 void S9xDeinitDisplay ()
 {
 #ifdef PANDORA
-    // for vsync
-    extern int g_fb;
-    if ( g_fb >= 0 )
-    {
-	  close ( g_fb );
+	// for vsync
+	extern int g_fb;
+	if ( g_fb >= 0 )
+	{
+		close ( g_fb );
 	}
 	// for LCD refresh
 	system ( "/usr/bin/sudo -n /usr/pandora/scripts/op_lcdrate.sh 60" );
@@ -215,43 +218,47 @@ void S9xSetTitle (const char * /*title*/)
 
 #ifndef _ZAURUS
 const char *S9xSelectFilename (const char *def, const char *dir1,
-			    const char *ext1, const char *title)
+                               const char *ext1, const char *title)
 {
-    static char path [PATH_MAX];
-    char buffer [PATH_MAX];
-    
-    S9xTextMode ();
-    printf ("\n%s (default: %s): ", title, def);
-    fflush (stdout);
-    
-    if (fgets (buffer, sizeof (buffer) - 1, stdin))
-    {
+	static char path [PATH_MAX];
+	char buffer [PATH_MAX];
+
+	S9xTextMode ();
+	printf ("\n%s (default: %s): ", title, def);
+	fflush (stdout);
+
+	if (fgets (buffer, sizeof (buffer) - 1, stdin))
+	{
 		char *p = buffer;
 		while (isspace (*p) || *p == '\n')
-		    p++;
+		{
+			p++;
+		}
 		if (!*p)
 		{
-		    strcpy (buffer, def);
-		    p = buffer;
+			strcpy (buffer, def);
+			p = buffer;
 		}
-	
+
 		char *q = strrchr (p, '\n');
 		if (q)
-		    *q = 0;
-	
+		{
+			*q = 0;
+		}
+
 		char fname [PATH_MAX];
 		char drive [_MAX_DRIVE];
 		char dir [_MAX_DIR];
 		char ext [_MAX_EXT];
-	
+
 		_splitpath (p, drive, dir, fname, ext);
 		_makepath (path, drive, *dir ? dir : dir1, fname, *ext ? ext : ext1);
 		S9xGraphicsMode ();
 		return (path);
-    }
-    
-    S9xGraphicsMode ();
-    return (NULL);
+	}
+
+	S9xGraphicsMode ();
+	return (NULL);
 }
 
 void S9xExtraUsage ()
@@ -259,21 +266,21 @@ void S9xExtraUsage ()
 }
 
 bool8 S9xReadMousePosition (int /* which1 */, int &/* x */, int & /* y */,
-			    uint32 & /* buttons */)
+                            uint32 & /* buttons */)
 {
 //	SDL_GetMouseState
-    return (FALSE);
+	return (FALSE);
 }
 
-bool8 S9xReadSuperScopePosition (int & /* x */, int & /* y */, 
-				 uint32 & /* buttons */)
+bool8 S9xReadSuperScopePosition (int & /* x */, int & /* y */,
+                                 uint32 & /* buttons */)
 {
-    return (FALSE);
+	return (FALSE);
 }
 #endif
 
 void S9xMessage (int /* type */, int /* number */, const char *message)
 {
-    fprintf (stderr, "%s\n", message);
+	fprintf (stderr, "%s\n", message);
 }
 #endif

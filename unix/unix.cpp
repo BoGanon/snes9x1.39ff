@@ -56,13 +56,13 @@
 #include "keydef.h"
 
 #ifdef NETPLAY_SUPPORT
-	#include "../netplay.h"
+#include "../netplay.h"
 #endif
 
 #ifdef CAANOO
-	#include "caanoo.h"
+#include "caanoo.h"
 #else
-	#include "dingoo.h"
+#include "dingoo.h"
 #endif
 
 #ifdef PANDORA
@@ -108,39 +108,40 @@ pthread_mutex_t mutex;
 #include "spc700.h"
 
 #ifdef PANDORA
-	#include "pandora_scaling/blitscale.h"
-	blit_scaler_option_t blit_scalers[] = {
-		// KEEP IN SYNC TO BLIT_SCALER_E or Earth Crashes Into The Sun
-		{ bs_error,                bs_invalid, 0, 0,       "Error" },
-		{ bs_1to1,                 bs_invalid, 1, 1,       "1 to 1" },
-		{ bs_1to2_double,          bs_valid,   2, 2,       "2x2 no-AA" },
-		{ bs_1to2_scale2x,         bs_valid,   2, 2,       "2x2 Scale2x" },
-		{ bs_1to2_smooth,          bs_valid,   2, 2,       "2x2 Smoothed" },
-		{ bs_1to32_multiplied,     bs_valid,   3, 2,       "3x2 no-AA" },
-		{ bs_1to32_smooth,         bs_invalid, 3, 2,       "3x2 Smoothed" },
-		{ bs_fs_aspect_multiplied, bs_invalid, 0xFF, 0xFF, "Fullscreen (aspect) (unsmoothed)" },
-		{ bs_fs_aspect_smooth,     bs_invalid, 0xFF, 0xFF, "Fullscreen (aspect) (smoothed)" },
-		{ bs_fs_always_multiplied, bs_invalid, 0xFF, 0xFF, "Fullscreen (unsmoothed)" },
-		{ bs_fs_always_smooth,     bs_invalid, 0xFF, 0xFF, "Fullscreen (smoothed)" },
-	};
+#include "pandora_scaling/blitscale.h"
+blit_scaler_option_t blit_scalers[] =
+{
+	// KEEP IN SYNC TO BLIT_SCALER_E or Earth Crashes Into The Sun
+	{ bs_error,                bs_invalid, 0, 0,       "Error" },
+	{ bs_1to1,                 bs_invalid, 1, 1,       "1 to 1" },
+	{ bs_1to2_double,          bs_valid,   2, 2,       "2x2 no-AA" },
+	{ bs_1to2_scale2x,         bs_valid,   2, 2,       "2x2 Scale2x" },
+	{ bs_1to2_smooth,          bs_valid,   2, 2,       "2x2 Smoothed" },
+	{ bs_1to32_multiplied,     bs_valid,   3, 2,       "3x2 no-AA" },
+	{ bs_1to32_smooth,         bs_invalid, 3, 2,       "3x2 Smoothed" },
+	{ bs_fs_aspect_multiplied, bs_invalid, 0xFF, 0xFF, "Fullscreen (aspect) (unsmoothed)" },
+	{ bs_fs_aspect_smooth,     bs_invalid, 0xFF, 0xFF, "Fullscreen (aspect) (smoothed)" },
+	{ bs_fs_always_multiplied, bs_invalid, 0xFF, 0xFF, "Fullscreen (unsmoothed)" },
+	{ bs_fs_always_smooth,     bs_invalid, 0xFF, 0xFF, "Fullscreen (smoothed)" },
+};
 
-	blit_scaler_e g_scale = bs_1to2_double;
-	//blit_scaler_e g_scale = bs_1to32_multiplied;
-	unsigned char g_fullscreen = 1;
-	unsigned char g_scanline = 0; // pixel doubling, but skipping the vertical alternate lines
-	unsigned char g_vsync = 1; // if >0, do vsync
-	int g_fb = -1; // fb for framebuffer
+blit_scaler_e g_scale = bs_1to2_double;
+//blit_scaler_e g_scale = bs_1to32_multiplied;
+unsigned char g_fullscreen = 1;
+unsigned char g_scanline = 0; // pixel doubling, but skipping the vertical alternate lines
+unsigned char g_vsync = 1; // if >0, do vsync
+int g_fb = -1; // fb for framebuffer
 #endif
 
 #ifdef CAANOO
-	SDL_Joystick* keyssnes;
+SDL_Joystick* keyssnes;
 #else
-	uint8 *keyssnes;
+uint8 *keyssnes;
 #endif
 
 #ifdef NETPLAY_SUPPORT
-	static uint32	joypads[8];
-	static uint32	old_joypads[8];
+static uint32	joypads[8];
+static uint32	old_joypads[8];
 #endif
 
 // SaveSlotNumber
@@ -158,7 +159,7 @@ void *S9xProcessSound (void *);
 void OutOfMemory();
 
 #ifdef DINGOO
-	void gp2x_sound_volume(int l, int r);
+void gp2x_sound_volume(int l, int r);
 #endif
 
 extern void S9xDisplayFrameRate (uint8 *, uint32);
@@ -180,8 +181,8 @@ char *snapshot_filename = NULL;
 static void sigbrkhandler(int)
 {
 #ifdef DEBUGGER
-    CPU.Flags |= DEBUG_MODE_FLAG;
-    signal(SIGINT, (SIG_PF) sigbrkhandler);
+	CPU.Flags |= DEBUG_MODE_FLAG;
+	signal(SIGINT, (SIG_PF) sigbrkhandler);
 #endif
 }
 #endif
@@ -190,214 +191,253 @@ static void sigbrkhandler(int)
 void S9xParseArg (char **argv, int &i, int argc)
 {
 
-    if (strcasecmp (argv [i], "-b") == 0 ||
-	     strcasecmp (argv [i], "-bs") == 0 ||
-	     strcasecmp (argv [i], "-buffersize") == 0)
-    {
-	if (i + 1 < argc)
-	    Settings.SoundBufferSize = atoi (argv [++i]);
-	else
-	    S9xUsage ();
-    }
-    else if (strcmp (argv [i], "-l") == 0 ||
-	     strcasecmp (argv [i], "-loadsnapshot") == 0)
-    {
-	if (i + 1 < argc)
-	    snapshot_filename = argv [++i];
-	else
-	    S9xUsage ();
-    }
-    else if (strcmp (argv [i], "-xs") == 0)
-    {
-	if (i + 1 < argc)
-	    xs = atoi(argv [++i]);
-	else
-	    S9xUsage ();
+	if (strcasecmp (argv [i], "-b") == 0 ||
+	        strcasecmp (argv [i], "-bs") == 0 ||
+	        strcasecmp (argv [i], "-buffersize") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			Settings.SoundBufferSize = atoi (argv [++i]);
+		}
+		else
+		{
+			S9xUsage ();
+		}
 	}
-    else if (strcmp (argv [i], "-ys") == 0)
-    {
-	if (i + 1 < argc)
-	    ys = atoi(argv [++i]);
-	else
-	    S9xUsage ();
+	else if (strcmp (argv [i], "-l") == 0 ||
+	         strcasecmp (argv [i], "-loadsnapshot") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			snapshot_filename = argv [++i];
+		}
+		else
+		{
+			S9xUsage ();
+		}
 	}
-    else if (strcmp (argv [i], "-cl") == 0)
-    {
-	if (i + 1 < argc)
-	    cl = atoi(argv [++i]);
-	else
-	    S9xUsage ();
+	else if (strcmp (argv [i], "-xs") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			xs = atoi(argv [++i]);
+		}
+		else
+		{
+			S9xUsage ();
+		}
 	}
-    else if (strcmp (argv [i], "-cs") == 0)
-    {
-	if (i + 1 < argc)
-	    cs = atoi(argv [++i]);
-	else
-	    S9xUsage ();
+	else if (strcmp (argv [i], "-ys") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			ys = atoi(argv [++i]);
+		}
+		else
+		{
+			S9xUsage ();
+		}
 	}
-    else if (strcmp (argv [i], "-mfs") == 0)
-    {
-	if (i + 1 < argc)
-	    mfs = atoi(argv [++i]);
-	else
-	    S9xUsage ();
+	else if (strcmp (argv [i], "-cl") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			cl = atoi(argv [++i]);
+		}
+		else
+		{
+			S9xUsage ();
+		}
 	}
-    else
-	    S9xUsage ();
+	else if (strcmp (argv [i], "-cs") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			cs = atoi(argv [++i]);
+		}
+		else
+		{
+			S9xUsage ();
+		}
+	}
+	else if (strcmp (argv [i], "-mfs") == 0)
+	{
+		if (i + 1 < argc)
+		{
+			mfs = atoi(argv [++i]);
+		}
+		else
+		{
+			S9xUsage ();
+		}
+	}
+	else
+	{
+		S9xUsage ();
+	}
 }
 
 extern "C"
 int main (int argc, char **argv)
 {
-    start = clock();
-    if (argc < 2)
+	start = clock();
+	if (argc < 2)
+	{
 		S9xUsage ();
+	}
 
-    ZeroMemory (&Settings, sizeof (Settings));
+	ZeroMemory (&Settings, sizeof (Settings));
 
-    Settings.JoystickEnabled = FALSE;	//unused
+	Settings.JoystickEnabled = FALSE;	//unused
 #ifdef DINGOO
-    Settings.SoundPlaybackRate = 2;
+	Settings.SoundPlaybackRate = 2;
 #else
-    Settings.SoundPlaybackRate = 5; //default would be '2', use 32000Hz as the genuine hardware does
+	Settings.SoundPlaybackRate = 5; //default would be '2', use 32000Hz as the genuine hardware does
 #endif
-    Settings.Stereo = TRUE;
+	Settings.Stereo = TRUE;
 	Settings.SoundBufferSize = 512; //256 //2048
-    Settings.CyclesPercentage = 100;
-    Settings.DisableSoundEcho = FALSE;
-    Settings.APUEnabled = Settings.NextAPUEnabled = TRUE;
-    Settings.H_Max = SNES_CYCLES_PER_SCANLINE;
+	Settings.CyclesPercentage = 100;
+	Settings.DisableSoundEcho = FALSE;
+	Settings.APUEnabled = Settings.NextAPUEnabled = TRUE;
+	Settings.H_Max = SNES_CYCLES_PER_SCANLINE;
 #ifdef PANDORA
-    Settings.SkipFrames = 1;
+	Settings.SkipFrames = 1;
 #else
-    Settings.SkipFrames = AUTO_FRAMERATE;
+	Settings.SkipFrames = AUTO_FRAMERATE;
 #endif
-Settings.DisplayFrameRate = TRUE;
-    Settings.ShutdownMaster = TRUE;
-    Settings.FrameTimePAL = 20000;
-    Settings.FrameTimeNTSC = 16667;
-    Settings.FrameTime = Settings.FrameTimeNTSC;
-    Settings.DisableSampleCaching = FALSE;
-    Settings.DisableMasterVolume = FALSE;
-    Settings.Mouse = FALSE;	//TRUE
-    Settings.SuperScope = FALSE;
-    Settings.MultiPlayer5 = FALSE;
-    Settings.ControllerOption = SNES_MULTIPLAYER5;
-    Settings.ControllerOption = 0;
-    Settings.Transparency = FALSE; //TRUE;
-    Settings.SixteenBit = TRUE;
-    Settings.SupportHiRes = FALSE; //autodetected for known highres roms
-    Settings.NetPlay = FALSE;
-    Settings.ServerName [0] = 0;
-    Settings.ThreadSound = TRUE;
-    Settings.AutoSaveDelay = 30;
-    Settings.ApplyCheats = TRUE;
-    Settings.TurboMode = FALSE;
-    Settings.TurboSkipFrames = 15;
-    if (Settings.ForceNoTransparency)
+	Settings.DisplayFrameRate = TRUE;
+	Settings.ShutdownMaster = TRUE;
+	Settings.FrameTimePAL = 20000;
+	Settings.FrameTimeNTSC = 16667;
+	Settings.FrameTime = Settings.FrameTimeNTSC;
+	Settings.DisableSampleCaching = FALSE;
+	Settings.DisableMasterVolume = FALSE;
+	Settings.Mouse = FALSE;	//TRUE
+	Settings.SuperScope = FALSE;
+	Settings.MultiPlayer5 = FALSE;
+	Settings.ControllerOption = SNES_MULTIPLAYER5;
+	Settings.ControllerOption = 0;
+	Settings.Transparency = FALSE; //TRUE;
+	Settings.SixteenBit = TRUE;
+	Settings.SupportHiRes = FALSE; //autodetected for known highres roms
+	Settings.NetPlay = FALSE;
+	Settings.ServerName [0] = 0;
+	Settings.ThreadSound = TRUE;
+	Settings.AutoSaveDelay = 30;
+	Settings.ApplyCheats = TRUE;
+	Settings.TurboMode = FALSE;
+	Settings.TurboSkipFrames = 15;
+	if (Settings.ForceNoTransparency)
+	{
 		Settings.Transparency = FALSE;
-    if (Settings.Transparency)
+	}
+	if (Settings.Transparency)
+	{
 		Settings.SixteenBit = TRUE;
+	}
 
 	//parse commandline arguments for ROM filename
 	rom_filename = S9xParseArgs (argv, argc);
 
 	//printf( "Playbackrate1: %02d\n",Settings.SoundPlaybackRate );
 
-    Settings.HBlankStart = (256 * Settings.H_Max) / SNES_HCOUNTER_MAX;
+	Settings.HBlankStart = (256 * Settings.H_Max) / SNES_HCOUNTER_MAX;
 
-    if (!Memory.Init () || !S9xInitAPU())
-    {
+	if (!Memory.Init () || !S9xInitAPU())
+	{
 		OutOfMemory ();
 	}
 
-   (void) S9xInitSound (Settings.SoundPlaybackRate, Settings.Stereo, Settings.SoundBufferSize);
+	(void) S9xInitSound (Settings.SoundPlaybackRate, Settings.Stereo, Settings.SoundBufferSize);
 
-    if (!Settings.APUEnabled)
+	if (!Settings.APUEnabled)
+	{
 		S9xSetSoundMute (TRUE);
+	}
 
-    uint32 saved_flags = CPU.Flags;
+	uint32 saved_flags = CPU.Flags;
 
 #ifdef GFX_MULTI_FORMAT
-    S9xSetRenderPixelFormat (RGB565);
+	S9xSetRenderPixelFormat (RGB565);
 #endif
 
 #ifndef DINGOO
-    // ROM selector if no rom filename is available!!!!!!!!!!!!!!
-    if (!rom_filename)
-    {
-	    S9xInitDisplay (argc, argv);
-	    if (!S9xGraphicsInit ())
-	    {
+	// ROM selector if no rom filename is available!!!!!!!!!!!!!!
+	if (!rom_filename)
+	{
+		S9xInitDisplay (argc, argv);
+		if (!S9xGraphicsInit ())
+		{
 			OutOfMemory ();
 		}
-	    S9xInitInputDevices ();
+		S9xInitInputDevices ();
 
-	    // just to init Font here for ROM selector
-	    S9xReset ();
+		// just to init Font here for ROM selector
+		S9xReset ();
 
-	    do
-	    {
+		do
+		{
 			rom_filename = menu_romselector();
-		}while(rom_filename==NULL);
+		}
+		while(rom_filename==NULL);
 
 		S9xDeinitDisplay();
 		printf ("Romfile selected: %s\n", rom_filename);
 	}
 #endif
 
-    if (rom_filename)
-    {
+	if (rom_filename)
+	{
 		if (!Memory.LoadROM (rom_filename))
 		{
-		    char dir [_MAX_DIR + 1];
-		    char drive [_MAX_DRIVE + 1];
-		    char name [_MAX_FNAME + 1];
-		    char ext [_MAX_EXT + 1];
-		    char fname [_MAX_PATH + 1];
+			char dir [_MAX_DIR + 1];
+			char drive [_MAX_DRIVE + 1];
+			char name [_MAX_FNAME + 1];
+			char ext [_MAX_EXT + 1];
+			char fname [_MAX_PATH + 1];
 
-		    _splitpath (rom_filename, drive, dir, name, ext);
-		    _makepath (fname, drive, dir, name, ext);
+			_splitpath (rom_filename, drive, dir, name, ext);
+			_makepath (fname, drive, dir, name, ext);
 
-		    strcpy (fname, S9xGetROMDirectory ());
-		    strcat (fname, SLASH_STR);
-		    strcat (fname, name);
+			strcpy (fname, S9xGetROMDirectory ());
+			strcat (fname, SLASH_STR);
+			strcat (fname, name);
 
-		    if (ext [0])
-		    {
+			if (ext [0])
+			{
 				strcat (fname, ".");
 				strcat (fname, ext);
-		    }
-		    _splitpath (fname, drive, dir, name, ext);
-		    _makepath (fname, drive, dir, name, ext);
+			}
+			_splitpath (fname, drive, dir, name, ext);
+			_makepath (fname, drive, dir, name, ext);
 
-		    if (!Memory.LoadROM (fname))
-		    {
+			if (!Memory.LoadROM (fname))
+			{
 				printf ("Error opening: %s\n", rom_filename);
 				OutOfMemory();
-		    }
+			}
 		}
 		Memory.LoadSRAM (S9xGetFilename (".srm"));
-    }
-    else
-    {
-	    S9xExit();
-    }
+	}
+	else
+	{
+		S9xExit();
+	}
 
-    S9xInitDisplay (argc, argv);
-    if (!S9xGraphicsInit ())
-    {
+	S9xInitDisplay (argc, argv);
+	if (!S9xGraphicsInit ())
+	{
 		OutOfMemory ();
 	}
 
 #ifdef PANDORA
-    hqxInit();
+	hqxInit();
 #endif
 
-    S9xInitInputDevices ();
+	S9xInitInputDevices ();
 
-    CPU.Flags = saved_flags;
-    Settings.StopEmulation = FALSE;
+	CPU.Flags = saved_flags;
+	Settings.StopEmulation = FALSE;
 
 #ifdef DEBUGGER
 	struct sigaction sa;
@@ -424,10 +464,13 @@ Settings.DisplayFrameRate = TRUE;
 
 	char	*port = getenv("S9XPORT");
 	if (Settings.Port >= 0 && port)
+	{
 		Settings.Port = atoi(port);
-	else
-	if (Settings.Port < 0)
+	}
+	else if (Settings.Port < 0)
+	{
 		Settings.Port = -Settings.Port;
+	}
 
 	if (Settings.NetPlay)
 	{
@@ -447,27 +490,29 @@ Settings.DisplayFrameRate = TRUE;
 #ifdef CAANOO
 	sprintf(msg,"Press HOME to Show MENU");
 #elif PANDORA
-    sprintf(msg,"Press SPACEBAR to Show MENU");
+	sprintf(msg,"Press SPACEBAR to Show MENU");
 #elif CYGWIN32
 	sprintf(msg,"Press ESC+LALT to Show MENU");
 #else
-    sprintf(msg,"Press SELECT+B to Show MENU");
+	sprintf(msg,"Press SELECT+B to Show MENU");
 #endif
-    S9xSetInfoString(msg);
+	S9xSetInfoString(msg);
 
-    //load Snapshot
-    if (snapshot_filename)
-    {
+	//load Snapshot
+	if (snapshot_filename)
+	{
 		int Flags = CPU.Flags & (DEBUG_MODE_FLAG | TRACE_FLAG);
 		if (!S9xLoadSnapshot (snapshot_filename))
-		    exit (1);
+		{
+			exit (1);
+		}
 		CPU.Flags |= Flags;
-    }
+	}
 
 #ifndef _ZAURUS
-    S9xGraphicsMode ();
-    sprintf (String, "\"%s\" %s: %s", Memory.ROMName, TITLE, VERSION);
-    S9xSetTitle (String);
+	S9xGraphicsMode ();
+	sprintf (String, "\"%s\" %s: %s", Memory.ROMName, TITLE, VERSION);
+	S9xSetTitle (String);
 #endif
 
 #ifdef JOYSTICK_SUPPORT
@@ -539,18 +584,22 @@ Settings.DisplayFrameRate = TRUE;
 
 #ifdef DEBUGGER
 		if (CPU.Flags & DEBUG_MODE_FLAG)
+		{
 			S9xDoDebug();
+		}
 		else
 #endif
-		if (Settings.Paused)
-		{
-			S9xProcessEvents(FALSE);
-			usleep(100000);
-		}
+			if (Settings.Paused)
+			{
+				S9xProcessEvents(FALSE);
+				usleep(100000);
+			}
 
 #ifdef JOYSTICK_SUPPORT
 		if (unixSettings.JoystickEnabled && (JoypadSkip++ & 1) == 0)
+		{
 			ReadJoysticks();
+		}
 #endif
 
 		S9xProcessEvents(TRUE);
@@ -568,18 +617,18 @@ Settings.DisplayFrameRate = TRUE;
 
 void S9xAutoSaveSRAM ()
 {
-    Memory.SaveSRAM (S9xGetFilename (".srm"));
+	Memory.SaveSRAM (S9xGetFilename (".srm"));
 }
 
 void OutOfMemory()
 {
-    fprintf (stderr, "Snes9X: Memory allocation failure - not enough RAM/virtual memory available.\n S9xExiting...\n");
+	fprintf (stderr, "Snes9X: Memory allocation failure - not enough RAM/virtual memory available.\n S9xExiting...\n");
 
-    Memory.Deinit ();
-    S9xDeinitAPU ();
-    S9xDeinitDisplay();
+	Memory.Deinit ();
+	S9xDeinitAPU ();
+	S9xDeinitDisplay();
 
-    exit (1);
+	exit (1);
 }
 
 void S9xExit()
@@ -587,30 +636,34 @@ void S9xExit()
 	S9xSetSoundMute(true);
 
 #ifdef USE_THREADS
-    if (Settings.ThreadSound)
-    {
+	if (Settings.ThreadSound)
+	{
 		int status = pthread_cancel(thread);
 		if (status != 0)
+		{
 			perror ("Error pthread_cancel");
+		}
 	}
 #endif
 
 #ifdef NETPLAY_SUPPORT
 	if (Settings.NetPlay)
+	{
 		S9xNPDisconnect();
+	}
 #endif
 
-    Memory.SaveSRAM (S9xGetFilename (".srm"));
+	Memory.SaveSRAM (S9xGetFilename (".srm"));
 //    S9xSaveCheatFile (S9xGetFilename (".cht")); // not needed for embedded devices
 
-    Memory.Deinit ();
-    S9xDeinitAPU ();
-    S9xDeinitDisplay ();
+	Memory.Deinit ();
+	S9xDeinitAPU ();
+	S9xDeinitDisplay ();
 
-    SDL_ShowCursor(SDL_ENABLE);
-    SDL_Quit();
+	SDL_ShowCursor(SDL_ENABLE);
+	SDL_Quit();
 
-    exit (0);
+	exit (0);
 }
 
 Uint16 sfc_key[256];
@@ -654,20 +707,20 @@ void S9xInitInputDevices ()
 	sfc_key[RIGHT_1] = SDLK_RIGHT; //DINGOO_BUTTON_RIGHT;
 	sfc_key[UP_1] = SDLK_UP; //DINGOO_BUTTON_UP;
 	sfc_key[DOWN_1] = SDLK_DOWN; //DINGOO_BUTTON_DOWN;
-/*
-	// for now, essentially unmapped
-	sfc_key[LEFT_2] = SDLK_g;
-	sfc_key[RIGHT_2] = SDLK_j;
-	sfc_key[UP_2] = SDLK_u;
-	sfc_key[DOWN_2] = SDLK_n;
-	sfc_key[LU_2] = SDLK_y;
-	sfc_key[LD_2] = SDLK_b;
-	sfc_key[RU_2] = SDLK_i;
-	sfc_key[RD_2] = SDLK_m;
+	/*
+		// for now, essentially unmapped
+		sfc_key[LEFT_2] = SDLK_g;
+		sfc_key[RIGHT_2] = SDLK_j;
+		sfc_key[UP_2] = SDLK_u;
+		sfc_key[DOWN_2] = SDLK_n;
+		sfc_key[LU_2] = SDLK_y;
+		sfc_key[LD_2] = SDLK_b;
+		sfc_key[RU_2] = SDLK_i;
+		sfc_key[RD_2] = SDLK_m;
 
-	sfc_key[QUIT] = SDLK_ESCAPE;
-	sfc_key[ACCEL] = SDLK_TAB;
-*/
+		sfc_key[QUIT] = SDLK_ESCAPE;
+		sfc_key[ACCEL] = SDLK_TAB;
+	*/
 #else
 	// Dingoo mapping
 	sfc_key[A_1] = DINGOO_BUTTON_A;
@@ -682,49 +735,93 @@ void S9xInitInputDevices ()
 	sfc_key[RIGHT_1] = DINGOO_BUTTON_RIGHT;
 	sfc_key[UP_1] = DINGOO_BUTTON_UP;
 	sfc_key[DOWN_1] = DINGOO_BUTTON_DOWN;
-/*
-	// for now, essentially unmapped
-	sfc_key[LEFT_2] = SDLK_g;
-	sfc_key[RIGHT_2] = SDLK_j;
-	sfc_key[UP_2] = SDLK_u;
-	sfc_key[DOWN_2] = SDLK_n;
-	sfc_key[LU_2] = SDLK_y;
-	sfc_key[LD_2] = SDLK_b;
-	sfc_key[RU_2] = SDLK_i;
-	sfc_key[RD_2] = SDLK_m;
+	/*
+		// for now, essentially unmapped
+		sfc_key[LEFT_2] = SDLK_g;
+		sfc_key[RIGHT_2] = SDLK_j;
+		sfc_key[UP_2] = SDLK_u;
+		sfc_key[DOWN_2] = SDLK_n;
+		sfc_key[LU_2] = SDLK_y;
+		sfc_key[LD_2] = SDLK_b;
+		sfc_key[RU_2] = SDLK_i;
+		sfc_key[RD_2] = SDLK_m;
 
-	sfc_key[QUIT] = SDLK_d;
-	sfc_key[ACCEL] = SDLK_u;
-*/
+		sfc_key[QUIT] = SDLK_d;
+		sfc_key[ACCEL] = SDLK_u;
+	*/
 #endif
 
 	int i = 0;
 	char *envp, *j;
 	envp = j = getenv ("S9XKEYS");
-	if (envp) {
-		do {
+	if (envp)
+	{
+		do
+		{
 			if (j = strchr(envp, ','))
+			{
 				*j = 0;
-			if (i == 0) sfc_key[QUIT] = atoi(envp);
-			else if (i == 1)  sfc_key[A_1] = atoi(envp);
-			else if (i == 2)  sfc_key[B_1] = atoi(envp);
-			else if (i == 3)  sfc_key[X_1] = atoi(envp);
-			else if (i == 4)  sfc_key[Y_1] = atoi(envp);
-			else if (i == 5)  sfc_key[L_1] = atoi(envp);
-			else if (i == 6)  sfc_key[R_1] = atoi(envp);
-			else if (i == 7)  sfc_key[START_1] = atoi(envp);
-			else if (i == 8)  sfc_key[SELECT_1] = atoi(envp);
-			else if (i == 9)  sfc_key[LEFT_1] = atoi(envp);
-			else if (i == 10) sfc_key[RIGHT_1] = atoi(envp);
-			else if (i == 11) sfc_key[UP_1] = atoi(envp);
-			else if (i == 12) sfc_key[DOWN_1] = atoi(envp);
-/*			else if (i == 13) sfc_key[LU_2] = atoi(envp);
-			else if (i == 14) sfc_key[LD_2] = atoi(envp);
-			else if (i == 15) sfc_key[RU_2] = atoi(envp);
-			else if (i == 16) sfc_key[RD_2] = atoi(envp);
-*/			envp = j + 1;
+			}
+			if (i == 0)
+			{
+				sfc_key[QUIT] = atoi(envp);
+			}
+			else if (i == 1)
+			{
+				sfc_key[A_1] = atoi(envp);
+			}
+			else if (i == 2)
+			{
+				sfc_key[B_1] = atoi(envp);
+			}
+			else if (i == 3)
+			{
+				sfc_key[X_1] = atoi(envp);
+			}
+			else if (i == 4)
+			{
+				sfc_key[Y_1] = atoi(envp);
+			}
+			else if (i == 5)
+			{
+				sfc_key[L_1] = atoi(envp);
+			}
+			else if (i == 6)
+			{
+				sfc_key[R_1] = atoi(envp);
+			}
+			else if (i == 7)
+			{
+				sfc_key[START_1] = atoi(envp);
+			}
+			else if (i == 8)
+			{
+				sfc_key[SELECT_1] = atoi(envp);
+			}
+			else if (i == 9)
+			{
+				sfc_key[LEFT_1] = atoi(envp);
+			}
+			else if (i == 10)
+			{
+				sfc_key[RIGHT_1] = atoi(envp);
+			}
+			else if (i == 11)
+			{
+				sfc_key[UP_1] = atoi(envp);
+			}
+			else if (i == 12)
+			{
+				sfc_key[DOWN_1] = atoi(envp);
+			}
+			/*			else if (i == 13) sfc_key[LU_2] = atoi(envp);
+						else if (i == 14) sfc_key[LD_2] = atoi(envp);
+						else if (i == 15) sfc_key[RU_2] = atoi(envp);
+						else if (i == 16) sfc_key[RD_2] = atoi(envp);
+			*/			envp = j + 1;
 			++i;
-		} while(j);
+		}
+		while(j);
 	}
 
 }
@@ -732,166 +829,185 @@ void S9xInitInputDevices ()
 const char *GetHomeDirectory ()
 {
 #if CAANOO
-    return (".");
+	return (".");
 #elif CYGWIN32
-    return (".");
+	return (".");
 #else
-    return (getenv ("HOME"));
+	return (getenv ("HOME"));
 #endif
 }
 
 const char *S9xGetSnapshotDirectory ()
 {
-    static char filename [PATH_MAX];
-    const char *snapshot;
+	static char filename [PATH_MAX];
+	const char *snapshot;
 
-    if (!(snapshot = getenv ("SNES9X_SNAPSHOT_DIR")) &&
-	!(snapshot = getenv ("SNES96_SNAPSHOT_DIR")))
-    {
+	if (!(snapshot = getenv ("SNES9X_SNAPSHOT_DIR")) &&
+	        !(snapshot = getenv ("SNES96_SNAPSHOT_DIR")))
+	{
 		const char *home = GetHomeDirectory ();
 		strcpy (filename, home);
 		strcat (filename, SLASH_STR);
 		strcat (filename, ".snes96_snapshots");
 		mkdir (filename, 0777);
 		chown (filename, getuid (), getgid ());
-    }
-    else
-	return (snapshot);
+	}
+	else
+	{
+		return (snapshot);
+	}
 
-    return (filename);
+	return (filename);
 }
 
 const char *S9xGetFilename (const char *ex)
 {
-    static char filename [PATH_MAX + 1];
-    char drive [_MAX_DRIVE + 1];
-    char dir [_MAX_DIR + 1];
-    char fname [_MAX_FNAME + 1];
-    char ext [_MAX_EXT + 1];
+	static char filename [PATH_MAX + 1];
+	char drive [_MAX_DRIVE + 1];
+	char dir [_MAX_DIR + 1];
+	char fname [_MAX_FNAME + 1];
+	char ext [_MAX_EXT + 1];
 
-    _splitpath (Memory.ROMFilename, drive, dir, fname, ext);
-    strcpy (filename, S9xGetSnapshotDirectory ());
-    strcat (filename, SLASH_STR);
-    strcat (filename, fname);
-    strcat (filename, ex);
+	_splitpath (Memory.ROMFilename, drive, dir, fname, ext);
+	strcpy (filename, S9xGetSnapshotDirectory ());
+	strcat (filename, SLASH_STR);
+	strcat (filename, fname);
+	strcat (filename, ex);
 
-    return (filename);
+	return (filename);
 }
 
 const char *S9xGetROMDirectory ()
 {
-    const char *roms;
+	const char *roms;
 
-    if (!(roms = getenv ("SNES9X_ROM_DIR")) && !(roms = getenv ("SNES96_ROM_DIR")))
+	if (!(roms = getenv ("SNES9X_ROM_DIR")) && !(roms = getenv ("SNES96_ROM_DIR")))
+	{
 		return ("." SLASH_STR "roms");
-    else
+	}
+	else
+	{
 		return (roms);
+	}
 }
 
 const char *S9xBasename (const char *f)
 {
-    const char *p;
-    if ((p = strrchr (f, '/')) != NULL || (p = strrchr (f, '\\')) != NULL)
-	return (p + 1);
+	const char *p;
+	if ((p = strrchr (f, '/')) != NULL || (p = strrchr (f, '\\')) != NULL)
+	{
+		return (p + 1);
+	}
 
-    return (f);
+	return (f);
 }
 
 bool8 S9xOpenSnapshotFile (const char *fname, bool8 read_only, STREAM *file)
 {
-    char filename [PATH_MAX + 1];
-    char drive [_MAX_DRIVE + 1];
-    char dir [_MAX_DIR + 1];
-    char ext [_MAX_EXT + 1];
+	char filename [PATH_MAX + 1];
+	char drive [_MAX_DRIVE + 1];
+	char dir [_MAX_DIR + 1];
+	char ext [_MAX_EXT + 1];
 
-    _splitpath (fname, drive, dir, filename, ext);
+	_splitpath (fname, drive, dir, filename, ext);
 
-    if (*drive || *dir == '/' ||
-	(*dir == '.' && (*(dir + 1) == '/'
-        )))
-    {
-	strcpy (filename, fname);
-	if (!*ext)
-	    strcat (filename, ".s96");
-    }
-    else
-    {
-	strcpy (filename, S9xGetSnapshotDirectory ());
-	strcat (filename, SLASH_STR);
-	strcat (filename, fname);
-	if (!*ext)
-	    strcat (filename, ".s96");
-    }
+	if (*drive || *dir == '/' ||
+	        (*dir == '.' && (*(dir + 1) == '/'
+	                        )))
+	{
+		strcpy (filename, fname);
+		if (!*ext)
+		{
+			strcat (filename, ".s96");
+		}
+	}
+	else
+	{
+		strcpy (filename, S9xGetSnapshotDirectory ());
+		strcat (filename, SLASH_STR);
+		strcat (filename, fname);
+		if (!*ext)
+		{
+			strcat (filename, ".s96");
+		}
+	}
 
 #ifdef ZLIB
-    if (read_only)
-    {
-	if ((*file = OPEN_STREAM (filename, "rb")))
-	    return (TRUE);
-    }
-    else
-    {
-	if ((*file = OPEN_STREAM (filename, "wb")))
+	if (read_only)
 	{
-	    chown (filename, getuid (), getgid ());
-	    return (TRUE);
+		if ((*file = OPEN_STREAM (filename, "rb")))
+		{
+			return (TRUE);
+		}
 	}
-    }
+	else
+	{
+		if ((*file = OPEN_STREAM (filename, "wb")))
+		{
+			chown (filename, getuid (), getgid ());
+			return (TRUE);
+		}
+	}
 #else
-    char command [PATH_MAX];
+	char command [PATH_MAX];
 
-    if (read_only)
-    {
-	sprintf (command, "gzip -d <\"%s\"", filename);
-	if (*file = popen (command, "r"))
-	    return (TRUE);
-    }
-    else
-    {
-	sprintf (command, "gzip --best >\"%s\"", filename);
-	if (*file = popen (command, "wb"))
-	    return (TRUE);
-    }
+	if (read_only)
+	{
+		sprintf (command, "gzip -d <\"%s\"", filename);
+		if (*file = popen (command, "r"))
+		{
+			return (TRUE);
+		}
+	}
+	else
+	{
+		sprintf (command, "gzip --best >\"%s\"", filename);
+		if (*file = popen (command, "wb"))
+		{
+			return (TRUE);
+		}
+	}
 #endif
-    return (FALSE);
+	return (FALSE);
 }
 
 void S9xCloseSnapshotFile (STREAM file)
 {
 #ifdef ZLIB
-    CLOSE_STREAM (file);
+	CLOSE_STREAM (file);
 #else
-    pclose (file);
+	pclose (file);
 #endif
-    sync();
+	sync();
 }
 
 bool8_32 S9xInitUpdate ()
 {
-    return (TRUE);
+	return (TRUE);
 }
 
 //		uint32 xs = 320, ys = 240, cl = 0, cs = 0, mfs = 10;
 #ifdef PANDORA
-bool8_32 S9xDeinitUpdate ( int Width, int Height ) {
+bool8_32 S9xDeinitUpdate ( int Width, int Height )
+{
 
-  /* rules:
-   * if highres mode -> g_scale should always be 1 (ie: no scaling, since high res mode is 512x480
-   * for non-highres-mode -> g_scale can be 1 (1:1) or 2 (1:2, pixel doubling)
-   *
-   * future:
-   * g_scale -> to imply anti-aliasing or stretch-blit or other scaling modes
-   */
+	/* rules:
+	 * if highres mode -> g_scale should always be 1 (ie: no scaling, since high res mode is 512x480
+	 * for non-highres-mode -> g_scale can be 1 (1:1) or 2 (1:2, pixel doubling)
+	 *
+	 * future:
+	 * g_scale -> to imply anti-aliasing or stretch-blit or other scaling modes
+	 */
 
-  // NEEDS WORK, THIS IS JUST TO GET WORKING
+	// NEEDS WORK, THIS IS JUST TO GET WORKING
 
 	// get the pitch only once...
 	// pitch is in 1b increments, so is 2* what you think!
 	uint16 screen_pitch_half = (screen -> pitch) >> 1;
-	
+
 	//pointer to the screen
 	uint16* screen_pixels = (uint16*)(screen -> pixels);
-	
+
 	// this line for centering in Y direction always assumes that Height<=240 and double scaling in Y is wanted (interlacing!)
 	// screen_pitch_half * (480-(Heigth*2))/2; due to shifting no "div by zero" not possible
 	// heigth is usually 224, 239 or 240!
@@ -900,30 +1016,35 @@ bool8_32 S9xDeinitUpdate ( int Width, int Height ) {
 	uint16 widescreen_center_x;
 	// destination pointer address: pointer to screen_pixels plus moving for centering
 	uint16* destination_pointer_address;
-	
+
 	//fprintf (stderr, "width: %d, height: %d\n", Width, Height);
-	
+
 	uint16 source_panewidth = 320; // LoRes games are rendered into a 320 wide SDL screen
 	if (Settings.SupportHiRes)
-		source_panewidth = 512; // HiRes games are rendered into a 512 wide SDL screen
-	
-	switch (g_scale) {
+	{
+		source_panewidth = 512;    // HiRes games are rendered into a 512 wide SDL screen
+	}
+
+	switch (g_scale)
+	{
 		case bs_1to2_double:
 			// the pandora screen has a width of 800px, so everything above should be handled differently
 			// only some scenes in hires roms use 512px width, otherwise the max is 320px in the menu!
 			// hires modules themselves come with two modes, one with 512 width, one with 256
-			if (Width > 400 ) {
+			if (Width > 400 )
+			{
 				widescreen_center_x = ( screen -> w - Width ) >> 1; // ( screen -> w - Width ) / 2
 				destination_pointer_address = screen_pixels + widescreen_center_x + widescreen_center_y;
-				
+
 				render_x_single(destination_pointer_address, screen_pitch_half,
 				                (uint16*)(GFX.Screen), source_panewidth, Width, Height);
 			}
-			else {
+			else
+			{
 				widescreen_center_x = ( screen -> w - ( Width << 1 ) ) >> 1; // ( screen -> w - ( Width * 2 ) ) / 2
 				// destination pointer address: pointer to screen_pixels plus moving for centering
 				destination_pointer_address = screen_pixels + widescreen_center_x + widescreen_center_y;
-				
+
 				render_x_double(destination_pointer_address, screen_pitch_half,
 				                (uint16*)(GFX.Screen), source_panewidth, Width, Height);
 			}
@@ -932,35 +1053,43 @@ bool8_32 S9xDeinitUpdate ( int Width, int Height ) {
 			//widescreen_center_x = 16; // screen -> w - 3*Width
 			// destination pointer address: pointer to screen_pixels plus moving for centering
 			destination_pointer_address = screen_pixels + 16 + widescreen_center_y;
-			
+
 			// the pandora screen has a width of 800px, so everything above should be handled differently
 			// only some scenes in hires roms use 512px width, otherwise the max is 320px in the menu!
 			// hires modules themselves come with two modes, one with 512 width, one with 256
-			if (Width > 400 ) {
+			if (Width > 400 )
+			{
 				render_x_oneandhalf(destination_pointer_address, screen_pitch_half,
-				                (uint16*)(GFX.Screen), source_panewidth, Width, Height);
+				                    (uint16*)(GFX.Screen), source_panewidth, Width, Height);
 			}
-			else {
+			else
+			{
 				render_x_triple(destination_pointer_address, screen_pitch_half,
 				                (uint16*)(GFX.Screen), source_panewidth, Width, Height);
 			}
 			break;
 		case bs_1to2_smooth:
-			if (Settings.SupportHiRes) { 
+			if (Settings.SupportHiRes)
+			{
 				fprintf ( stderr, "Smoothed not enabled for hires mode!\n" );
 				g_scale = bs_1to2_double;
-			} else {
+			}
+			else
+			{
 				hq2x_16((uint16*)(GFX.Screen), screen_pixels, Width, Height, screen->w, screen->h);
 			}
 			break;
 		case bs_1to2_scale2x:
-			if (Settings.SupportHiRes) { 
+			if (Settings.SupportHiRes)
+			{
 				fprintf ( stderr, "Scale2x not enabled for hires mode!\n" );
 				g_scale = bs_1to2_double;
-			} else {
+			}
+			else
+			{
 				widescreen_center_x = ( screen -> w - ( Width << 1 ) ) >> 1; // ( screen -> w - ( Width * 2 ) ) / 2
 				destination_pointer_address = screen_pixels + widescreen_center_x + widescreen_center_y;
-				
+
 				scale(2, (uint16*)destination_pointer_address, screen->w*2, (uint16*)GFX.Screen, 320*2, 2, Width, Height);
 			}
 			break;
@@ -976,19 +1105,19 @@ bool8_32 S9xDeinitUpdate ( int Width, int Height ) {
 // 		for (register uint16 i = 0; i < Height; ++i) {
 // 			// first scanline of doubled pair
 // 			register uint16 *dp16 = destination_pointer_address + ( i * screen_pitch );
-// 			
+//
 // 			register uint16 *sp16 = (uint16*)(GFX.Screen);
 // 			sp16 += ( i * 320 );
-// 			
+//
 // 			for (register uint16 j = 0; j < Width /*256*/; ++j, ++sp16) {
 // 				*dp16++ = *sp16;
 // 				*dp16++ = *sp16; // doubled
 // 			}
-// 			
+//
 // 			if ( ! g_scanline ) {
 // 				// second scanline of doubled pair
 // 				dp16 = destination_pointer_address + ( i * screen_pitch ) + screen_pitch_half;
-// 				
+//
 // 				sp16 = (uint16*)(GFX.Screen);
 // 				sp16 += ( i * 320 );
 // 				for (register uint16 j = 0; j < Width /*256*/; ++j, ++sp16) {
@@ -998,9 +1127,10 @@ bool8_32 S9xDeinitUpdate ( int Width, int Height ) {
 // 			} // scanline
 // 		} // for each height unit
 
-  if (Settings.DisplayFrameRate) {
-    S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 800 * 2 * 2 );
-  }
+	if (Settings.DisplayFrameRate)
+	{
+		S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 800 * 2 * 2 );
+	}
 
 //the following part was once the cause of a segfault with savestates, this is no longer the case
 //sadly it is not removed correctly in every screen mode, so commenting it out for the moment
@@ -1008,18 +1138,19 @@ bool8_32 S9xDeinitUpdate ( int Width, int Height ) {
 //    S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 800 * 2 * 2, 240 );
 //  }
 
-  // SDL_UnlockSurface(screen);
+	// SDL_UnlockSurface(screen);
 
-  // vsync
-  if ( g_vsync && g_fb >= 0 ) {
-    int arg = 0;
-    ioctl ( g_fb, FBIO_WAITFORVSYNC, &arg );
-  }
+	// vsync
+	if ( g_vsync && g_fb >= 0 )
+	{
+		int arg = 0;
+		ioctl ( g_fb, FBIO_WAITFORVSYNC, &arg );
+	}
 
-  // update the actual screen
-  SDL_UpdateRect(screen,0,0,0,0);
+	// update the actual screen
+	SDL_UpdateRect(screen,0,0,0,0);
 
-  return(TRUE);
+	return(TRUE);
 }
 #else
 bool8_32 S9xDeinitUpdate (int Width, int Height)
@@ -1029,17 +1160,21 @@ bool8_32 S9xDeinitUpdate (int Width, int Height)
 	register uint32 lp = (xs > 256) ? 16 : 0;
 
 	if (Width > 256)
+	{
 		lp *= 2;
+	}
 
 	if (Settings.SupportHiRes)
 	{
 		if (Width > 256)
 		{
 			//Wenn SupportHiRes activ und HighRes Frame
-			for (register uint32 i = 0; i < Height; i++) {
+			for (register uint32 i = 0; i < Height; i++)
+			{
 				register uint16 *dp16 = (uint16 *)(screen->pixels) + ((i + cl) * xs) + lp;
 				register uint32 *sp32 = (uint32 *)(GFX.Screen) + (i << 8) + cs;
-				for (register uint32 j = 0; j < 256; j++) {
+				for (register uint32 j = 0; j < 256; j++)
+				{
 					*dp16++ = *sp32++;
 				}
 			}
@@ -1047,19 +1182,25 @@ bool8_32 S9xDeinitUpdate (int Width, int Height)
 		else
 		{
 			//Wenn SupportHiRes activ aber kein HighRes Frame
-			for (register uint32 i = 0; i < Height; i++) {
+			for (register uint32 i = 0; i < Height; i++)
+			{
 				register uint32 *dp32 = (uint32 *)(screen->pixels) + ((i + cl) * xs / 2) + lp;
 				register uint32 *sp32 = (uint32 *)(GFX.Screen) + (i << 8) + cs;
-				for (register uint32 j = 0; j < 128; j++) {
+				for (register uint32 j = 0; j < 128; j++)
+				{
 					*dp32++ = *sp32++;
 				}
 			}
 		}
 
 		if (GFX.InfoString)
-		    S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 640,0);
+		{
+			S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 640,0);
+		}
 		else if (Settings.DisplayFrameRate)
-		    S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 640);
+		{
+			S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 640);
+		}
 
 		SDL_UpdateRect(screen,32,0,256,Height);
 	}
@@ -1071,56 +1212,64 @@ bool8_32 S9xDeinitUpdate (int Width, int Height)
 			int x,y,s;
 			uint32 x_error;
 			static uint32 x_fraction=52428;
-		 	char temp[512];
+			char temp[512];
 			register uint8 *d;
 
 			//center ypos if ysize is only 224px
 			int yoffset = 8*(Height == 224);
 
-			for (y = Height-1;y >= 0; y--)
+			for (y = Height-1; y >= 0; y--)
 			{
-			    d = GFX.Screen + y * 640;
-			    memcpy(temp,d,512);
-			    d += yoffset*640;
-			    x_error = x_fraction;
-			    s=0;
+				d = GFX.Screen + y * 640;
+				memcpy(temp,d,512);
+				d += yoffset*640;
+				x_error = x_fraction;
+				s=0;
 
-			    for (x = 0; x < 320; x++)
-			    {
+				for (x = 0; x < 320; x++)
+				{
 					x_error += x_fraction;
 
 					if(x_error >= 0x10000)
 					{
-					    *d++ = temp[s++];
-					    *d++ = temp[s++];
-					    x_error -= 0x10000;
+						*d++ = temp[s++];
+						*d++ = temp[s++];
+						x_error -= 0x10000;
 					}
 					else
 					{
 						*d++ = ((temp[s-2] ^ temp[s])>>1)&0xEF | ((temp[s-2] & temp[s]));
 						*d++ = ((temp[s-1] ^ temp[s+1])>>1)&0x7B | ((temp[s-1] & temp[s+1]));
 					}
-			    }
+				}
 			}
 			if (GFX.InfoString)
-			    S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 640,0);
+			{
+				S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 640,0);
+			}
 			else if (Settings.DisplayFrameRate)
-			    S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 640);
-	
+			{
+				S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 640);
+			}
+
 			SDL_UpdateRect(screen,0,yoffset,320,Height);
 		}
 		else
 		{
 			//center ypos if ysize is only 224px
 //			int yoffset = 8*(Height == 224);
-			
+
 			if (GFX.InfoString)
-			    S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 640,0);
+			{
+				S9xDisplayString (GFX.InfoString, (uint8 *)screen->pixels + 64, 640,0);
+			}
 			else if (Settings.DisplayFrameRate)
-			    S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 640);
-	
+			{
+				S9xDisplayFrameRate ((uint8 *)screen->pixels + 64, 640);
+			}
+
 //		    SDL_UpdateRect(screen,0,yoffset,320,Height);
-		    SDL_UpdateRect(screen,32,0,256,Height);
+			SDL_UpdateRect(screen,32,0,256,Height);
 		}
 	}
 
@@ -1131,135 +1280,157 @@ bool8_32 S9xDeinitUpdate (int Width, int Height)
 #ifndef _ZAURUS
 static unsigned long now ()
 {
-    static unsigned long seconds_base = 0;
-    struct timeval tp;
-    gettimeofday (&tp, NULL);
-    if (!seconds_base)
-	seconds_base = tp.tv_sec;
+	static unsigned long seconds_base = 0;
+	struct timeval tp;
+	gettimeofday (&tp, NULL);
+	if (!seconds_base)
+	{
+		seconds_base = tp.tv_sec;
+	}
 
-    return ((tp.tv_sec - seconds_base) * 1000 + tp.tv_usec / 1000);
+	return ((tp.tv_sec - seconds_base) * 1000 + tp.tv_usec / 1000);
 }
 #endif
 
 void _makepath (char *path, const char *, const char *dir,
-		const char *fname, const char *ext)
+                const char *fname, const char *ext)
 {
-    if (dir && *dir)
-    {
-	strcpy (path, dir);
-	strcat (path, "/");
-    }
-    else
-	*path = 0;
-    strcat (path, fname);
-    if (ext && *ext)
-    {
-        strcat (path, ".");
-        strcat (path, ext);
-    }
+	if (dir && *dir)
+	{
+		strcpy (path, dir);
+		strcat (path, "/");
+	}
+	else
+	{
+		*path = 0;
+	}
+	strcat (path, fname);
+	if (ext && *ext)
+	{
+		strcat (path, ".");
+		strcat (path, ext);
+	}
 }
 
 void _splitpath (const char *path, char *drive, char *dir, char *fname,
-		 char *ext)
+                 char *ext)
 {
-    *drive = 0;
+	*drive = 0;
 
-    char *slash = strrchr ( (char*) path, '/');
-    if (!slash)
-	slash = strrchr ( (char*) path, '\\');
-
-    char *dot = strrchr ( (char*) path, '.');
-
-    if (dot && slash && dot < slash)
-	dot = NULL;
-
-    if (!slash)
-    {
-	strcpy (dir, "");
-	strcpy (fname, path);
-        if (dot)
-        {
-	    *(fname + (dot - path)) = 0;
-	    strcpy (ext, dot + 1);
-        }
-	else
-	    strcpy (ext, "");
-    }
-    else
-    {
-	strcpy (dir, path);
-	*(dir + (slash - path)) = 0;
-	strcpy (fname, slash + 1);
-        if (dot)
+	char *slash = strrchr ( (char*) path, '/');
+	if (!slash)
 	{
-	    *(fname + (dot - slash) - 1) = 0;
-    	    strcpy (ext, dot + 1);
+		slash = strrchr ( (char*) path, '\\');
+	}
+
+	char *dot = strrchr ( (char*) path, '.');
+
+	if (dot && slash && dot < slash)
+	{
+		dot = NULL;
+	}
+
+	if (!slash)
+	{
+		strcpy (dir, "");
+		strcpy (fname, path);
+		if (dot)
+		{
+			*(fname + (dot - path)) = 0;
+			strcpy (ext, dot + 1);
+		}
+		else
+		{
+			strcpy (ext, "");
+		}
 	}
 	else
-	    strcpy (ext, "");
-    }
+	{
+		strcpy (dir, path);
+		*(dir + (slash - path)) = 0;
+		strcpy (fname, slash + 1);
+		if (dot)
+		{
+			*(fname + (dot - slash) - 1) = 0;
+			strcpy (ext, dot + 1);
+		}
+		else
+		{
+			strcpy (ext, "");
+		}
+	}
 }
 
 #ifndef _ZAURUS
 void S9xToggleSoundChannel (int c)
 {
-    if (c == 8)
-	so.sound_switch = 255;
-    else
-	so.sound_switch ^= 1 << c;
-    S9xSetSoundControl (so.sound_switch);
+	if (c == 8)
+	{
+		so.sound_switch = 255;
+	}
+	else
+	{
+		so.sound_switch ^= 1 << c;
+	}
+	S9xSetSoundControl (so.sound_switch);
 }
 #endif
 
 static void SoundTrigger ()
 {
-    if (Settings.APUEnabled && !so.mute_sound)
+	if (Settings.APUEnabled && !so.mute_sound)
+	{
 		S9xProcessSound (NULL);
+	}
 }
 
 void StopTimer ()
 {
-    struct itimerval timeout;
+	struct itimerval timeout;
 
-    timeout.it_interval.tv_sec = 0;
-    timeout.it_interval.tv_usec = 0;
-    timeout.it_value.tv_sec = 0;
-    timeout.it_value.tv_usec = 0;
-    if (setitimer (ITIMER_REAL, &timeout, NULL) < 0)
-	perror ("setitimer");
+	timeout.it_interval.tv_sec = 0;
+	timeout.it_interval.tv_usec = 0;
+	timeout.it_value.tv_sec = 0;
+	timeout.it_value.tv_usec = 0;
+	if (setitimer (ITIMER_REAL, &timeout, NULL) < 0)
+	{
+		perror ("setitimer");
+	}
 }
 
 void InitTimer ()
 {
-    struct itimerval timeout;
-    struct sigaction sa;
+	struct itimerval timeout;
+	struct sigaction sa;
 
 #ifdef USE_THREADS
-    if (Settings.ThreadSound)
-    {
+	if (Settings.ThreadSound)
+	{
 		pthread_mutex_init (&mutex, NULL);
 		pthread_create (&thread, NULL, S9xProcessSound, NULL);
 		return;
-    }
+	}
 #endif
 
-    sa.sa_handler = (SIG_PF) SoundTrigger;
+	sa.sa_handler = (SIG_PF) SoundTrigger;
 
 #if defined (SA_RESTART)
-    sa.sa_flags = SA_RESTART;
+	sa.sa_flags = SA_RESTART;
 #else
-    sa.sa_flags = 0;
+	sa.sa_flags = 0;
 #endif
 
-    sigemptyset (&sa.sa_mask);
-    sigaction (SIGALRM, &sa, NULL);
+	sigemptyset (&sa.sa_mask);
+	sigaction (SIGALRM, &sa, NULL);
 
-    timeout.it_interval.tv_sec = 0;
-    timeout.it_interval.tv_usec = 10000;
-    timeout.it_value.tv_sec = 0;
-    timeout.it_value.tv_usec = 10000;
-    if (setitimer (ITIMER_REAL, &timeout, NULL) < 0)
-	perror ("setitimer");
+	timeout.it_interval.tv_sec = 0;
+	timeout.it_interval.tv_usec = 10000;
+	timeout.it_value.tv_sec = 0;
+	timeout.it_value.tv_usec = 10000;
+	if (setitimer (ITIMER_REAL, &timeout, NULL) < 0)
+	{
+		perror ("setitimer");
+	}
 }
 
 void S9xSyncSpeed ()
@@ -1267,21 +1438,25 @@ void S9xSyncSpeed ()
 #ifdef NETPLAY_SUPPORT
 	if (Settings.NetPlay && NetPlay.Connected)
 	{
-	#if defined(NP_DEBUG) && NP_DEBUG == 2
+#if defined(NP_DEBUG) && NP_DEBUG == 2
 		printf("CLIENT: SyncSpeed @%d\n", S9xGetMilliTime());
-	#endif
+#endif
 
 		S9xNPSendJoypadUpdate(old_joypads[0]);
 		for (int J = 0; J < 8; J++)
+		{
 			joypads[J] = S9xNPGetJoypad(J);
+		}
 
 		if (!S9xNPCheckForHeartBeat())
 		{
 			NetPlay.PendingWait4Sync = !S9xNPWaitForHeartBeatDelay(100);
-		#if defined(NP_DEBUG) && NP_DEBUG == 2
+#if defined(NP_DEBUG) && NP_DEBUG == 2
 			if (NetPlay.PendingWait4Sync)
+			{
 				printf("CLIENT: PendingWait4Sync1 @%d\n", S9xGetMilliTime());
-		#endif
+			}
+#endif
 
 			IPPU.RenderThisFrame = TRUE;
 			IPPU.SkippedFrames = 0;
@@ -1289,10 +1464,12 @@ void S9xSyncSpeed ()
 		else
 		{
 			NetPlay.PendingWait4Sync = !S9xNPWaitForHeartBeatDelay(200);
-		#if defined(NP_DEBUG) && NP_DEBUG == 2
+#if defined(NP_DEBUG) && NP_DEBUG == 2
 			if (NetPlay.PendingWait4Sync)
+			{
 				printf("CLIENT: PendingWait4Sync2 @%d\n", S9xGetMilliTime());
-		#endif
+			}
+#endif
 
 			if (IPPU.SkippedFrames < NetPlay.MaxFrameSkip)
 			{
@@ -1315,67 +1492,74 @@ void S9xSyncSpeed ()
 		return;
 	}
 #endif
-    if (!Settings.TurboMode && Settings.SkipFrames == AUTO_FRAMERATE)
-    {
+	if (!Settings.TurboMode && Settings.SkipFrames == AUTO_FRAMERATE)
+	{
 		static struct timeval next1 = {0, 0};
 		struct timeval now;
 
-		while (gettimeofday (&now, NULL) < 0) ;
+		while (gettimeofday (&now, NULL) < 0)
+		{
+			;
+		}
 		if (next1.tv_sec == 0)
 		{
-		    next1 = now;
-		    next1.tv_usec++;
+			next1 = now;
+			next1.tv_usec++;
 		}
 
 		if (timercmp(&next1, &now, >))
 		{
-		    if (IPPU.SkippedFrames == 0)
-		    {
+			if (IPPU.SkippedFrames == 0)
+			{
 				do
 				{
-				    CHECK_SOUND ();
-				    while (gettimeofday (&now, NULL) < 0) ;
-				} while (timercmp(&next1, &now, >));
-		    }
-		    IPPU.RenderThisFrame = TRUE;
-		    IPPU.SkippedFrames = 0;
+					CHECK_SOUND ();
+					while (gettimeofday (&now, NULL) < 0)
+					{
+						;
+					}
+				}
+				while (timercmp(&next1, &now, >));
+			}
+			IPPU.RenderThisFrame = TRUE;
+			IPPU.SkippedFrames = 0;
 		}
 		else
 		{
-		    if (IPPU.SkippedFrames < mfs)
-		    {
-			IPPU.SkippedFrames++;
-			IPPU.RenderThisFrame = FALSE;
-		    }
-		    else
-		    {
-			IPPU.RenderThisFrame = TRUE;
-			IPPU.SkippedFrames = 0;
-			next1 = now;
-		    }
+			if (IPPU.SkippedFrames < mfs)
+			{
+				IPPU.SkippedFrames++;
+				IPPU.RenderThisFrame = FALSE;
+			}
+			else
+			{
+				IPPU.RenderThisFrame = TRUE;
+				IPPU.SkippedFrames = 0;
+				next1 = now;
+			}
 		}
 		next1.tv_usec += Settings.FrameTime;
 		if (next1.tv_usec >= 1000000)
 		{
-		    next1.tv_sec += next1.tv_usec / 1000000;
-		    next1.tv_usec %= 1000000;
+			next1.tv_sec += next1.tv_usec / 1000000;
+			next1.tv_usec %= 1000000;
 		}
-    }
-    else
-    {
+	}
+	else
+	{
 		if (++IPPU.FrameSkip >= (Settings.TurboMode ? Settings.TurboSkipFrames
-							    : Settings.SkipFrames))
+		                         : Settings.SkipFrames))
 		{
-		    IPPU.FrameSkip = 0;
-		    IPPU.SkippedFrames = 0;
-		    IPPU.RenderThisFrame = TRUE;
+			IPPU.FrameSkip = 0;
+			IPPU.SkippedFrames = 0;
+			IPPU.RenderThisFrame = TRUE;
 		}
 		else
 		{
-		    IPPU.SkippedFrames++;
-		    IPPU.RenderThisFrame = FALSE;
+			IPPU.SkippedFrames++;
+			IPPU.RenderThisFrame = FALSE;
 		}
-    }
+	}
 }
 
 void S9xProcessEvents (bool8_32 block)
@@ -1387,7 +1571,7 @@ void S9xProcessEvents (bool8_32 block)
 		switch(event.type)
 		{
 #ifdef CAANOO
-			// CAANOO -------------------------------------------------------------
+				// CAANOO -------------------------------------------------------------
 			case SDL_JOYBUTTONDOWN:
 				keyssnes = SDL_JoystickOpen(0);
 				//QUIT Emulator
@@ -1411,7 +1595,7 @@ void S9xProcessEvents (bool8_32 block)
 				}
 				break;
 #else
-			//PANDORA & DINGOO ------------------------------------------------------
+				//PANDORA & DINGOO ------------------------------------------------------
 			case SDL_KEYDOWN:
 				keyssnes = SDL_GetKeyState(NULL);
 
@@ -1429,10 +1613,12 @@ void S9xProcessEvents (bool8_32 block)
 					if (g_scale == bs_1to2_double)
 					{
 						g_scale = bs_1to2_scale2x;
-					} else if (g_scale == bs_1to2_scale2x)
+					}
+					else if (g_scale == bs_1to2_scale2x)
 					{
 						g_scale = bs_1to2_smooth;
-					} else
+					}
+					else
 					{
 						g_scale = bs_1to2_double;
 					}
@@ -1490,10 +1676,10 @@ void S9xProcessEvents (bool8_32 block)
 				// another shortcut I'm afraid
 				else if (event.key.keysym.sym == SDLK_SPACE)
 				{
-						S9xSetSoundMute(true);
-						menu_loop();
-						S9xSetSoundMute(false);
-						//S9xSetMasterVolume (vol, vol);
+					S9xSetSoundMute(true);
+					menu_loop();
+					S9xSetSoundMute(false);
+					//S9xSetMasterVolume (vol, vol);
 #endif //PANDORA
 				}
 				break;
@@ -1509,12 +1695,14 @@ void S9xProcessEvents (bool8_32 block)
 
 static long log2 (long num)
 {
-    long n = 0;
+	long n = 0;
 
-    while (num >>= 1)
-	n++;
+	while (num >>= 1)
+	{
+		n++;
+	}
 
-    return (n);
+	return (n);
 }
 
 uint32 S9xReadJoypad (int which1)
@@ -1522,36 +1710,110 @@ uint32 S9xReadJoypad (int which1)
 	uint32 val=0x80000000;
 
 	if (which1 > 4)
+	{
 		return 0;
+	}
 
 #ifdef CAANOO
 	//player1
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[L_1]))			val |= SNES_TL_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[R_1]))			val |= SNES_TR_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[X_1]))			val |= SNES_X_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[Y_1]))			val |= SNES_Y_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[B_1]))			val |= SNES_B_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[A_1]))			val |= SNES_A_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[START_1]))		val |= SNES_START_MASK;
-	if (SDL_JoystickGetButton(keyssnes, sfc_key[SELECT_1]))		val |= SNES_SELECT_MASK;
-	if (SDL_JoystickGetAxis(keyssnes, 1) < -20000)				val |= SNES_UP_MASK;
-	if (SDL_JoystickGetAxis(keyssnes, 1) > 20000)				val |= SNES_DOWN_MASK;
-	if (SDL_JoystickGetAxis(keyssnes, 0) < -20000)				val |= SNES_LEFT_MASK;
-	if (SDL_JoystickGetAxis(keyssnes, 0) > 20000)				val |= SNES_RIGHT_MASK;
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[L_1]))
+	{
+		val |= SNES_TL_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[R_1]))
+	{
+		val |= SNES_TR_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[X_1]))
+	{
+		val |= SNES_X_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[Y_1]))
+	{
+		val |= SNES_Y_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[B_1]))
+	{
+		val |= SNES_B_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[A_1]))
+	{
+		val |= SNES_A_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[START_1]))
+	{
+		val |= SNES_START_MASK;
+	}
+	if (SDL_JoystickGetButton(keyssnes, sfc_key[SELECT_1]))
+	{
+		val |= SNES_SELECT_MASK;
+	}
+	if (SDL_JoystickGetAxis(keyssnes, 1) < -20000)
+	{
+		val |= SNES_UP_MASK;
+	}
+	if (SDL_JoystickGetAxis(keyssnes, 1) > 20000)
+	{
+		val |= SNES_DOWN_MASK;
+	}
+	if (SDL_JoystickGetAxis(keyssnes, 0) < -20000)
+	{
+		val |= SNES_LEFT_MASK;
+	}
+	if (SDL_JoystickGetAxis(keyssnes, 0) > 20000)
+	{
+		val |= SNES_RIGHT_MASK;
+	}
 #else
 	//player1
-	if (keyssnes[sfc_key[L_1]] == SDL_PRESSED)		val |= SNES_TL_MASK;
-	if (keyssnes[sfc_key[R_1]] == SDL_PRESSED)		val |= SNES_TR_MASK;
-	if (keyssnes[sfc_key[X_1]] == SDL_PRESSED)		val |= SNES_X_MASK;
-	if (keyssnes[sfc_key[Y_1]] == SDL_PRESSED)		val |= SNES_Y_MASK;
-	if (keyssnes[sfc_key[B_1]] == SDL_PRESSED)		val |= SNES_B_MASK;
-	if (keyssnes[sfc_key[A_1]] == SDL_PRESSED)		val |= SNES_A_MASK;
-	if (keyssnes[sfc_key[START_1]] == SDL_PRESSED)	val |= SNES_START_MASK;
-	if (keyssnes[sfc_key[SELECT_1]] == SDL_PRESSED)	val |= SNES_SELECT_MASK;
-	if (keyssnes[sfc_key[UP_1]] == SDL_PRESSED)		val |= SNES_UP_MASK;
-	if (keyssnes[sfc_key[DOWN_1]] == SDL_PRESSED)	val |= SNES_DOWN_MASK;
-	if (keyssnes[sfc_key[LEFT_1]] == SDL_PRESSED)	val |= SNES_LEFT_MASK;
-	if (keyssnes[sfc_key[RIGHT_1]] == SDL_PRESSED)	val |= SNES_RIGHT_MASK;
+	if (keyssnes[sfc_key[L_1]] == SDL_PRESSED)
+	{
+		val |= SNES_TL_MASK;
+	}
+	if (keyssnes[sfc_key[R_1]] == SDL_PRESSED)
+	{
+		val |= SNES_TR_MASK;
+	}
+	if (keyssnes[sfc_key[X_1]] == SDL_PRESSED)
+	{
+		val |= SNES_X_MASK;
+	}
+	if (keyssnes[sfc_key[Y_1]] == SDL_PRESSED)
+	{
+		val |= SNES_Y_MASK;
+	}
+	if (keyssnes[sfc_key[B_1]] == SDL_PRESSED)
+	{
+		val |= SNES_B_MASK;
+	}
+	if (keyssnes[sfc_key[A_1]] == SDL_PRESSED)
+	{
+		val |= SNES_A_MASK;
+	}
+	if (keyssnes[sfc_key[START_1]] == SDL_PRESSED)
+	{
+		val |= SNES_START_MASK;
+	}
+	if (keyssnes[sfc_key[SELECT_1]] == SDL_PRESSED)
+	{
+		val |= SNES_SELECT_MASK;
+	}
+	if (keyssnes[sfc_key[UP_1]] == SDL_PRESSED)
+	{
+		val |= SNES_UP_MASK;
+	}
+	if (keyssnes[sfc_key[DOWN_1]] == SDL_PRESSED)
+	{
+		val |= SNES_DOWN_MASK;
+	}
+	if (keyssnes[sfc_key[LEFT_1]] == SDL_PRESSED)
+	{
+		val |= SNES_LEFT_MASK;
+	}
+	if (keyssnes[sfc_key[RIGHT_1]] == SDL_PRESSED)
+	{
+		val |= SNES_RIGHT_MASK;
+	}
 	//player2
 	/*
 	if (keyssnes[sfc_key[UP_2]] == SDL_PRESSED)		val |= SNES_UP_MASK;
@@ -1566,8 +1828,10 @@ uint32 S9xReadJoypad (int which1)
 #endif
 
 #ifdef NETPLAY_SUPPORT
-    if (Settings.NetPlay)
+	if (Settings.NetPlay)
+	{
 		return (S9xNPGetJoypad (which1));
+	}
 #endif
 
 	return(val);
@@ -1585,7 +1849,7 @@ static int Rates[8] =
 
 static int BufferSizes [8] =
 {
-    0, 256, 256, 256, 512, 512, 1024, 1024
+	0, 256, 256, 256, 512, 512, 1024, 1024
 };
 
 
@@ -1602,160 +1866,177 @@ static volatile bool8 pending_signal = FALSE;
 bool8_32 S9xOpenSoundDevice (int mode, bool8_32 stereo, int buffer_size)
 {
 #ifndef CYGWIN32
-    int J, K;
+	int J, K;
 
-    if ((so.sound_fd = open ("/dev/dsp", O_WRONLY|O_ASYNC)) < 0)
-    {
+	if ((so.sound_fd = open ("/dev/dsp", O_WRONLY|O_ASYNC)) < 0)
+	{
 		perror ("/dev/dsp");
 		return (FALSE);
-    }
+	}
 
-    mixerdev = open("/dev/mixer", O_RDWR);
-    ioctl(mixerdev, SOUND_MIXER_READ_VOLUME, &vol);
-    vol = vol>>8;
+	mixerdev = open("/dev/mixer", O_RDWR);
+	ioctl(mixerdev, SOUND_MIXER_READ_VOLUME, &vol);
+	vol = vol>>8;
 
-    J = AFMT_S16_LE;
+	J = AFMT_S16_LE;
 //    J = AFMT_U8;
-    if (ioctl (so.sound_fd, SNDCTL_DSP_SETFMT, &J) < 0)
-    {
+	if (ioctl (so.sound_fd, SNDCTL_DSP_SETFMT, &J) < 0)
+	{
 		perror ("ioctl SNDCTL_DSP_SETFMT");
 		return (FALSE);
-    }
+	}
 	so.sixteen_bit = TRUE;
-    so.stereo = stereo;
-    if (ioctl (so.sound_fd, SNDCTL_DSP_STEREO, &so.stereo) < 0)
-    {
+	so.stereo = stereo;
+	if (ioctl (so.sound_fd, SNDCTL_DSP_STEREO, &so.stereo) < 0)
+	{
 		perror ("ioctl SNDCTL_DSP_STEREO");
 		return (FALSE);
-    }
+	}
 
-    so.playback_rate = Rates[mode & 0x07];
- //   so.playback_rate = 16000;
+	so.playback_rate = Rates[mode & 0x07];
+//   so.playback_rate = 16000;
 
-    if (ioctl (so.sound_fd, SNDCTL_DSP_SPEED, &so.playback_rate) < 0)
-    {
+	if (ioctl (so.sound_fd, SNDCTL_DSP_SPEED, &so.playback_rate) < 0)
+	{
 		perror ("ioctl SNDCTL_DSP_SPEED");
 		return (FALSE);
-    }
+	}
 
-    S9xSetPlaybackRate (so.playback_rate);
+	S9xSetPlaybackRate (so.playback_rate);
 
-    //    if (buffer_size == 0)
-so.buffer_size = buffer_size;
+	//    if (buffer_size == 0)
+	so.buffer_size = buffer_size;
 //	so.buffer_size = buffer_size = BufferSizes [mode & 7];
 
 	//	buffer_size = so.buffer_size = 256;
 
-    if (buffer_size > MAX_BUFFER_SIZE / 4)
-	buffer_size = MAX_BUFFER_SIZE / 4;
+	if (buffer_size > MAX_BUFFER_SIZE / 4)
+	{
+		buffer_size = MAX_BUFFER_SIZE / 4;
+	}
 //    if (so.sixteen_bit)
 	buffer_size *= 2;
-    if (so.stereo)
-	buffer_size *= 2;
+	if (so.stereo)
+	{
+		buffer_size *= 2;
+	}
 
-    int power2 = log2 (buffer_size);
-    J = K = power2 | (3 << 16);
-    if (ioctl (so.sound_fd, SNDCTL_DSP_SETFRAGMENT, &J) < 0)
-    {
+	int power2 = log2 (buffer_size);
+	J = K = power2 | (3 << 16);
+	if (ioctl (so.sound_fd, SNDCTL_DSP_SETFRAGMENT, &J) < 0)
+	{
 		perror ("ioctl SNDCTL_DSP_SETFRAGMENT");
 		return (FALSE);
-    }
+	}
 
-    printf ("Rate: %d, Buffer size: %d, 16-bit: %s, Stereo: %s, Encoded: %s\n",
-	    so.playback_rate, so.buffer_size, so.sixteen_bit ? "yes" : "no",
-	    so.stereo ? "yes" : "no", so.encoded ? "yes" : "no");
+	printf ("Rate: %d, Buffer size: %d, 16-bit: %s, Stereo: %s, Encoded: %s\n",
+	        so.playback_rate, so.buffer_size, so.sixteen_bit ? "yes" : "no",
+	        so.stereo ? "yes" : "no", so.encoded ? "yes" : "no");
 
 #ifdef DINGOO
-    gp2x_sound_volume(vol,vol);
+	gp2x_sound_volume(vol,vol);
 #endif //DINGOO
 
 #endif
-    return (TRUE);
+	return (TRUE);
 }
 
 void S9xGenerateSound ()
 {
-    int bytes_so_far = (so.samples_mixed_so_far << 1);
+	int bytes_so_far = (so.samples_mixed_so_far << 1);
 //    int bytes_so_far = so.sixteen_bit ? (so.samples_mixed_so_far << 1) :
 //				        so.samples_mixed_so_far;
 #ifndef _ZAURUS
-    if (Settings.SoundSync == 2)
-    {
-	// Assumes sound is signal driven
-	while (so.samples_mixed_so_far >= so.buffer_size && !so.mute_sound)
-	    pause ();
-    }
-    else
+	if (Settings.SoundSync == 2)
+	{
+		// Assumes sound is signal driven
+		while (so.samples_mixed_so_far >= so.buffer_size && !so.mute_sound)
+		{
+			pause ();
+		}
+	}
+	else
 #endif
-    if (bytes_so_far >= so.buffer_size)
-	return;
+		if (bytes_so_far >= so.buffer_size)
+		{
+			return;
+		}
 
 #ifdef USE_THREADS
-    if (Settings.ThreadSound)
-    {
+	if (Settings.ThreadSound)
+	{
 		if (block_generate_sound || pthread_mutex_trylock (&mutex))
-		    return;
-    }
+		{
+			return;
+		}
+	}
 #endif
 
-    block_signal = TRUE;
+	block_signal = TRUE;
 
-    so.err_counter += so.err_rate;
-    if (so.err_counter >= FIXED_POINT)
-    {
-        int sample_count = so.err_counter >> FIXED_POINT_SHIFT;
-	int byte_offset;
-	int byte_count;
-
-        so.err_counter &= FIXED_POINT_REMAINDER;
-	if (so.stereo)
-	    sample_count <<= 1;
-	byte_offset = bytes_so_far + so.play_position;
-
-	do
+	so.err_counter += so.err_rate;
+	if (so.err_counter >= FIXED_POINT)
 	{
-	    int sc = sample_count;
-	    byte_count = sample_count;
-//	    if (so.sixteen_bit)
-		byte_count <<= 1;
+		int sample_count = so.err_counter >> FIXED_POINT_SHIFT;
+		int byte_offset;
+		int byte_count;
 
-	    if ((byte_offset & SOUND_BUFFER_SIZE_MASK) + byte_count > SOUND_BUFFER_SIZE)
-	    {
-		sc = SOUND_BUFFER_SIZE - (byte_offset & SOUND_BUFFER_SIZE_MASK);
-		byte_count = sc;
+		so.err_counter &= FIXED_POINT_REMAINDER;
+		if (so.stereo)
+		{
+			sample_count <<= 1;
+		}
+		byte_offset = bytes_so_far + so.play_position;
+
+		do
+		{
+			int sc = sample_count;
+			byte_count = sample_count;
+//	    if (so.sixteen_bit)
+			byte_count <<= 1;
+
+			if ((byte_offset & SOUND_BUFFER_SIZE_MASK) + byte_count > SOUND_BUFFER_SIZE)
+			{
+				sc = SOUND_BUFFER_SIZE - (byte_offset & SOUND_BUFFER_SIZE_MASK);
+				byte_count = sc;
 //		if (so.sixteen_bit)
-		    sc >>= 1;
-	    }
-	    if (bytes_so_far + byte_count > so.buffer_size)
-	    {
-		byte_count = so.buffer_size - bytes_so_far;
-		if (byte_count == 0)
-		    break;
-		sc = byte_count;
+				sc >>= 1;
+			}
+			if (bytes_so_far + byte_count > so.buffer_size)
+			{
+				byte_count = so.buffer_size - bytes_so_far;
+				if (byte_count == 0)
+				{
+					break;
+				}
+				sc = byte_count;
 //		if (so.sixteen_bit)
-		    sc >>= 1;
-	    }
-	    S9xMixSamplesO (Buf, sc, byte_offset & SOUND_BUFFER_SIZE_MASK);
-	    so.samples_mixed_so_far += sc;
-	    sample_count -= sc;
-	    bytes_so_far = (so.samples_mixed_so_far << 1);
+				sc >>= 1;
+			}
+			S9xMixSamplesO (Buf, sc, byte_offset & SOUND_BUFFER_SIZE_MASK);
+			so.samples_mixed_so_far += sc;
+			sample_count -= sc;
+			bytes_so_far = (so.samples_mixed_so_far << 1);
 //	    bytes_so_far = so.sixteen_bit ? (so.samples_mixed_so_far << 1) :
 //	 	           so.samples_mixed_so_far;
-	    byte_offset += byte_count;
-	} while (sample_count > 0);
-    }
-    block_signal = FALSE;
+			byte_offset += byte_count;
+		}
+		while (sample_count > 0);
+	}
+	block_signal = FALSE;
 
 #ifdef USE_THREADS
-    if (Settings.ThreadSound)
+	if (Settings.ThreadSound)
+	{
 		pthread_mutex_unlock (&mutex);
-    else
+	}
+	else
 #endif
-    if (pending_signal)
-    {
-		S9xProcessSound (NULL);
-		pending_signal = FALSE;
-    }
+		if (pending_signal)
+		{
+			S9xProcessSound (NULL);
+			pending_signal = FALSE;
+		}
 }
 
 void *S9xProcessSound (void *)
@@ -1769,19 +2050,19 @@ void *S9xProcessSound (void *)
 //    }
 
 #ifdef USE_THREADS
-    do
-    {
+	do
+	{
 #endif
 
-    int sample_count = so.buffer_size;
-    int byte_offset;
+		int sample_count = so.buffer_size;
+		int byte_offset;
 
 //    if (so.sixteen_bit)
-	sample_count >>= 1;
+		sample_count >>= 1;
 
 #ifdef USE_THREADS
 //    if (Settings.ThreadSound)
-	pthread_mutex_lock (&mutex);
+		pthread_mutex_lock (&mutex);
 //    else
 #endif
 //    if (block_signal)
@@ -1790,82 +2071,88 @@ void *S9xProcessSound (void *)
 //	return (NULL);
 //    }
 
-    block_generate_sound = TRUE;
+		block_generate_sound = TRUE;
 
-    if (so.samples_mixed_so_far < sample_count)
-    {
-	//	byte_offset = so.play_position +
-	//		      (so.sixteen_bit ? (so.samples_mixed_so_far << 1)
-	//				      : so.samples_mixed_so_far);
-		byte_offset = so.play_position + (so.samples_mixed_so_far << 1);
-
-		if (Settings.SoundSync == 2)
+		if (so.samples_mixed_so_far < sample_count)
 		{
-		    memset (Buf + (byte_offset & SOUND_BUFFER_SIZE_MASK), 0, sample_count - so.samples_mixed_so_far);
+			//	byte_offset = so.play_position +
+			//		      (so.sixteen_bit ? (so.samples_mixed_so_far << 1)
+			//				      : so.samples_mixed_so_far);
+			byte_offset = so.play_position + (so.samples_mixed_so_far << 1);
+
+			if (Settings.SoundSync == 2)
+			{
+				memset (Buf + (byte_offset & SOUND_BUFFER_SIZE_MASK), 0, sample_count - so.samples_mixed_so_far);
+			}
+			else
+			{
+				S9xMixSamplesO (Buf, sample_count - so.samples_mixed_so_far, byte_offset & SOUND_BUFFER_SIZE_MASK);
+			}
+
+			so.samples_mixed_so_far = 0;
 		}
 		else
 		{
-		    S9xMixSamplesO (Buf, sample_count - so.samples_mixed_so_far, byte_offset & SOUND_BUFFER_SIZE_MASK);
-	    }
-
-		so.samples_mixed_so_far = 0;
-    }
-    else
-    {
-		so.samples_mixed_so_far -= sample_count;
-	}
+			so.samples_mixed_so_far -= sample_count;
+		}
 
 //    if (!so.mute_sound)
-    {
-		int I;
-		int J = so.buffer_size;
+		{
+			int I;
+			int J = so.buffer_size;
 
-		byte_offset = so.play_position;
-		so.play_position = (so.play_position + so.buffer_size) & SOUND_BUFFER_SIZE_MASK;
+			byte_offset = so.play_position;
+			so.play_position = (so.play_position + so.buffer_size) & SOUND_BUFFER_SIZE_MASK;
 
 #ifdef USE_THREADS
-	//	if (Settings.ThreadSound)
-		    pthread_mutex_unlock (&mutex);
+			//	if (Settings.ThreadSound)
+			pthread_mutex_unlock (&mutex);
 #endif
-		block_generate_sound = FALSE;
-		do
-		{
-		    if (byte_offset + J > SOUND_BUFFER_SIZE)
-		    {
-			I = write (so.sound_fd, (char *) Buf + byte_offset,
-				   SOUND_BUFFER_SIZE - byte_offset);
-			if (I > 0)
+			block_generate_sound = FALSE;
+			do
 			{
-			    J -= I;
-			    byte_offset = (byte_offset + I) & SOUND_BUFFER_SIZE_MASK;
+				if (byte_offset + J > SOUND_BUFFER_SIZE)
+				{
+					I = write (so.sound_fd, (char *) Buf + byte_offset,
+					           SOUND_BUFFER_SIZE - byte_offset);
+					if (I > 0)
+					{
+						J -= I;
+						byte_offset = (byte_offset + I) & SOUND_BUFFER_SIZE_MASK;
+					}
+				}
+				else
+				{
+					I = write (so.sound_fd, (char *) Buf + byte_offset, J);
+					if (I > 0)
+					{
+						J -= I;
+						byte_offset = (byte_offset + I) & SOUND_BUFFER_SIZE_MASK;
+					}
+				}
 			}
-		    }
-		    else
-		    {
-			I = write (so.sound_fd, (char *) Buf + byte_offset, J);
-			if (I > 0)
-			{
-			    J -= I;
-			    byte_offset = (byte_offset + I) & SOUND_BUFFER_SIZE_MASK;
-			}
-		    }
-		} while ((I < 0 && errno == EINTR) || J > 0);
-    }
+			while ((I < 0 && errno == EINTR) || J > 0);
+		}
 
 #ifdef USE_THREADS
 //    } while (Settings.ThreadSound);
-    } while (1);
+	}
+	while (1);
 #endif
 
-    return (NULL);
+	return (NULL);
 }
 
 #ifdef DINGOO
 void gp2x_sound_volume(int l, int r)
 {
- 	l=l<0?0:l; l=l>255?255:l; r=r<0?0:r; r=r>255?255:r;
- 	l<<=8; l|=r;
-  	ioctl(mixerdev, SOUND_MIXER_WRITE_VOLUME, &l);
+	l=l<0?0:l;
+	l=l>255?255:l;
+	r=r<0?0:r;
+	r=r>255?255:r;
+	l<<=8;
+	l|=r;
+	ioctl(mixerdev, SOUND_MIXER_WRITE_VOLUME, &l);
 }
 #endif
 

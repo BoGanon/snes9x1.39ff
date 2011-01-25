@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -46,41 +46,41 @@
 
 struct SIAPU
 {
-    uint8		*PC;
-    uint8		*RAM;
-    uint8		*DirectPage;
-    bool8_32	APUExecuting;
-    uint8_32	Bit;
-    uint32		Address;
-    uint8		*WaitAddress1;
-    uint8		*WaitAddress2;
-    uint32		WaitCounter;
-    uint8		*ShadowRAM;
-    uint8		*CachedSamples;
-    uint8_32	_Carry;
-    uint8_32	_Zero;
-    uint8_32	_Overflow;
-    uint32		TimerErrorCounter;
-    int32  NextAPUTimerPos;
-    int32  APUTimerCounter;
-    uint32		Scanline;
-    int32		OneCycle;
-    int32		TwoCycles;
+	uint8		*PC;
+	uint8		*RAM;
+	uint8		*DirectPage;
+	bool8_32	APUExecuting;
+	uint8_32	Bit;
+	uint32		Address;
+	uint8		*WaitAddress1;
+	uint8		*WaitAddress2;
+	uint32		WaitCounter;
+	uint8		*ShadowRAM;
+	uint8		*CachedSamples;
+	uint8_32	_Carry;
+	uint8_32	_Zero;
+	uint8_32	_Overflow;
+	uint32		TimerErrorCounter;
+	int32  NextAPUTimerPos;
+	int32  APUTimerCounter;
+	uint32		Scanline;
+	int32		OneCycle;
+	int32		TwoCycles;
 };
 
 struct SAPU
 {
-    int32		Cycles;
-    bool8_32	ShowROM;
-    uint8_32	Flags;
-    uint8		KeyedChannels;
-    uint8		OutPorts [4];
-    uint8		DSP [0x80];
-    uint8		ExtraRAM [64];
-    uint16_32	Timer [3];
-    uint16_32	TimerTarget [3];
-    bool8_32	TimerEnabled [3];
-    bool8_32	TimerValueWritten [3];
+	int32		Cycles;
+	bool8_32	ShowROM;
+	uint8_32	Flags;
+	uint8		KeyedChannels;
+	uint8		OutPorts [4];
+	uint8		DSP [0x80];
+	uint8		ExtraRAM [64];
+	uint16_32	Timer [3];
+	uint16_32	TimerTarget [3];
+	bool8_32	TimerEnabled [3];
+	bool8_32	TimerValueWritten [3];
 };
 
 EXTERN_C struct SAPU APU;

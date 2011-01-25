@@ -4,7 +4,7 @@
  * (c) Copyright 1996 - 2001 Gary Henderson (gary.henderson@ntlworld.com) and
  *                           Jerremy Koot (jkoot@snes9x.com)
  *
- * Super FX C emulator code 
+ * Super FX C emulator code
  * (c) Copyright 1997 - 1999 Ivar (ivar@snes9x.com) and
  *                           Gary Henderson.
  * Super FX assembler emulator code (c) Copyright 1998 zsKnight and _Demo_.
@@ -66,7 +66,7 @@ int S9xMinCommandLineArgs ();
 void S9xNextController ();
 bool8 S9xLoadROMImage (const char *string);
 const char *S9xSelectFilename (const char *def, const char *dir,
-			       const char *ext, const char *title);
+                               const char *ext, const char *title);
 
 //const char *S9xChooseFilename (bool8 read_only);
 bool8 S9xOpenSnapshotFile (const char *base, bool8 read_only, STREAM *file);
