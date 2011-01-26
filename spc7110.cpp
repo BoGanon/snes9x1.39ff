@@ -66,7 +66,7 @@
 #include "display.h"
 #include <limits.h>
 #include <unistd.h>
-#define FREEZEFOLDER S9xGetSnapshotDirectory ()
+#define FREEZEFOLDER S9xGetDirectory(SNAPSHOT_DIR)
 #endif
 
 //really not needed, but usually MS adds the _ to POSIX functions,

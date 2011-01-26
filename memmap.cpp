@@ -468,7 +468,11 @@ again:
 			            "Found multiple ROM file headers (and ignored them).");
 	}
 
-	CheckForIPSPatch (filename, HeaderCount != 0, TotalFileSize);
+	if (!Settings.NoPatch)
+	{
+		CheckForIPSPatch (filename, HeaderCount != 0, TotalFileSize);
+	}
+
 	int orig_hi_score, orig_lo_score;
 	int hi_score, lo_score;
 
@@ -697,7 +701,7 @@ again:
 	InitROM (Tales);
 
 #ifdef CHEATS
-	S9xLoadCheatFile (S9xGetFilename(".cht"));
+	S9xLoadCheatFile (S9xGetFilename(".cht",CHEAT_DIR));
 //    S9xInitCheatData ();
 //    S9xApplyCheats ();
 #endif
@@ -2207,7 +2211,7 @@ const char *CMemory::KartContents ()
 	{
 		"DSP1", "DSP2", "DSP3", "DSP4"
 	};
-	if (ROMType == 0&&!Settings.BS)
+	if (ROMType == 0 && !Settings.BS)
 	{
 		return ("ROM only");
 	}
@@ -2437,11 +2441,11 @@ void CMemory::ApplyROMFixes ()
 		Memory.LoROM = TRUE;
 		LoROMMap ();
 	}
-	Settings.StarfoxHack = strcmp (ROMName, "STAR FOX") == 0 ||
-	                       strcmp (ROMName, "STAR WING") == 0;
-	Settings.WinterGold = strcmp (ROMName, "FX SKIING NINTENDO 96") == 0 ||
-	                      strcmp (ROMName, "DIRT RACER") == 0 || Settings.StarfoxHack;
 
+	Settings.StarfoxHack = strcmp (ROMName, "STAR FOX") == 0 || 
+	                           strcmp (ROMName, "STAR WING") == 0;
+	Settings.WinterGold = strcmp (ROMName, "FX SKIING NINTENDO 96") == 0 ||
+	                          strcmp (ROMName, "DIRT RACER") == 0 || Settings.StarfoxHack;
 	Settings.ChuckRock = strcmp (ROMName, "CHUCK ROCK") == 0;
 	Settings.Dezaemon = strcmp (ROMName, "DEZAEMON") == 0;
 
@@ -2967,7 +2971,7 @@ void CMemory::CheckForIPSPatch (const char *rom_filename, bool8_32 header,
 
 	if (!(patch_file = fopen (fname, "rb")))
 	{
-		if (!(patch_file = fopen (S9xGetFilename (".ips"), "rb")))
+		if (!(patch_file = fopen (S9xGetFilename (".ips",IPS_DIR), "rb")))
 		{
 			return;
 		}

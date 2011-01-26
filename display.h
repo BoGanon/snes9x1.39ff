@@ -74,12 +74,29 @@ void S9xCloseSnapshotFile (STREAM file);
 
 const char *S9xBasename (const char *filename);
 
+enum s9x_getdirtype
+{
+	DEFAULT_DIR = 0,
+	HOME_DIR,
+	ROMFILENAME_DIR,
+	ROM_DIR,
+	SRAM_DIR,
+	SNAPSHOT_DIR,
+	SCREENSHOT_DIR,
+	SPC_DIR,
+	CHEAT_DIR,
+	IPS_DIR,
+	BIOS_DIR,
+	LOG_DIR,
+	LAST_DIR
+};
+
 int S9xFStrcmp (FILE *, const char *);
-const char *S9xGetHomeDirectory ();
-const char *S9xGetSnapshotDirectory ();
-const char *S9xGetROMDirectory ();
-const char *S9xGetSRAMFilename ();
-const char *S9xGetFilename (const char *extension);
+
+const char * S9xGetDirectory (enum s9x_getdirtype);
+const char * S9xGetFilename (const char *, enum s9x_getdirtype);
+const char * S9xGetFilenameInc (const char *, enum s9x_getdirtype);
+
 END_EXTERN_C
 
 #endif

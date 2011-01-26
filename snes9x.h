@@ -330,11 +330,11 @@ struct SSettings
 	bool8_32  GlideEnable;
 	bool8_32  OpenGLEnable;
 	int32  AutoSaveDelay; // Time in seconds before S-RAM auto-saved if modified.
+	bool8_32  NoPatch;
 	bool8_32  ApplyCheats;
 	bool8_32  TurboMode;
 	uint32 TurboSkipFrames;
 	uint32 AutoMaxSkipFrames;
-
 // Fixes for individual games
 	uint32 StrikeGunnerOffsetHack;
 	bool8_32  ChuckRock;

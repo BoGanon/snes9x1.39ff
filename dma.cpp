@@ -102,7 +102,7 @@ void S9xDoDMA (uint8 Channel)
 	bool8_32 in_sa1_dma = FALSE;
 	uint8 *in_sdd1_dma = NULL;
 	uint8 *spc7110_dma=NULL;
-	bool8_32 s7_wrap=false;
+	//bool8_32 s7_wrap=false;
 	SDMA *d = &DMA[Channel];
 
 	int count = d->TransferBytes;

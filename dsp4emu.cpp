@@ -310,11 +310,11 @@ DSP4_WAIT(2) resume2:
 
 		// quadratic regression (rough)
 		if(project_focaly>=-0x0f)
-			py_dy = project_focaly * project_focaly * -0.20533553
-			        - 1.08330005 * project_focaly - 69.61094639;
+			py_dy = (int16)((double)(project_focaly * project_focaly * -0.20533553
+			        - 1.08330005 * project_focaly - 69.61094639));
 		else
-			py_dy = project_focaly * project_focaly * -0.000657035759
-			        - 1.07629051 * project_focaly - 65.69315963;
+			py_dy = (int16)((double)(project_focaly * project_focaly * -0.000657035759
+			        - 1.07629051 * project_focaly - 65.69315963));
 
 		// approximate # of raster lines
 		segments = abs(project_y2-project_y1);
@@ -537,11 +537,11 @@ DSP4_WAIT(2) resume2:
 
 		// quadratic regression (rough)
 		if(project_focaly>=-0x0f)
-			py_dy = project_focaly * project_focaly * -0.20533553
-			        - 1.08330005 * project_focaly - 69.61094639;
+			py_dy = (int16)((double)(project_focaly * project_focaly * -0.20533553
+			        - 1.08330005 * project_focaly - 69.61094639));
 		else
-			py_dy = project_focaly * project_focaly * -0.000657035759
-			        - 1.07629051 * project_focaly - 65.69315963;
+			py_dy = (int16)((double)(project_focaly * project_focaly * -0.000657035759
+			        - 1.07629051 * project_focaly - 65.69315963));
 
 		// approximate # of raster lines
 		segments = abs(project_y2-project_y1);
@@ -820,7 +820,7 @@ DSP4_WAIT(2) resume2:
 		{
 			int16 index=0, lcv;
 			int16 left_inc=0,right_inc=0;
-			int16 dx1,dx2,dx3,dx4;
+			int16 dx1=0,dx2=0,dx3,dx4;
 
 			// # segments to traverse
 			segments = abs(y_left - path_y[0]);
@@ -1212,11 +1212,11 @@ DSP4_WAIT(2) resume2:
 
 		// quadratic regression (rough)
 		if(project_focaly>=-0x0f)
-			py_dy = project_focaly * project_focaly * -0.20533553
-			        - 1.08330005 * project_focaly - 69.61094639;
+			py_dy = (int16)((double)(project_focaly * project_focaly * -0.20533553
+			        - 1.08330005 * project_focaly - 69.61094639));
 		else
-			py_dy = project_focaly * project_focaly * -0.000657035759
-			        - 1.07629051 * project_focaly - 65.69315963;
+			py_dy = (int16)((double)(project_focaly * project_focaly * -0.000657035759
+			        - 1.07629051 * project_focaly - 65.69315963));
 
 		// approximate # of raster lines
 		segments = abs(project_y2-project_y1);

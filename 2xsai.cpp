@@ -1112,7 +1112,7 @@ void Scale_2xSaI (uint8 *srcPtr, uint32 srcPitch, uint8 * /* deltaPtr */,
 			uint32 E, F, G, H;
 			uint32 I, J, K, L;
 			uint32 x1, x2, a1, f1, f2;
-			uint32 position, product1;
+			uint32 position, product1 = 0;
 
 			position = w >> 16;
 			A = bP[position];	// current pixel
@@ -1137,84 +1137,84 @@ void Scale_2xSaI (uint8 *srcPtr, uint32 srcPitch, uint8 * /* deltaPtr */,
 				product1 = A;
 			}
 			else
-				/*1*/
-				if (A == D && B != C)
+			/*1*/
+			if (A == D && B != C)
+			{
+				f1 = (x1 >> 1) + (0x10000 >> 2);
+				f2 = (y1 >> 1) + (0x10000 >> 2);
+				if (y1 <= f1 && A == J && A != E)	// close to B
 				{
-					f1 = (x1 >> 1) + (0x10000 >> 2);
-					f2 = (y1 >> 1) + (0x10000 >> 2);
-					if (y1 <= f1 && A == J && A != E)	// close to B
-					{
-						a1 = f1 - y1;
-						product1 = Bilinear (A, B, a1);
-					}
-					else if (y1 >= f1 && A == G && A != L)	// close to C
-					{
-						a1 = y1 - f1;
-						product1 = Bilinear (A, C, a1);
-					}
-					else if (x1 >= f2 && A == E && A != J)	// close to B
-					{
-						a1 = x1 - f2;
-						product1 = Bilinear (A, B, a1);
-					}
-					else if (x1 <= f2 && A == L && A != G)	// close to C
-					{
-						a1 = f2 - x1;
-						product1 = Bilinear (A, C, a1);
-					}
-					else if (y1 >= x1)	// close to C
-					{
-						a1 = y1 - x1;
-						product1 = Bilinear (A, C, a1);
-					}
-					else if (y1 <= x1)	// close to B
-					{
-						a1 = x1 - y1;
-						product1 = Bilinear (A, B, a1);
-					}
+					a1 = f1 - y1;
+					product1 = Bilinear (A, B, a1);
 				}
-				else
-					/*2*/
-					if (B == C && A != D)
-					{
-						f1 = (x1 >> 1) + (0x10000 >> 2);
-						f2 = (y1 >> 1) + (0x10000 >> 2);
-						if (y2 >= f1 && B == H && B != F)	// close to A
-						{
-							a1 = y2 - f1;
-							product1 = Bilinear (B, A, a1);
-						}
-						else if (y2 <= f1 && B == I && B != K)	// close to D
-						{
-							a1 = f1 - y2;
-							product1 = Bilinear (B, D, a1);
-						}
-						else if (x2 >= f2 && B == F && B != H)	// close to A
-						{
-							a1 = x2 - f2;
-							product1 = Bilinear (B, A, a1);
-						}
-						else if (x2 <= f2 && B == K && B != I)	// close to D
-						{
-							a1 = f2 - x2;
-							product1 = Bilinear (B, D, a1);
-						}
-						else if (y2 >= x1)	// close to A
-						{
-							a1 = y2 - x1;
-							product1 = Bilinear (B, A, a1);
-						}
-						else if (y2 <= x1)	// close to D
-						{
-							a1 = x1 - y2;
-							product1 = Bilinear (B, D, a1);
-						}
-					}
+				else if (y1 >= f1 && A == G && A != L)	// close to C
+				{
+					a1 = y1 - f1;
+					product1 = Bilinear (A, C, a1);
+				}
+				else if (x1 >= f2 && A == E && A != J)	// close to B
+				{
+					a1 = x1 - f2;
+					product1 = Bilinear (A, B, a1);
+				}
+				else if (x1 <= f2 && A == L && A != G)	// close to C
+				{
+					a1 = f2 - x1;
+					product1 = Bilinear (A, C, a1);
+				}
+				else if (y1 >= x1)	// close to C
+				{
+					a1 = y1 - x1;
+					product1 = Bilinear (A, C, a1);
+				}
+				else if (y1 <= x1)	// close to B
+				{
+					a1 = x1 - y1;
+					product1 = Bilinear (A, B, a1);
+				}
+			}
+			else
+			/*2*/
+			if (B == C && A != D)
+			{
+				f1 = (x1 >> 1) + (0x10000 >> 2);
+				f2 = (y1 >> 1) + (0x10000 >> 2);
+				if (y2 >= f1 && B == H && B != F)	// close to A
+				{
+					a1 = y2 - f1;
+					product1 = Bilinear (B, A, a1);
+				}
+				else if (y2 <= f1 && B == I && B != K)	// close to D
+				{
+					a1 = f1 - y2;
+					product1 = Bilinear (B, D, a1);
+				}
+				else if (x2 >= f2 && B == F && B != H)	// close to A
+				{
+					a1 = x2 - f2;
+					product1 = Bilinear (B, A, a1);
+				}
+				else if (x2 <= f2 && B == K && B != I)	// close to D
+				{
+					a1 = f2 - x2;
+					product1 = Bilinear (B, D, a1);
+				}
+				else if (y2 >= x1)	// close to A
+				{
+					a1 = y2 - x1;
+					product1 = Bilinear (B, A, a1);
+				}
+				else if (y2 <= x1)	// close to D
+				{
+					a1 = x1 - y2;
+					product1 = Bilinear (B, D, a1);
+				}
+			}
 			/*3*/
-					else
-					{
-						product1 = Bilinear4 (A, B, C, D, x1, y1);
-					}
+			else
+			{
+				product1 = Bilinear4 (A, B, C, D, x1, y1);
+			}
 
 //end First Pixel
 			*(uint32 *) dP = product1;

@@ -185,7 +185,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
-#include <memory.h>
+#ifndef _EE
+	#include <memory.h>
+#endif
 #include <sys/types.h>
 
 #ifdef __WIN32__

@@ -42,19 +42,43 @@
 #define _PORT_H_
 
 #include <limits.h>
-#include <memory.h>
+#ifndef _EE
+	#include <memory.h>
+#endif
 #include <string.h>
 
 #include <sys/types.h>
 
 /* #define PIXEL_FORMAT RGB565 */
-#define GFX_MULTI_FORMAT
+
+
+#ifdef _EE
+	#define PIXEL_FORMAT BGR555
+#else
+	#define GFX_MULTI_FORMAT
+#endif
 
 #ifndef snes9x_types_defined
 #define snes9x_types_defined
 
+#ifdef _EE
 typedef unsigned char bool8;
 
+typedef unsigned char	uint8;
+typedef unsigned short	uint16;
+typedef unsigned int	uint32;
+typedef unsigned long	uint64;
+typedef signed char		int8;
+typedef signed short	int16;
+typedef int				int32;
+typedef long			int64;
+typedef unsigned int	bool8_32;
+typedef unsigned int	uint8_32;
+typedef unsigned int	uint16_32;
+typedef int				int8_32;
+typedef int				int16_32;
+typedef unsigned char	bool8;
+#else
 typedef unsigned char uint8;
 typedef unsigned short uint16;
 typedef signed char int8;
@@ -67,6 +91,8 @@ typedef unsigned long	uint8_32;
 typedef unsigned long	uint16_32;
 typedef long			int8_32;
 typedef long			int16_32;
+#endif
+
 #endif // snes9x_types_defined
 #include "pixform.h"
 
@@ -88,8 +114,6 @@ typedef long			int16_32;
 #define END_EXTERN_C
 #endif
 
-#define SDD1_DECOMP
-
 #ifndef PATH_MAX
 #define PATH_MAX 1024
 #endif
@@ -110,11 +134,10 @@ typedef long			int16_32;
 	} \
 }
 
-void _makepath (char *path, const char *drive, const char *dir,
+EXTERN_C void _makepath (char *path, const char *drive, const char *dir,
                 const char *fname, const char *ext);
-void _splitpath (const char *path, char *drive, char *dir, char *fname,
+EXTERN_C void _splitpath (const char *path, char *drive, char *dir, char *fname,
                  char *ext);
-
 EXTERN_C void S9xGenerateSound ();
 
 #define CHECK_SOUND()

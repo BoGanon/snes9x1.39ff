@@ -2570,7 +2570,7 @@ inline void CPUShutdown(struct SICPU * icpu, struct SCPUState * cpu)
 }
 #endif
 #else
-#define CPUShutdown()
+#define CPUShutdown(A,B)
 #endif
 
 /* BCC */
@@ -3925,13 +3925,17 @@ static void Op40 (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState
 // WAI
 static void OpCB (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState * cpu)
 {
+#ifdef CPU_SHUTDOWN
 	struct SIAPU *iapu = &IAPU;
 	struct SAPU *apu = &APU;
+#endif
 
-// Ok, let's just C-ify the ASM versions separately.
+	// Ok, let's just C-ify the ASM versions separately.
 #ifdef SA1_OPCODES
 	SA1.WaitingForInterrupt = TRUE;
 	SA1.PC--;
+
+/*
 #if 0
 // XXX: FIXME
 	if(Settings.Shutdown)
@@ -3948,11 +3952,11 @@ static void OpCB (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState
 			SA1.Executing = TRUE;
 		}
 	}
-#endif
+#endif // 0
+*/
 #else // SA1_OPCODES
+/*
 #if 0
-
-
 	if (CPU.IRQActive)
 	{
 #ifndef SA1_OPCODES
@@ -3960,7 +3964,8 @@ static void OpCB (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState
 #endif
 	}
 	else
-#endif
+#endif // 0
+*/
 	{
 		if (DSP1.version == 3)
 		{
@@ -3969,6 +3974,7 @@ static void OpCB (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState
 
 		CPU.WaitingForInterrupt = TRUE;
 		CPU.PC--;
+
 #ifdef CPU_SHUTDOWN
 		if (Settings.Shutdown)
 		{
@@ -3987,11 +3993,11 @@ static void OpCB (struct SRegisters * reg, struct SICPU * icpu, struct SCPUState
 		}
 		else
 		{
-#ifndef SA1_OPCODES
 			CPU.Cycles += TWO_CYCLES;
-#endif
-#endif
 		}
+#else
+		CPU.Cycles += TWO_CYCLES;
+#endif // CPU_SHUTDOWN
 	}
 #endif // SA1_OPCODES
 }
