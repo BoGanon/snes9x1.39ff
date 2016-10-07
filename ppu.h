@@ -144,7 +144,7 @@ struct SPPU
 	} BG [4];
 
 	bool8_32  CGFLIP;
-	uint16 CGDATA [256];
+	uint16 *CGDATA;
 	uint8  FirstSprite;
 	uint8  LastSprite;
 	struct SOBJ OBJ [128];

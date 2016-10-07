@@ -761,10 +761,9 @@ void S9xDoDMA (uint8 Channel)
 		while (count);
 	}
 
-#ifdef SPC700_C
 	iapu->APUExecuting = Settings.APUEnabled;
 	APU_EXECUTE ();
-#endif
+
 	while (cpu->Cycles > cpu->NextEvent)
 	{
 		S9xDoHBlankProcessing (cpu, apu, iapu);

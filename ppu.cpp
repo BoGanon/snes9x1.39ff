@@ -2539,12 +2539,14 @@ void S9xResetPPU()
 	{
 		IPPU.Controller = SNES_MAX_CONTROLLER_OPTIONS - 1;
 	}
+#ifndef _EE
 #ifndef _ZAURUS
 	else
 	{
 		IPPU.Controller = Settings.ControllerOption - 1;
 	}
 	S9xNextController();
+#endif
 #endif
 	for (c = 0; c < 2; c++)
 	{
@@ -2570,7 +2572,7 @@ void S9xResetPPU()
 	// For BS Suttehakkun 2...
 	ZeroMemory(& Memory.FillRAM[0x1000], 0x1000);
 }
-
+#ifndef _EE
 #ifndef _ZAURUS
 void S9xProcessMouse(int which1)
 {
@@ -2733,6 +2735,7 @@ void S9xNextController()
 	}
 }
 #endif
+#endif
 
 void S9xUpdateJoypads(struct InternalPPU *ippu)
 {
@@ -2754,7 +2757,7 @@ void S9xUpdateJoypads(struct InternalPPU *ippu)
 		ippu->Joypads[i] &= ~SNES_DOWN_MASK;
 	}
 	//}
-
+#ifndef _EE
 #ifndef _ZAURUS
 	//touhaiden controller Fix
 	if (SNESGameFixes.TouhaidenControllerFix
@@ -2783,6 +2786,7 @@ void S9xUpdateJoypads(struct InternalPPU *ippu)
 	{
 		ProcessSuperScope();
 	}
+#endif
 #endif
 	if (Memory.FillRAM[0x4200] & 1)
 	{

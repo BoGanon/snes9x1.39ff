@@ -439,6 +439,7 @@ bool8_32 S9xLoadSnapshot (const char *filename)
 
 bool8_32 S9xUnfreezeGame (const char *filename)
 {
+#ifndef _EE
 #ifndef _ZAURUS
 	if (S9xLoadOrigSnapshot (filename))
 	{
@@ -449,7 +450,7 @@ bool8_32 S9xUnfreezeGame (const char *filename)
 		return (TRUE);
 	}
 #endif
-
+#endif
 	STREAM snapshot = NULL;
 	if (S9xOpenSnapshotFile (filename, TRUE, &snapshot))
 	{
@@ -1269,7 +1270,7 @@ bool8_32 S9xUnfreezeZSNES (const char *filename)
 				}
 			}
 			IAPU.RAM [0xf2] = APU_KON;
-			S9xSetAPUDSP (t [APU_KON], &APU, IAPU);
+			S9xSetAPUDSP (t [APU_KON], &APU, &IAPU);
 			IAPU.RAM [0xf2] = saved;
 
 			S9xSetSoundMute (FALSE);

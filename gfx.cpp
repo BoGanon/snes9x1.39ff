@@ -3798,10 +3798,9 @@ void S9xUpdateScreen () // ~30-50ms! (called from FLUSH_REDRAW())
 		{
 			struct ClipData *pClip;
 
-			gfx->FixedColour = ((int)ippu->XB [PPU.FixedColourRed] << 11) | ((int)ippu->XB [PPU.FixedColourGreen] << 6) | (int)ippu->XB [PPU.FixedColourBlue];
-//			gfx->FixedColour = BUILD_PIXEL (ippu->XB [PPU.FixedColourRed],
-//					   ippu->XB [PPU.FixedColourGreen],
-//					   ippu->XB [PPU.FixedColourBlue]);
+			gfx->FixedColour = BUILD_PIXEL (ippu->XB [PPU.FixedColourRed],
+					   ippu->XB [PPU.FixedColourGreen],
+					   ippu->XB [PPU.FixedColourBlue]);
 
 			// Clear the z-buffer, marking areas 'covered' by the fixed
 			// colour as depth 1.

@@ -46,9 +46,9 @@
 #include "gfx.h"
 #include "tile.h"
 
-#ifdef USE_GLIDE
-#include "3d.h"
-#endif
+//#ifdef USE_GLIDE
+//#include "3d.h"
+//#endif
 
 extern uint32 HeadMask [4];
 extern uint32 TailMask [5];
@@ -369,7 +369,7 @@ void DrawLargePixel (uint32 Tile, uint32 Offset,
 	register uint8 *sp = gfx->S + Offset;
 	uint8  *Depth = gfx->DB + Offset;
 	uint8 pixel;
-
+#define PLOT_PIXEL(screen, pixel) (pixel)
 	RENDER_TILE_LARGE (((uint8) gfx->ScreenColors [pixel]), PLOT_PIXEL)
 }
 #endif

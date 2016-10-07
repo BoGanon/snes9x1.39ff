@@ -51,7 +51,10 @@
 #include "display.h"
 #include "apu.h"
 #include "sa1.h"
+
+#ifndef _ZAURUS
 #include "spc7110.h"
+#endif
 
 #ifdef DEBUGGER
 static void WhatsMissing ();

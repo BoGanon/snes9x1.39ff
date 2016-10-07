@@ -50,9 +50,9 @@
 #include "65c816.h"
 #include "messages.h"
 
-#if defined(USE_GLIDE) && !defined(GFX_MULTI_FORMAT)
-#define GFX_MULTI_FORMAT
-#endif
+//#if defined(USE_GLIDE) && !defined(GFX_MULTI_FORMAT)
+//#define GFX_MULTI_FORMAT
+//#endif
 
 #define ROM_NAME_LEN 23
 

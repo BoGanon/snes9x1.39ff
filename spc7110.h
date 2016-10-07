@@ -140,6 +140,8 @@ typedef struct SPC7110EmuVars
 	uint8 bank50[DECOMP_BUFFER_SIZE];
 
 } SPC7110Regs;
+
 extern SPC7110Regs s7r;
 extern S7RTC rtc_f9;
+
 #endif

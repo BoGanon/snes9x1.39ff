@@ -650,17 +650,14 @@ static uint8 fx_checkStartAddress()
 	/* Check if we're in RAM and the RAN flag is not set */
 	if(GSU.vPrgBankReg >= 0x70 && GSU.vPrgBankReg <= 0x73)
 	{
-		if (SCMR & (1<<3))
-		{
-			return TRUE;
-		}
-		else
+		if (!(SCMR & (1<<3)))
 		{
 			return FALSE;
 		}
 	}
+
 	/* If not, we're in ROM, so check if the RON flag is set */
-	else if(!(SCMR&(1<<4)))
+	if(!(SCMR&(1<<4)))
 	{
 		return FALSE;
 	}
