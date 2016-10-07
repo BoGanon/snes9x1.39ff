@@ -1,0 +1,169 @@
+.ROM.
+strcasecmp (argv [i], "-interleaved") == 0)
+Settings.ForceInterleaved = TRUE;
+
+strcasecmp (argv [i], "-interleaved2") == 0)
+Settings.ForceInterleaved2 = TRUE;
+
+strcasecmp (argv [i], "-nointerleave") == 0)
+Settings.ForceNotInterleaved = TRUE;
+
+strcasecmp (argv [i], "-hirom") == 0)
+Settings.ForceHiROM = TRUE;
+
+strcasecmp (argv [i], "-lorom") == 0)
+Settings.ForceLoROM = TRUE;
+
+strcasecmp (argv [i], "-header") == 0 ||
+Settings.ForceHeader = TRUE;
+
+strcasecmp (argv [i], "-noheader") == 0)
+Settings.ForceNoHeader = TRUE;
+
+strcasecmp (argv [i], "-pal") == 0)
+Settings.ForcePAL = TRUE;
+
+strcasecmp (argv [i], "-ntsc") == 0)
+Settings.ForceNTSC = TRUE;
+
+
+.Sound.
+
+strcasecmp (argv [i], "-buffersize") == 0)
+Settings.SoundBufferSize = atoi (argv [++i]);
+
+strcasecmp (argv [i], "-sound") == 0)
+Settings.NextAPUEnabled = TRUE;
+
+strcasecmp (argv [i], "-soundskip") == 0
+Settings.SoundSkipMethod = atoi (argv [++i]);
+
+strcasecmp (argv [i], "-echo") == 0)
+Settings.DisableSoundEcho = FALSE;
+
+strcasecmp (argv [i], "-soundquality") == 0 ||
+Settings.SoundPlaybackRate = atoi (argv [++i]) & 7;
+
+#ifndef _ZAURUS
+strcasecmp (argv [i], "-stereo") == 0 ||
+Settings.Stereo = TRUE;
+Settings.APUEnabled = TRUE;
+Settings.NextAPUEnabled = TRUE;
+
+strcasecmp (argv [i], "-mono") == 0)
+Settings.Stereo = FALSE;
+Settings.NextAPUEnabled = TRUE;
+#endif
+
+strcasecmp (argv [i], "-soundenvelope")
+Settings.SoundEnvelopeHeightReading = TRUE;
+
+strcasecmp (argv [i], "-nosamplecaching") == 0 ||
+Settings.DisableSampleCaching = TRUE;
+
+strcasecmp (argv [i], "-nomastervolume") == 0 ||
+Settings.DisableMasterVolume = TRUE;
+
+strcasecmp (argv [i], "-soundsync") == 0 ||
+Settings.SoundSync = TRUE;
+Settings.SoundEnvelopeHeightReading = TRUE;
+Settings.InterpolatedSound = TRUE;
+
+strcasecmp (argv [i], "-soundsync2") == 0 ||
+Settings.SoundSync = 2;
+Settings.SoundEnvelopeHeightReading = TRUE;
+Settings.InterpolatedSound = TRUE;
+
+strcasecmp (argv [i], "-interpolatedsound") == 0 ||
+Settings.InterpolatedSound = TRUE;
+
+#ifdef USE_THREADS
+strcasecmp (argv [i], "-threadsound") == 0 ||
+Settings.ThreadSound = TRUE;
+#endif
+
+strcasecmp (argv [i], "-altsampledecode") == 0)
+Settings.AltSampleDecode = 1;
+
+strcasecmp (argv [i], "-fix") == 0)
+Settings.FixFrequency = 1;
+
+.Display.
+
+strcasecmp (argv [i], "-hires") == 0)
+Settings.SupportHiRes = TRUE;
+
+strcasecmp (argv [i], "-sixteen") == 0)
+Settings.SixteenBit = TRUE;
+
+strcasecmp (argv [i], "-transparency") == 0)
+Settings.ForceTransparency = TRUE;
+Settings.ForceNoTransparency = FALSE;
+
+strcasecmp (argv [i], "-layering") == 0)
+Settings.BGLayering = TRUE;
+
+strcasecmp (argv [i], "-windows") == 0)
+Settings.DisableGraphicWindows = FALSE;
+
+strcasecmp (argv [i], "-im7") == 0)
+Settings.Mode7Interpolate = TRUE;
+
+strcasecmp (argv [i], "-displayframerate") == 0 ||
+Settings.DisplayFrameRate = TRUE;
+
+.Settings.
+
+strcasecmp (argv [i], "-bs") == 0)
+Settings.BS = TRUE;
+
+strcasecmp (argv [i], "-nosuperfx") == 0 ||
+Settings.ForceNoSuperFX = TRUE;
+
+strcasecmp (argv [i], "-superfx") == 0 ||
+Settings.ForceSuperFX = TRUE;
+
+strcasecmp (argv [i], "-dsp1") == 0)
+Settings.ForceDSP1 = TRUE;
+
+strcasecmp (argv [i], "-nodsp1") == 0)
+Settings.ForceNoDSP1 = TRUE;
+
+strcasecmp (argv [i], "-frameskip") == 0)
+Settings.SkipFrames = atoi (argv [++i]) /*+ 1*/;    //SiENcE
+
+strcasecmp (argv [i], "-frametime") == 0)
+Settings.FrameTimePAL = (int32) ft;
+Settings.FrameTimeNTSC = (int32) ft;
+
+.Controls.
+strcasecmp (argv [i], "-swapjoypads") == 0 ||
+Settings.SwapJoypads = TRUE;
+
+strcasecmp (argv [i], "-multiplayer5") == 0 ||
+Settings.MultiPlayer5 = TRUE;
+Settings.ControllerOption = SNES_MULTIPLAYER5;
+
+strcasecmp (argv [i], "-mouse") == 0 ||
+Settings.ControllerOption = SNES_MOUSE_SWAPPED;
+Settings.Mouse = TRUE;
+
+strcasecmp (argv [i], "-superscope") == 0 ||
+Settings.SuperScope = TRUE;
+Settings.ControllerOption = SNES_SUPERSCOPE;
+
+Scale = TRUE;
+
+.Hacks.
+
+strcasecmp (argv [i], "-cycles") == 0)
+Settings.CyclesPercentage = p;
+
+strcasecmp (argv [i], "-hdma") == 0)
+Settings.DisableHDMA = FALSE;
+
+strcasecmp (argv [i], "-speedhacks") == 0)
+Settings.ShutdownMaster = TRUE;
+
+strcasecmp (argv [i], "-noirq") == 0)
+Settings.DisableIRQ = TRUE;
